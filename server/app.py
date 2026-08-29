@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-
+from flask import Flask, jsonify 
+from data.skills_matrix import SKILLS_MATRIX
 app = Flask(__name__)
 
 SUBJECTS = [
@@ -29,6 +29,8 @@ def subjects():
 @app.get("/api/levels")
 def levels():
     return jsonify(LEVELS)
-
+@app.get("/api/skills")
+def skills():
+    return jsonify(SKILLS_MATRIX)
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
