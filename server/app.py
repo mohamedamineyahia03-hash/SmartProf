@@ -1,5 +1,6 @@
-from flask import Flask, jsonify 
+from flask import Flask, jsonify, request
 from data.skills_matrix import SKILLS_MATRIX
+from diagnostic_engine import diagnose
 app = Flask(__name__)
 
 SUBJECTS = [
@@ -32,5 +33,15 @@ def levels():
 @app.get("/api/skills")
 def skills():
     return jsonify(SKILLS_MATRIX)
+@app.post("/api/diagnostic")
+def diagnostic():
+    data = request.get_json()
+    level = data.get("level")
+    subject = data.get("subject")
+    results = data.get("results", {})
+
+    return jsonify(
+        diagnose(level, subject, results)
+    )
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)
