@@ -1,19 +1,12 @@
 # SmartProf — matrice de compétences diagnostiques
-# Référence Mathématiques 1ère année : data/math1/math1_curriculum.json
-# Les identifiants sont utilisés par le moteur pour éviter les écarts
-# entre les libellés d'affichage et les compétences pédagogiques.
+# Mathématiques 1ère année : identifiants alignés sur data/math1/math1_curriculum.json
 
 SKILLS_MATRIX = {
     "1": {
         "math": {
-            "T1": [
-                "pre_numeric",
-                "numeration",
-                "calcul",
-                "espace_geometrie",
-                "mesure",
-                "problemes",
-            ],
+            "T1": ["pre_numeric", "numeration", "calcul"],
+            "T2": ["numeration", "calcul", "mesure", "problemes"],
+            "T3": ["espace_geometrie", "mesure", "problemes"],
         }
     },
     "2": {
