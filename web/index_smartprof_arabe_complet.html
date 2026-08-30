@@ -1404,12 +1404,12 @@ function generateMath1Exercise(skill, difficulty = 1) {
         a = Math.floor(Math.random() * (max + 1));
         b = Math.floor(Math.random() * (max - a + 1));
         answer = a + b;
-        q = ;
+        q = a + " + " + b + " = ?";
     } else {
         a = Math.floor(Math.random() * (max + 1));
         b = Math.floor(Math.random() * (a + 1));
         answer = a - b;
-        q = ;
+        q = a + " - " + b + " = ?";
     }
 
     const options = new Set([answer]);
@@ -1430,6 +1430,7 @@ function generateMath1Exercises(skill, difficulty = 1, count = 10) {
 
     while (list.length < count) {
         const exercise = generateMath1Exercise(skill, difficulty);
+        if (!used.has(exercise.q)) {
             used.add(exercise.q);
             list.push(exercise);
         }
