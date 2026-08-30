@@ -1418,10 +1418,26 @@ async function startSession() {
 
         console.log("Diagnostic SmartProf :", diagnostic);
 
-        exercises = [
+        const weakSkills = diagnostic
+    .filter(item => item.score < 70)
+    .map(item => item.skill);
+
+if (selectedSubject === "math" && selectedLevel === "1") {
+    exercises = weakSkills.includes("Addition")
+        ? [
+            { q: "4 + 3 = ?", options: [6, 7, 8, 9], answer: 7 },
+            { q: "5 + 2 = ?", options: [6, 7, 8, 9], answer: 7 }
+          ]
+        : [
             { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
             { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
-        ];
+          ];
+} else {
+    exercises = [
+        { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
+        { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
+    ];
+}
 
         currentIndex = 0;
         score = 0;

@@ -1,7 +1,10 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from data.skills_matrix import SKILLS_MATRIX
 from diagnostic_engine import diagnose
+
 app = Flask(__name__)
+CORS(app)
 
 SUBJECTS = [
     {"id": "math", "name": "Mathématiques"},
