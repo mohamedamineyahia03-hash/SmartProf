@@ -1,0 +1,263 @@
+{
+  "level": 1,
+  "subject": "math",
+  "languages": [
+    "fr",
+    "ar"
+  ],
+  "domains": [
+    {
+      "id": "pre_numeric",
+      "name_fr": "Activités pré-numériques",
+      "name_ar": "الأنشطة ما قبل العددية",
+      "skills": [
+        "tri",
+        "classement",
+        "correspondance",
+        "rangement",
+        "rythmes"
+      ],
+      "exercise_formats": {
+        "tri": [
+          "selection",
+          "drag_drop"
+        ],
+        "classement": [
+          "selection",
+          "drag_drop"
+        ],
+        "correspondance": [
+          "association",
+          "drag_drop"
+        ],
+        "rangement": [
+          "drag_drop",
+          "classement"
+        ],
+        "rythmes": [
+          "suite_visuelle",
+          "selection"
+        ]
+      }
+    },
+    {
+      "id": "numeration",
+      "name_fr": "Numération",
+      "name_ar": "العد والأعداد",
+      "skills": [
+        "denombrement",
+        "reconnaissance_quantite",
+        "lecture_nombre",
+        "ecriture_nombre",
+        "suite_numerique",
+        "precedent_suivant",
+        "ordre_nombres",
+        "composition",
+        "decomposition",
+        "nombre_manquant"
+      ],
+      "exercise_formats": {
+        "denombrement": [
+          "comptage",
+          "selection"
+        ],
+        "reconnaissance_quantite": [
+          "association",
+          "selection"
+        ],
+        "lecture_nombre": [
+          "selection",
+          "qcm"
+        ],
+        "ecriture_nombre": [
+          "saisie_nombre"
+        ],
+        "suite_numerique": [
+          "saisie_nombre",
+          "selection"
+        ],
+        "precedent_suivant": [
+          "selection",
+          "saisie_nombre"
+        ],
+        "ordre_nombres": [
+          "classement",
+          "drag_drop"
+        ],
+        "composition": [
+          "saisie_nombre",
+          "qcm"
+        ],
+        "decomposition": [
+          "saisie_nombre",
+          "qcm"
+        ],
+        "nombre_manquant": [
+          "saisie_nombre",
+          "qcm"
+        ]
+      }
+    },
+    {
+      "id": "calcul",
+      "name_fr": "Calcul",
+      "name_ar": "الحساب",
+      "skills": [
+        "addition",
+        "calcul_mental",
+        "egalite",
+        "situations_additives"
+      ],
+      "exercise_formats": {
+        "addition": [
+          "calcul",
+          "qcm",
+          "saisie_nombre"
+        ],
+        "calcul_mental": [
+          "calcul",
+          "saisie_nombre"
+        ],
+        "egalite": [
+          "selection",
+          "saisie_nombre"
+        ],
+        "situations_additives": [
+          "probleme",
+          "recit"
+        ]
+      }
+    },
+    {
+      "id": "espace_geometrie",
+      "name_fr": "Espace et géométrie",
+      "name_ar": "الفضاء والهندسة",
+      "skills": [
+        "positions",
+        "gauche_droite",
+        "haut_bas",
+        "dessus_dessous",
+        "dedans_dehors",
+        "devant_derriere",
+        "pres_loin",
+        "entre",
+        "lignes",
+        "formes",
+        "frises",
+        "pavages",
+        "traces"
+      ],
+      "exercise_formats": {
+        "positions": [
+          "selection",
+          "visuel"
+        ],
+        "gauche_droite": [
+          "selection",
+          "visuel"
+        ],
+        "haut_bas": [
+          "selection",
+          "visuel"
+        ],
+        "dessus_dessous": [
+          "selection",
+          "visuel"
+        ],
+        "dedans_dehors": [
+          "selection",
+          "visuel"
+        ],
+        "devant_derriere": [
+          "selection",
+          "visuel"
+        ],
+        "pres_loin": [
+          "selection",
+          "visuel"
+        ],
+        "entre": [
+          "selection",
+          "visuel"
+        ],
+        "lignes": [
+          "selection",
+          "visuel"
+        ],
+        "formes": [
+          "selection",
+          "association"
+        ],
+        "frises": [
+          "suite_visuelle",
+          "selection"
+        ],
+        "pavages": [
+          "visuel",
+          "selection"
+        ],
+        "traces": [
+          "tracé",
+          "visuel"
+        ]
+      }
+    },
+    {
+      "id": "mesure",
+      "name_fr": "Grandeurs et mesures",
+      "name_ar": "المقادير والقياس",
+      "skills": [
+        "comparaison_longueurs",
+        "rangement_longueurs",
+        "comparaison_masses"
+      ],
+      "exercise_formats": {
+        "comparaison_longueurs": [
+          "selection",
+          "classement"
+        ],
+        "rangement_longueurs": [
+          "classement",
+          "drag_drop"
+        ],
+        "comparaison_masses": [
+          "selection",
+          "classement"
+        ]
+      }
+    },
+    {
+      "id": "problemes",
+      "name_fr": "Résolution de problèmes",
+      "name_ar": "حل المسائل",
+      "skills": [
+        "identifier_information",
+        "choisir_operation",
+        "resoudre",
+        "expliquer_demarche",
+        "recit_multi_questions"
+      ],
+      "exercise_formats": {
+        "identifier_information": [
+          "probleme",
+          "selection"
+        ],
+        "choisir_operation": [
+          "selection",
+          "probleme"
+        ],
+        "resoudre": [
+          "probleme",
+          "saisie_nombre"
+        ],
+        "expliquer_demarche": [
+          "réponse_libre"
+        ],
+        "recit_multi_questions": [
+          "recit",
+          "multi_questions"
+        ]
+      }
+    }
+  ]
+}

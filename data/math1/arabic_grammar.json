@@ -1,0 +1,65 @@
+{
+  "version": "1.0.0",
+  "pronouns": {
+    "m": {
+      "friend_possessive": "صديقه",
+      "friend_object": "أعطاه صديقه",
+      "had": "كان لديه",
+      "became": "أصبح لديه"
+    },
+    "f": {
+      "friend_possessive": "صديقتها",
+      "friend_object": "أعطاها صديقتها",
+      "had": "كان لديها",
+      "became": "أصبح لديها"
+    }
+  },
+  "number_rules": {
+    "objects": {
+      "pomme": {
+        "singular": "تفاحة",
+        "plural": "تفاحات"
+      },
+      "orange": {
+        "singular": "برتقالة",
+        "plural": "برتقالات"
+      },
+      "ballon": {
+        "singular": "كرة",
+        "plural": "كرات"
+      },
+      "stylo": {
+        "singular": "قلم",
+        "plural": "أقلام"
+      },
+      "carnet": {
+        "singular": "دفتر",
+        "plural": "دفاتر"
+      },
+      "livre": {
+        "singular": "كتاب",
+        "plural": "كتب"
+      },
+      "crayon": {
+        "singular": "قلم رصاص",
+        "plural": "أقلام رصاص"
+      },
+      "jouet": {
+        "singular": "لعبة",
+        "plural": "ألعاب"
+      }
+    }
+  },
+  "agreement": {
+    "male": {
+      "subject": "لديه",
+      "friend": "صديقه",
+      "gave": "أعطاه"
+    },
+    "female": {
+      "subject": "لديها",
+      "friend": "صديقتها",
+      "gave": "أعطاها"
+    }
+  }
+}

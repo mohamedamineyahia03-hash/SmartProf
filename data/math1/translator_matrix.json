@@ -1,0 +1,555 @@
+[
+  {
+    "domain": "pre_numeric",
+    "skill": "tri",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "tri",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "classement",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "classement",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "correspondance",
+    "format": "association",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "correspondance",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "rangement",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "rangement",
+    "format": "classement",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "rythmes",
+    "format": "suite_visuelle",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "rythmes",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "denombrement",
+    "format": "comptage",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "denombrement",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "reconnaissance_quantite",
+    "format": "association",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "reconnaissance_quantite",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "lecture_nombre",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "lecture_nombre",
+    "format": "qcm",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "ecriture_nombre",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "suite_numerique",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "suite_numerique",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "precedent_suivant",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "precedent_suivant",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "ordre_nombres",
+    "format": "classement",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "ordre_nombres",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "composition",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "composition",
+    "format": "qcm",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "decomposition",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "decomposition",
+    "format": "qcm",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "nombre_manquant",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "numeration",
+    "skill": "nombre_manquant",
+    "format": "qcm",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "addition",
+    "format": "calcul",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "addition",
+    "format": "qcm",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "addition",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "calcul_mental",
+    "format": "calcul",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "calcul_mental",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "egalite",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "egalite",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "situations_additives",
+    "format": "probleme",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "calcul",
+    "skill": "situations_additives",
+    "format": "recit",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "positions",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "positions",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "gauche_droite",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "gauche_droite",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "haut_bas",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "haut_bas",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "dessus_dessous",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "dessus_dessous",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "dedans_dehors",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "dedans_dehors",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "devant_derriere",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "devant_derriere",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "pres_loin",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "pres_loin",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "entre",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "entre",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "lignes",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "lignes",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "formes",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "formes",
+    "format": "association",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "frises",
+    "format": "suite_visuelle",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "frises",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "pavages",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "pavages",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "traces",
+    "format": "tracé",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "traces",
+    "format": "visuel",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "comparaison_longueurs",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "comparaison_longueurs",
+    "format": "classement",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "rangement_longueurs",
+    "format": "classement",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "rangement_longueurs",
+    "format": "drag_drop",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "comparaison_masses",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "mesure",
+    "skill": "comparaison_masses",
+    "format": "classement",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "identifier_information",
+    "format": "probleme",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "identifier_information",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "choisir_operation",
+    "format": "selection",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "choisir_operation",
+    "format": "probleme",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "resoudre",
+    "format": "probleme",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "resoudre",
+    "format": "saisie_nombre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "expliquer_demarche",
+    "format": "réponse_libre",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "recit_multi_questions",
+    "format": "recit",
+    "fr": "",
+    "ar": ""
+  },
+  {
+    "domain": "problemes",
+    "skill": "recit_multi_questions",
+    "format": "multi_questions",
+    "fr": "",
+    "ar": ""
+  }
+]

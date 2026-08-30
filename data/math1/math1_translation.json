@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "objects": {
+    "pomme": {
+      "fr_singular": "pomme",
+      "fr_plural": "pommes",
+      "ar_singular": "تفاحة",
+      "ar_plural": "تفاحات",
+      "gender": "f"
+    },
+    "orange": {
+      "fr_singular": "orange",
+      "fr_plural": "oranges",
+      "ar_singular": "برتقالة",
+      "ar_plural": "برتقالات",
+      "gender": "f"
+    },
+    "ballon": {
+      "fr_singular": "ballon",
+      "fr_plural": "ballons",
+      "ar_singular": "كرة",
+      "ar_plural": "كرات",
+      "gender": "f"
+    },
+    "stylo": {
+      "fr_singular": "stylo",
+      "fr_plural": "stylos",
+      "ar_singular": "قلم",
+      "ar_plural": "أقلام",
+      "gender": "m"
+    },
+    "carnet": {
+      "fr_singular": "carnet",
+      "fr_plural": "carnets",
+      "ar_singular": "دفتر",
+      "ar_plural": "دفاتر",
+      "gender": "m"
+    },
+    "livre": {
+      "fr_singular": "livre",
+      "fr_plural": "livres",
+      "ar_singular": "كتاب",
+      "ar_plural": "كتب",
+      "gender": "m"
+    },
+    "crayon": {
+      "fr_singular": "crayon",
+      "fr_plural": "crayons",
+      "ar_singular": "قلم رصاص",
+      "ar_plural": "أقلام رصاص",
+      "gender": "m"
+    },
+    "jouet": {
+      "fr_singular": "jouet",
+      "fr_plural": "jouets",
+      "ar_singular": "لعبة",
+      "ar_plural": "ألعاب",
+      "gender": "f"
+    }
+  },
+  "persons": {
+    "Yassine": {
+      "fr_gender": "m",
+      "ar": "ياسين"
+    },
+    "Meriem": {
+      "fr_gender": "f",
+      "ar": "مريم"
+    },
+    "Lina": {
+      "fr_gender": "f",
+      "ar": "لينا"
+    },
+    "Sami": {
+      "fr_gender": "m",
+      "ar": "سامي"
+    },
+    "Amine": {
+      "fr_gender": "m",
+      "ar": "أمين"
+    },
+    "Ahmed": {
+      "fr_gender": "m",
+      "ar": "أحمد"
+    },
+    "Ali": {
+      "fr_gender": "m",
+      "ar": "علي"
+    },
+    "Aya": {
+      "fr_gender": "f",
+      "ar": "آية"
+    },
+    "Sara": {
+      "fr_gender": "f",
+      "ar": "سارة"
+    }
+  },
+  "mathematical_terms": {
+    "addition": {
+      "fr": "addition",
+      "ar": "الجمع"
+    },
+    "soustraction": {
+      "fr": "soustraction",
+      "ar": "الطرح"
+    },
+    "comparaison": {
+      "fr": "comparaison",
+      "ar": "المقارنة"
+    },
+    "nombre": {
+      "fr": "nombre",
+      "ar": "عدد"
+    },
+    "nombres": {
+      "fr": "nombres",
+      "ar": "أعداد"
+    },
+    "forme": {
+      "fr": "forme",
+      "ar": "شكل"
+    },
+    "formes": {
+      "fr": "formes",
+      "ar": "أشكال"
+    }
+  },
+  "instructions": {
+    "fr": {
+      "validate": "Valider",
+      "continue": "Continuer",
+      "write_answer": "Écris ta réponse"
+    },
+    "ar": {
+      "validate": "تحقق",
+      "continue": "متابعة",
+      "write_answer": "اكتب إجابتك"
+    }
+  }
+}

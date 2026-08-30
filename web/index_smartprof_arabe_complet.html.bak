@@ -1503,24 +1503,6 @@ function generateMath1Exercises(skill, difficulty = 1, count = 10) {
     return list;
 }
 
-const MATH1_SKILLS = [
-    "tri","classement","correspondance","rangement","rythmes",
-    "denombrement","reconnaissance_quantite","lecture_nombre",
-    "ecriture_nombre","suite_numerique","precedent_suivant",
-    "ordre_nombres","composition","decomposition","nombre_manquant",
-    "addition","calcul_mental","egalite","situations_additives",
-    "positions","gauche_droite","haut_bas","dessus_dessous",
-    "dedans_dehors","devant_derriere","pres_loin","entre","lignes",
-    "formes","frises","pavages","traces",
-    "comparaison_longueurs","rangement_longueurs","comparaison_masses",
-    "identifier_information","choisir_operation","resoudre",
-    "expliquer_demarche","recit_multi_questions"
-];
-
-function isMath1SkillSupported(skill) {
-    return MATH1_SKILLS.includes(skill);
-}
-
 function generateMath1Story() {
     const translator = window.SmartProfTranslator;
     const objects = [

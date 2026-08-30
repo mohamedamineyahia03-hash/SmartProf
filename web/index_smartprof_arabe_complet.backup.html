@@ -1070,60 +1070,6 @@ html, body, body * {
     font-family: "Brush Script MT", "Segoe Script", cursive !important;
 }
 
-
-.story-title {
-    font-family: "Nunito Sans", sans-serif;
-    font-size: clamp(22px, 3vw, 32px);
-    font-weight: 800;
-    text-align: center;
-    margin: 18px 0;
-}
-
-.story-text {
-    font-family: "Nunito Sans", sans-serif;
-    font-size: clamp(22px, 3vw, 32px);
-    font-weight: 700;
-    line-height: 1.8;
-    text-align: center;
-    margin: 20px auto;
-    padding: 20px;
-}
-
-.story-question {
-    font-family: "Nunito Sans", sans-serif;
-    font-size: clamp(21px, 2.8vw, 30px);
-    font-weight: 700;
-    line-height: 1.8;
-    margin: 24px auto;
-    padding: 16px;
-}
-
-.story-answer {
-    display: block;
-    width: min(320px, 80%);
-    margin: 18px auto;
-    padding: 14px 18px;
-    font-size: 24px;
-    text-align: center;
-}
-
-.story-feedback {
-    font-family: "Nunito Sans", sans-serif;
-    font-size: clamp(19px, 2.5vw, 27px);
-    font-weight: 600;
-    line-height: 1.9;
-    margin: 24px auto;
-    padding: 22px;
-    border-radius: 18px;
-}
-
-.story-feedback[dir="rtl"],
-.story-title[dir="rtl"],
-.story-text[dir="rtl"],
-.story-question[dir="rtl"] {
-    font-family: "Noto Kufi Arabic", sans-serif;
-}
-
 </style>
 </head>
 
@@ -1493,7 +1439,6 @@ function generateMath1Exercises(skill, difficulty = 1, count = 10) {
 
     while (list.length < count) {
         const exercise = generateMath1Exercise(skill, difficulty);
-
         if (!used.has(exercise.q)) {
             used.add(exercise.q);
             list.push(exercise);
@@ -1501,233 +1446,6 @@ function generateMath1Exercises(skill, difficulty = 1, count = 10) {
     }
 
     return list;
-}
-
-const MATH1_SKILLS = [
-    "tri","classement","correspondance","rangement","rythmes",
-    "denombrement","reconnaissance_quantite","lecture_nombre",
-    "ecriture_nombre","suite_numerique","precedent_suivant",
-    "ordre_nombres","composition","decomposition","nombre_manquant",
-    "addition","calcul_mental","egalite","situations_additives",
-    "positions","gauche_droite","haut_bas","dessus_dessous",
-    "dedans_dehors","devant_derriere","pres_loin","entre","lignes",
-    "formes","frises","pavages","traces",
-    "comparaison_longueurs","rangement_longueurs","comparaison_masses",
-    "identifier_information","choisir_operation","resoudre",
-    "expliquer_demarche","recit_multi_questions"
-];
-
-function isMath1SkillSupported(skill) {
-    return MATH1_SKILLS.includes(skill);
-}
-
-function generateMath1Story() {
-    const translator = window.SmartProfTranslator;
-    const objects = [
-        {
-            fr: "pommes",
-            ar: "تفاحات",
-            singularFr: "pomme",
-            singularAr: "تفاحة", gender: "f"
-        },
-        {
-            fr: "oranges",
-            ar: "برتقالات",
-            singularFr: "orange",
-            singularAr: "برتقالة", gender: "f"
-        },
-        {
-            fr: "ballons",
-            ar: "كرات",
-            singularFr: "ballon",
-            singularAr: "كرة", gender: "f"
-        },
-        {
-            fr: "stylos",
-            ar: "أقلام",
-            singularFr: "stylo",
-            singularAr: "قلم", gender: "m"
-        },
-        {
-            fr: "carnets",
-            ar: "دفاتر",
-            singularFr: "carnet",
-            singularAr: "دفتر", gender: "m"
-        }
-    ];
-
-    const names = [
-        { fr: "Lina", ar: "لينا", gender: "f" },
-        { fr: "Meriem", ar: "مريم", gender: "f" },
-        { fr: "Sami", ar: "سامي", gender: "m" },
-        { fr: "Yassine", ar: "ياسين", gender: "m" }
-    ];
-
-    const object = objects[Math.floor(Math.random() * objects.length)];
-    const person = names[Math.floor(Math.random() * names.length)];
-
-    const startNumber = Math.floor(Math.random() * 6) + 3;
-    const addedNumber = Math.floor(Math.random() * 5) + 1;
-    const totalNumber = startNumber + addedNumber;
-
-    const arabic = currentLanguage === "ar" || currentLanguage === "العربية";
-
-    if (arabic) {
-        const translated = translator.translateStoryToArabic({
-            person: person.fr,
-            object: object.singularFr,
-            startNumber,
-            addedNumber
-        });
-
-        return {
-            type: "story",
-            language: "ar",
-            title: "مسألة في شكل قصة",
-            story: translated.story,
-            questions: translated.questions
-        };
-    }
-
-    if (false) {
-        const possession = person.gender === "f" ? "لدى " : "لدى ";
-        const pronoun = person.gender === "f" ? "ها" : "ه";
-        const verb = person.gender === "f" ? "أعطتها" : "أعطاه";
-
-        return {
-            type: "story",
-            language: "ar",
-            title: "مسألة في شكل قصة",
-
-            story:
-                possession + person.ar + " " + startNumber + " " + object.ar +
-                "، و" + verb + " " + (person.gender === "f" ? "صديقها" : "صديقه") + " " + addedNumber + " " +
-                object.ar + " أخرى.",
-
-            questions: [
-                {
-                    q:
-                        "كم عدد " + object.ar +
-                        " التي أصبحت عند " + person.ar + "؟",
-
-                    answer: totalNumber,
-
-                    explanation:
-                        "لنحل المسألة خطوة بخطوة. " +
-                        "في البداية كان لدى " + person.ar + " " +
-                        startNumber + " " + object.ar + ". " +
-                        "ثم " + verb + " " + (person.gender === "f" ? "صديقها" : "صديقه") + " " +
-                        addedNumber + " " + object.ar + " أخرى. " +
-                        "إذن أصبح لدينا عدد أكبر من الأشياء، ولذلك نستخدم عملية الجمع. " +
-                        "نحسب: " +
-                        startNumber + " + " + addedNumber +
-                        " = " + totalNumber + ". " +
-                        "إذن أصبح لدى " + person.ar + " " +
-                        totalNumber + " " + object.ar + "."
-                },
-
-                {
-                    q:
-                        "كم كان لدى " + person.ar + " في البداية؟",
-
-                    answer: startNumber,
-
-                    explanation:
-                        "لنعد إلى بداية القصة. " +
-                        "تخبرنا القصة أن " + person.ar +
-                        " كان لديه في البداية " +
-                        startNumber + " " + object.ar + ". " +
-                        "إذن العدد الموجود في البداية هو " +
-                        startNumber + "."
-                },
-
-                {
-                    q:
-                        "كم " +
-                        (object.singularAr === "تفاحة" ? "تفاحة" :
-                         object.singularAr === "برتقالة" ? "برتقالة" :
-                         object.singularAr === "كرة" ? "كرة" :
-                         object.singularAr === "قلم" ? "قلمًا" :
-                         object.singularAr === "دفتر" ? "دفترًا" : object.singularAr) +
-                        " " +
-                        (person.gender === "f" ? "أعطاها صديقها؟" : "أعطاه صديقه؟"),
-
-                    answer: addedNumber,
-
-                    explanation:
-                        "نعود إلى الجملة الثانية من القصة. " +
-                        "الصديق أعطى " + person.ar +
-                        " عددًا قدره " + addedNumber +
-                        " من " + object.ar + ". " +
-                        "إذن العدد الذي أعطاه الصديق هو " +
-                        addedNumber + "."
-                }
-            ]
-        };
-    }
-
-    return {
-        type: "story",
-        language: "fr",
-        title: "Problème-récit",
-
-        story:
-            person.fr + " a " + startNumber + " " +
-            object.fr + ". Son ami lui donne " +
-            addedNumber + " " + object.fr + " de plus.",
-
-        questions: [
-            {
-                q:
-                    "Combien de " + object.fr +
-                    " a " + person.fr + " maintenant ?",
-
-                answer: totalNumber,
-
-                explanation:
-                    "Résolvons le problème étape par étape. " +
-                    "Au début, " + person.fr + " a " +
-                    startNumber + " " + object.fr + ". " +
-                    "Son ami lui donne ensuite " +
-                    addedNumber + " " + object.fr + " de plus. " +
-                    "La quantité augmente, donc nous faisons une addition. " +
-                    "Nous calculons : " +
-                    startNumber + " + " + addedNumber +
-                    " = " + totalNumber + ". " +
-                    "Il y a donc maintenant " +
-                    totalNumber + " " + object.fr + "."
-            },
-
-            {
-                q:
-                    "Combien de " + object.fr +
-                    " avait " + person.fr + " au début ?",
-
-                answer: startNumber,
-
-                explanation:
-                    "Revenons au début de l'histoire. " +
-                    person.fr + " avait " +
-                    startNumber + " " + object.fr +
-                    " avant de recevoir les nouveaux objets. " +
-                    "La réponse est donc " + startNumber + "."
-            },
-
-            {
-                q:
-                    "Combien de " + object.fr +
-                    " son ami lui a-t-il donnés ?",
-
-                answer: addedNumber,
-
-                explanation:
-                    "Regardons la deuxième partie de l'histoire. " +
-                    "Son ami lui donne " +
-                    addedNumber + " " + object.fr + " de plus. " +
-                    "La réponse est donc " + addedNumber + "."
-            }
-        ]
-    };
 }
 
 async function startSession() {
@@ -1752,42 +1470,18 @@ async function startSession() {
 
         console.log("Diagnostic SmartProf :", diagnostic);
 
-        const weakSkills = diagnostic
-            .filter(item => item.score < 70)
-            .map(item => item.skill);
+        const weakSkills = diagnostic.filter(item => item.score < 70).map(item => item.skill);
 
         if (selectedSubject === "math" && selectedLevel === "1") {
-
-            exercises = [];
-
             const skills = ["Addition", "Subtraction", "Comparison"];
-
-            for (let i = 0; i < 7; i++) {
-                exercises.push(
-                    generateMath1Exercise(
-                        skills[i % skills.length],
-                        1
-                    )
-                );
+            exercises = [];
+            for (let i = 0; i < 10; i++) {
+                exercises.push(generateMath1Exercise(skills[i % skills.length], 1));
             }
-
-            exercises.push(generateMath1Story());
-            exercises.push(generateMath1Story());
-            exercises.push(generateMath1Story());
-
         } else {
-
             exercises = [
-                {
-                    q: "5 + 3 = ?",
-                    options: [7, 8, 9, 10],
-                    answer: 8
-                },
-                {
-                    q: "12 - 4 = ?",
-                    options: [6, 7, 8, 9],
-                    answer: 8
-                }
+                { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
+                { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
             ];
         }
 
@@ -1800,20 +1494,11 @@ async function startSession() {
         renderExercise();
 
     } catch (error) {
-
         console.error("Erreur SmartProf :", error);
 
         exercises = [
-            {
-                q: "5 + 3 = ?",
-                options: [7, 8, 9, 10],
-                answer: 8
-            },
-            {
-                q: "12 - 4 = ?",
-                options: [6, 7, 8, 9],
-                answer: 8
-            }
+            { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
+            { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
         ];
 
         currentIndex = 0;
@@ -1827,251 +1512,30 @@ async function startSession() {
 }
 
 function renderExercise() {
-
     const ex = exercises[currentIndex];
-
-    const question = document.getElementById("question");
+    document.getElementById("question").textContent = ex.q;
     const answersDiv = document.getElementById("answers");
-
     answersDiv.innerHTML = "";
-
-    if (ex.type === "story") {
-
-        if (typeof ex.storyQuestionIndex !== "number") {
-            ex.storyQuestionIndex = 0;
-        }
-
-        const questionIndex = ex.storyQuestionIndex;
-        const item = ex.questions[questionIndex];
-
-        question.textContent =
-            ex.language === "ar"
-                ? "السؤال " + (questionIndex + 1)
-                : "Question " + (questionIndex + 1);
-
-        question.dir = ex.language === "ar" ? "rtl" : "ltr";
-
-        const storyTitle = document.createElement("div");
-        storyTitle.className = "story-title";
-        storyTitle.textContent = ex.title;
-        storyTitle.dir = ex.language === "ar" ? "rtl" : "ltr";
-
-        const storyText = document.createElement("div");
-        storyText.className = "story-text";
-        storyText.textContent = ex.story;
-        storyText.dir = ex.language === "ar" ? "rtl" : "ltr";
-
-        const storyQuestion = document.createElement("div");
-        storyQuestion.className = "story-question";
-        storyQuestion.textContent = item.q;
-        storyQuestion.dir = ex.language === "ar" ? "rtl" : "ltr";
-
-        answersDiv.appendChild(storyTitle);
-        answersDiv.appendChild(storyText);
-        answersDiv.appendChild(storyQuestion);
-
-        const input = document.createElement("input");
-
-        input.type = "number";
-        input.className = "story-answer";
-        input.placeholder =
-            ex.language === "ar"
-                ? "اكتب إجابتك"
-                : "Écris ta réponse";
-
-        input.dir = "ltr";
-
-        const validate = document.createElement("button");
-
-        validate.className = "answer";
-        validate.textContent =
-            ex.language === "ar"
-                ? "تحقق"
-                : "Valider";
-
-        answersDiv.appendChild(input);
-        answersDiv.appendChild(validate);
-
-        validate.onclick = function () {
-
-            if (validate.disabled) {
-                return;
-            }
-
-            if (input.value.trim() === "") {
-                return;
-            }
-
-            const userAnswer = Number(input.value);
-            const correct = userAnswer === item.answer;
-
-            input.disabled = true;
-            validate.disabled = true;
-
-            if (correct) {
-                score++;
-            }
-
-            const feedback = document.createElement("div");
-
-            feedback.className = correct
-                ? "story-feedback correct-feedback"
-                : "story-feedback wrong-feedback";
-
-            feedback.dir =
-                ex.language === "ar"
-                    ? "rtl"
-                    : "ltr";
-
-            let explanation = item.explanation;
-
-            if (!explanation || explanation.includes("undefined")) {
-
-                if (questionIndex === 0) {
-
-                    explanation =
-                        ex.language === "ar"
-                            ? "لنحل المسألة خطوة بخطوة. نبدأ بالعدد الموجود في بداية القصة، ثم نضيف العدد الجديد لأن الكمية أصبحت أكبر. بعد إجراء العملية نصل إلى النتيجة الصحيحة: " +
-                              item.answer +
-                              "."
-                            : "Résolvons le problème étape par étape. Nous partons de la quantité présente au début, puis nous ajoutons la nouvelle quantité parce que la quantité augmente. Après avoir effectué l'opération, nous obtenons le résultat correct : " +
-                              item.answer +
-                              ".";
-
-                } else {
-
-                    explanation =
-                        ex.language === "ar"
-                            ? "لنعد إلى القصة ونبحث عن المعلومة المطلوبة. العدد الصحيح هو " +
-                              item.answer +
-                              "."
-                            : "Revenons à l'histoire pour retrouver l'information demandée. Le nombre correct est " +
-                              item.answer +
-                              ".";
-                }
-            }
-
-            if (correct) {
-
-                feedback.innerHTML =
-                    ex.language === "ar"
-                        ? "<strong>أحسنت! إجابتك صحيحة.</strong><br><br>" +
-                          explanation
-                        : "<strong>Très bien ! Ta réponse est correcte.</strong><br><br>" +
-                          explanation;
-
-            } else {
-
-                feedback.innerHTML =
-                    ex.language === "ar"
-                        ? "<strong>لنراجع المسألة معًا.</strong><br><br>" +
-                          explanation +
-                          "<br><br><strong>الإجابة الصحيحة: " +
-                          item.answer +
-                          "</strong>"
-                        : "<strong>Reprenons le problème ensemble.</strong><br><br>" +
-                          explanation +
-                          "<br><br><strong>La bonne réponse : " +
-                          item.answer +
-                          "</strong>";
-            }
-
-            answersDiv.appendChild(feedback);
-
-            const continueButton = document.createElement("button");
-
-            continueButton.className = "answer";
-
-            continueButton.textContent =
-                questionIndex < ex.questions.length - 1
-                    ? (
-                        ex.language === "ar"
-                            ? "متابعة"
-                            : "Continuer"
-                    )
-                    : (
-                        ex.language === "ar"
-                            ? "إنهاء المسألة"
-                            : "Terminer le problème"
-                    );
-
-            answersDiv.appendChild(continueButton);
-
-            continueButton.onclick = function () {
-
-                if (questionIndex < ex.questions.length - 1) {
-
-                    ex.storyQuestionIndex++;
-
-                    renderExercise();
-
-                } else {
-
-                    ex.storyQuestionIndex = 0;
-
-                    currentIndex++;
-
-                    if (currentIndex < exercises.length) {
-
-                        renderExercise();
-
-                    } else {
-
-                        showResults();
-                    }
-                }
-            };
-        };
-
-        return;
-    }
-
-    question.textContent = ex.q;
-    question.dir = currentLanguage === "ar" ? "rtl" : "ltr";
-
-    ex.options.forEach(function (opt) {
-
+    ex.options.forEach(opt => {
         const btn = document.createElement("button");
-
         btn.className = "answer";
         btn.textContent = opt;
-
-        btn.onclick = function () {
-
-            if (btn.disabled) {
-                return;
-            }
-
-            const correct = opt === ex.answer;
-
-            btn.disabled = true;
-
-            if (correct) {
-
+        btn.onclick = () => {
+            if (opt === ex.answer) {
                 btn.classList.add("correct");
                 score++;
-
             } else {
-
                 btn.classList.add("wrong");
             }
-
-            setTimeout(function () {
-
+            setTimeout(() => {
                 currentIndex++;
-
                 if (currentIndex < exercises.length) {
-
                     renderExercise();
-
                 } else {
-
                     showResults();
                 }
-
             }, 500);
         };
-
         answersDiv.appendChild(btn);
     });
 }
@@ -2186,6 +1650,5 @@ document.getElementById("restartButton").addEventListener("click", () => {
 });
 </script>
 
-<script src="modules/translator.js"></script>
 </body>
 </html>
