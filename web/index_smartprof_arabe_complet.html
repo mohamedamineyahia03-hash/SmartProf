@@ -1398,29 +1398,38 @@ function updateSelection() {
 
 function generateMath1Exercise(skill, difficulty = 1) {
     const max = difficulty === 1 ? 10 : difficulty === 2 ? 20 : 50;
-    let a, b, answer, q;
+    let a, b, answer, q, options;
 
     if (skill === "Addition") {
         a = Math.floor(Math.random() * (max + 1));
         b = Math.floor(Math.random() * (max - a + 1));
         answer = a + b;
         q = a + " + " + b + " = ?";
-    } else {
+    } else if (skill === "Subtraction") {
         a = Math.floor(Math.random() * (max + 1));
         b = Math.floor(Math.random() * (a + 1));
         answer = a - b;
         q = a + " - " + b + " = ?";
+    } else {
+        a = Math.floor(Math.random() * (max + 1));
+        b = Math.floor(Math.random() * (max + 1));
+        answer = a > b ? ">" : a < b ? "<" : "=";
+        q = a + " ? " + b;
+        options = [">", "<", "="];
     }
 
-    const options = new Set([answer]);
-    while (options.size < 4) {
-        options.add(Math.max(0, answer + Math.floor(Math.random() * 7) - 3));
+    if (!options) {
+        options = new Set([answer]);
+        while (options.size < 4) {
+            options.add(Math.max(0, answer + Math.floor(Math.random() * 7) - 3));
+        }
+        options = [...options];
     }
 
     return {
-        q,
-        options: [...options].sort(() => Math.random() - 0.5),
-        answer
+        q: q,
+        options: options.sort(() => Math.random() - 0.5),
+        answer: answer
     };
 }
 
@@ -1464,8 +1473,11 @@ async function startSession() {
         const weakSkills = diagnostic.filter(item => item.score < 70).map(item => item.skill);
 
         if (selectedSubject === "math" && selectedLevel === "1") {
-            const skill = weakSkills.includes("Addition") ? "Addition" : "Subtraction";
-            exercises = generateMath1Exercises(skill, 1, 10);
+            const skills = ["Addition", "Subtraction", "Comparison"];
+            exercises = [];
+            for (let i = 0; i < 10; i++) {
+                exercises.push(generateMath1Exercise(skills[i % skills.length], 1));
+            }
         } else {
             exercises = [
                 { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
