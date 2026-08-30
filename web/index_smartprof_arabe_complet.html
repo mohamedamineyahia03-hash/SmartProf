@@ -1396,6 +1396,48 @@ function updateSelection() {
     updateBanner();
 }
 
+function generateMath1Exercise(skill, difficulty = 1) {
+    const max = difficulty === 1 ? 10 : difficulty === 2 ? 20 : 50;
+    let a, b, answer, q;
+
+    if (skill === "Addition") {
+        a = Math.floor(Math.random() * (max + 1));
+        b = Math.floor(Math.random() * (max - a + 1));
+        answer = a + b;
+        q = ;
+    } else {
+        a = Math.floor(Math.random() * (max + 1));
+        b = Math.floor(Math.random() * (a + 1));
+        answer = a - b;
+        q = ;
+    }
+
+    const options = new Set([answer]);
+    while (options.size < 4) {
+        options.add(Math.max(0, answer + Math.floor(Math.random() * 7) - 3));
+    }
+
+    return {
+        q,
+        options: [...options].sort(() => Math.random() - 0.5),
+        answer
+    };
+}
+
+function generateMath1Exercises(skill, difficulty = 1, count = 10) {
+    const list = [];
+    const used = new Set();
+
+    while (list.length < count) {
+        const exercise = generateMath1Exercise(skill, difficulty);
+            used.add(exercise.q);
+            list.push(exercise);
+        }
+    }
+
+    return list;
+}
+
 async function startSession() {
     try {
         const response = await fetch("http://127.0.0.1:5000/api/diagnostic", {
@@ -1418,55 +1460,17 @@ async function startSession() {
 
         console.log("Diagnostic SmartProf :", diagnostic);
 
-        const weakSkills = diagnostic
-    .filter(item => item.score < 70)
-    .map(item => item.skill);
-
-if (selectedSubject === "math" && selectedLevel === "1") {
-    exercises = weakSkills.includes("Addition")
-        ? [
-            { q: "4 + 3 = ?", options: [6, 7, 8, 9], answer: 7 },
-            { q: "5 + 2 = ?", options: [6, 7, 8, 9], answer: 7 }
-          ]
-        : [
-            { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
-            { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
-          ];
-} else {
-    const weakSkills = diagnostic.filter(item => item.score < 70).map(item => item.skill);
+        const weakSkills = diagnostic.filter(item => item.score < 70).map(item => item.skill);
 
         if (selectedSubject === "math" && selectedLevel === "1") {
-            const additionWeak = weakSkills.includes("Addition");
-            exercises = additionWeak ? [
-                { q: "4 + 3 = ?", options: [6, 7, 8, 9], answer: 7 },
-                { q: "5 + 2 = ?", options: [6, 7, 8, 9], answer: 7 },
-                { q: "6 + 3 = ?", options: [8, 9, 10, 11], answer: 9 },
-                { q: "2 + 5 = ?", options: [6, 7, 8, 9], answer: 7 },
-                { q: "3 + 4 = ?", options: [6, 7, 8, 9], answer: 7 },
-                { q: "1 + 6 = ?", options: [6, 7, 8, 9], answer: 7 },
-                { q: "4 + 4 = ?", options: [7, 8, 9, 10], answer: 8 },
-                { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
-                { q: "2 + 6 = ?", options: [7, 8, 9, 10], answer: 8 },
-                { q: "3 + 5 = ?", options: [7, 8, 9, 10], answer: 8 }
-            ] : [
-                { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
-                { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 },
-                { q: "2 + 4 = ?", options: [5, 6, 7, 8], answer: 6 },
-                { q: "9 - 3 = ?", options: [5, 6, 7, 8], answer: 6 },
-                { q: "3 + 5 = ?", options: [7, 8, 9, 10], answer: 8 },
-                { q: "10 - 2 = ?", options: [6, 7, 8, 9], answer: 8 },
-                { q: "4 + 2 = ?", options: [5, 6, 7, 8], answer: 6 },
-                { q: "8 - 3 = ?", options: [4, 5, 6, 7], answer: 5 },
-                { q: "1 + 7 = ?", options: [6, 7, 8, 9], answer: 8 },
-                { q: "11 - 1 = ?", options: [8, 9, 10, 11], answer: 10 }
-            ];
+            const skill = weakSkills.includes("Addition") ? "Addition" : "Subtraction";
+            exercises = generateMath1Exercises(skill, 1, 10);
         } else {
             exercises = [
                 { q: "5 + 3 = ?", options: [7, 8, 9, 10], answer: 8 },
                 { q: "12 - 4 = ?", options: [6, 7, 8, 9], answer: 8 }
             ];
         }
-}
 
         currentIndex = 0;
         score = 0;
