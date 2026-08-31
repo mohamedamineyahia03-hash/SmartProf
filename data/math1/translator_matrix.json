@@ -3,553 +3,553 @@
     "domain": "pre_numeric",
     "skill": "tri",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Tri — Sélection",
+    "ar": "الفرز — اختيار"
   },
   {
     "domain": "pre_numeric",
     "skill": "tri",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Tri — Glisser-déposer",
+    "ar": "الفرز — سحب وإفلات"
   },
   {
     "domain": "pre_numeric",
     "skill": "classement",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Classement — Sélection",
+    "ar": "التصنيف — اختيار"
   },
   {
     "domain": "pre_numeric",
     "skill": "classement",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Classement — Glisser-déposer",
+    "ar": "التصنيف — سحب وإفلات"
   },
   {
     "domain": "pre_numeric",
     "skill": "correspondance",
     "format": "association",
-    "fr": "",
-    "ar": ""
+    "fr": "Correspondance — Association",
+    "ar": "المطابقة — مطابقة"
   },
   {
     "domain": "pre_numeric",
     "skill": "correspondance",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Correspondance — Glisser-déposer",
+    "ar": "المطابقة — سحب وإفلات"
   },
   {
     "domain": "pre_numeric",
     "skill": "rangement",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Rangement — Glisser-déposer",
+    "ar": "الترتيب — سحب وإفلات"
   },
   {
     "domain": "pre_numeric",
     "skill": "rangement",
     "format": "classement",
-    "fr": "",
-    "ar": ""
+    "fr": "Rangement — Classement",
+    "ar": "الترتيب — ترتيب"
   },
   {
     "domain": "pre_numeric",
     "skill": "rythmes",
     "format": "suite_visuelle",
-    "fr": "",
-    "ar": ""
+    "fr": "Rythmes — Suite visuelle",
+    "ar": "الأنماط — تتابع بصري"
   },
   {
     "domain": "pre_numeric",
     "skill": "rythmes",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Rythmes — Sélection",
+    "ar": "الأنماط — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "denombrement",
     "format": "comptage",
-    "fr": "",
-    "ar": ""
+    "fr": "Dénombrement — Comptage",
+    "ar": "العدّ — عدّ"
   },
   {
     "domain": "numeration",
     "skill": "denombrement",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Dénombrement — Sélection",
+    "ar": "العدّ — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "reconnaissance_quantite",
     "format": "association",
-    "fr": "",
-    "ar": ""
+    "fr": "Reconnaissance des quantités — Association",
+    "ar": "التعرّف على الكميات — مطابقة"
   },
   {
     "domain": "numeration",
     "skill": "reconnaissance_quantite",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Reconnaissance des quantités — Sélection",
+    "ar": "التعرّف على الكميات — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "lecture_nombre",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Lecture des nombres — Sélection",
+    "ar": "قراءة الأعداد — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "lecture_nombre",
     "format": "qcm",
-    "fr": "",
-    "ar": ""
+    "fr": "Lecture des nombres — Question à choix multiples",
+    "ar": "قراءة الأعداد — اختيار من متعدد"
   },
   {
     "domain": "numeration",
     "skill": "ecriture_nombre",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Écriture des nombres — Saisie d’un nombre",
+    "ar": "كتابة الأعداد — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "suite_numerique",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Suite numérique — Saisie d’un nombre",
+    "ar": "السلسلة العددية — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "suite_numerique",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Suite numérique — Sélection",
+    "ar": "السلسلة العددية — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "precedent_suivant",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Précédent et suivant — Sélection",
+    "ar": "السابق واللاحق — اختيار"
   },
   {
     "domain": "numeration",
     "skill": "precedent_suivant",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Précédent et suivant — Saisie d’un nombre",
+    "ar": "السابق واللاحق — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "ordre_nombres",
     "format": "classement",
-    "fr": "",
-    "ar": ""
+    "fr": "Ordre des nombres — Classement",
+    "ar": "ترتيب الأعداد — ترتيب"
   },
   {
     "domain": "numeration",
     "skill": "ordre_nombres",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Ordre des nombres — Glisser-déposer",
+    "ar": "ترتيب الأعداد — سحب وإفلات"
   },
   {
     "domain": "numeration",
     "skill": "composition",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Composition des nombres — Saisie d’un nombre",
+    "ar": "تركيب الأعداد — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "composition",
     "format": "qcm",
-    "fr": "",
-    "ar": ""
+    "fr": "Composition des nombres — Question à choix multiples",
+    "ar": "تركيب الأعداد — اختيار من متعدد"
   },
   {
     "domain": "numeration",
     "skill": "decomposition",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Décomposition des nombres — Saisie d’un nombre",
+    "ar": "تفكيك الأعداد — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "decomposition",
     "format": "qcm",
-    "fr": "",
-    "ar": ""
+    "fr": "Décomposition des nombres — Question à choix multiples",
+    "ar": "تفكيك الأعداد — اختيار من متعدد"
   },
   {
     "domain": "numeration",
     "skill": "nombre_manquant",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Nombre manquant — Saisie d’un nombre",
+    "ar": "العدد الناقص — إدخال عدد"
   },
   {
     "domain": "numeration",
     "skill": "nombre_manquant",
     "format": "qcm",
-    "fr": "",
-    "ar": ""
+    "fr": "Nombre manquant — Question à choix multiples",
+    "ar": "العدد الناقص — اختيار من متعدد"
   },
   {
     "domain": "calcul",
     "skill": "addition",
     "format": "calcul",
-    "fr": "",
-    "ar": ""
+    "fr": "Addition — Calcul",
+    "ar": "الجمع — حساب"
   },
   {
     "domain": "calcul",
     "skill": "addition",
     "format": "qcm",
-    "fr": "",
-    "ar": ""
+    "fr": "Addition — Question à choix multiples",
+    "ar": "الجمع — اختيار من متعدد"
   },
   {
     "domain": "calcul",
     "skill": "addition",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Addition — Saisie d’un nombre",
+    "ar": "الجمع — إدخال عدد"
   },
   {
     "domain": "calcul",
     "skill": "calcul_mental",
     "format": "calcul",
-    "fr": "",
-    "ar": ""
+    "fr": "Calcul mental — Calcul",
+    "ar": "الحساب الذهني — حساب"
   },
   {
     "domain": "calcul",
     "skill": "calcul_mental",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Calcul mental — Saisie d’un nombre",
+    "ar": "الحساب الذهني — إدخال عدد"
   },
   {
     "domain": "calcul",
     "skill": "egalite",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Égalité — Sélection",
+    "ar": "المساواة — اختيار"
   },
   {
     "domain": "calcul",
     "skill": "egalite",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Égalité — Saisie d’un nombre",
+    "ar": "المساواة — إدخال عدد"
   },
   {
     "domain": "calcul",
     "skill": "situations_additives",
     "format": "probleme",
-    "fr": "",
-    "ar": ""
+    "fr": "Situations additives — Problème",
+    "ar": "مسائل الجمع — مسألة"
   },
   {
     "domain": "calcul",
     "skill": "situations_additives",
     "format": "recit",
-    "fr": "",
-    "ar": ""
+    "fr": "Situations additives — Récit",
+    "ar": "مسائل الجمع — قصة"
   },
   {
     "domain": "espace_geometrie",
     "skill": "positions",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Positions — Sélection",
+    "ar": "المواقع — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "positions",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Positions — Visuel",
+    "ar": "المواقع — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "gauche_droite",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Gauche et droite — Sélection",
+    "ar": "اليمين واليسار — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "gauche_droite",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Gauche et droite — Visuel",
+    "ar": "اليمين واليسار — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "haut_bas",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Haut et bas — Sélection",
+    "ar": "فوق وتحت — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "haut_bas",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Haut et bas — Visuel",
+    "ar": "فوق وتحت — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "dessus_dessous",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Dessus et dessous — Sélection",
+    "ar": "فوق وتحت — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "dessus_dessous",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Dessus et dessous — Visuel",
+    "ar": "فوق وتحت — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "dedans_dehors",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Dedans et dehors — Sélection",
+    "ar": "داخل وخارج — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "dedans_dehors",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Dedans et dehors — Visuel",
+    "ar": "داخل وخارج — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "devant_derriere",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Devant et derrière — Sélection",
+    "ar": "أمام وخلف — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "devant_derriere",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Devant et derrière — Visuel",
+    "ar": "أمام وخلف — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "pres_loin",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Près et loin — Sélection",
+    "ar": "قريب وبعيد — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "pres_loin",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Près et loin — Visuel",
+    "ar": "قريب وبعيد — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "entre",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Entre — Sélection",
+    "ar": "بين — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "entre",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Entre — Visuel",
+    "ar": "بين — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "lignes",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Lignes — Sélection",
+    "ar": "الخطوط — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "lignes",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Lignes — Visuel",
+    "ar": "الخطوط — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "formes",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Formes — Sélection",
+    "ar": "الأشكال — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "formes",
     "format": "association",
-    "fr": "",
-    "ar": ""
+    "fr": "Formes — Association",
+    "ar": "الأشكال — مطابقة"
   },
   {
     "domain": "espace_geometrie",
     "skill": "frises",
     "format": "suite_visuelle",
-    "fr": "",
-    "ar": ""
+    "fr": "Frises — Suite visuelle",
+    "ar": "الأشرطة الزخرفية — تتابع بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "frises",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Frises — Sélection",
+    "ar": "الأشرطة الزخرفية — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "pavages",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Pavages — Visuel",
+    "ar": "التبليط — بصري"
   },
   {
     "domain": "espace_geometrie",
     "skill": "pavages",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Pavages — Sélection",
+    "ar": "التبليط — اختيار"
   },
   {
     "domain": "espace_geometrie",
     "skill": "traces",
     "format": "tracé",
-    "fr": "",
-    "ar": ""
+    "fr": "Tracés — Tracé",
+    "ar": "الرسم والتتبع — رسم"
   },
   {
     "domain": "espace_geometrie",
     "skill": "traces",
     "format": "visuel",
-    "fr": "",
-    "ar": ""
+    "fr": "Tracés — Visuel",
+    "ar": "الرسم والتتبع — بصري"
   },
   {
     "domain": "mesure",
     "skill": "comparaison_longueurs",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Comparaison des longueurs — Sélection",
+    "ar": "مقارنة الأطوال — اختيار"
   },
   {
     "domain": "mesure",
     "skill": "comparaison_longueurs",
     "format": "classement",
-    "fr": "",
-    "ar": ""
+    "fr": "Comparaison des longueurs — Classement",
+    "ar": "مقارنة الأطوال — ترتيب"
   },
   {
     "domain": "mesure",
     "skill": "rangement_longueurs",
     "format": "classement",
-    "fr": "",
-    "ar": ""
+    "fr": "Rangement des longueurs — Classement",
+    "ar": "ترتيب الأطوال — ترتيب"
   },
   {
     "domain": "mesure",
     "skill": "rangement_longueurs",
     "format": "drag_drop",
-    "fr": "",
-    "ar": ""
+    "fr": "Rangement des longueurs — Glisser-déposer",
+    "ar": "ترتيب الأطوال — سحب وإفلات"
   },
   {
     "domain": "mesure",
     "skill": "comparaison_masses",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Comparaison des masses — Sélection",
+    "ar": "مقارنة الكتل — اختيار"
   },
   {
     "domain": "mesure",
     "skill": "comparaison_masses",
     "format": "classement",
-    "fr": "",
-    "ar": ""
+    "fr": "Comparaison des masses — Classement",
+    "ar": "مقارنة الكتل — ترتيب"
   },
   {
     "domain": "problemes",
     "skill": "identifier_information",
     "format": "probleme",
-    "fr": "",
-    "ar": ""
+    "fr": "Identifier les informations — Problème",
+    "ar": "تحديد المعلومات — مسألة"
   },
   {
     "domain": "problemes",
     "skill": "identifier_information",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Identifier les informations — Sélection",
+    "ar": "تحديد المعلومات — اختيار"
   },
   {
     "domain": "problemes",
     "skill": "choisir_operation",
     "format": "selection",
-    "fr": "",
-    "ar": ""
+    "fr": "Choisir l’opération — Sélection",
+    "ar": "اختيار العملية — اختيار"
   },
   {
     "domain": "problemes",
     "skill": "choisir_operation",
     "format": "probleme",
-    "fr": "",
-    "ar": ""
+    "fr": "Choisir l’opération — Problème",
+    "ar": "اختيار العملية — مسألة"
   },
   {
     "domain": "problemes",
     "skill": "resoudre",
     "format": "probleme",
-    "fr": "",
-    "ar": ""
+    "fr": "Résoudre le problème — Problème",
+    "ar": "حل المسألة — مسألة"
   },
   {
     "domain": "problemes",
     "skill": "resoudre",
     "format": "saisie_nombre",
-    "fr": "",
-    "ar": ""
+    "fr": "Résoudre le problème — Saisie d’un nombre",
+    "ar": "حل المسألة — إدخال عدد"
   },
   {
     "domain": "problemes",
     "skill": "expliquer_demarche",
     "format": "réponse_libre",
-    "fr": "",
-    "ar": ""
+    "fr": "Expliquer la démarche — Réponse libre",
+    "ar": "شرح طريقة الحل — إجابة حرة"
   },
   {
     "domain": "problemes",
     "skill": "recit_multi_questions",
     "format": "recit",
-    "fr": "",
-    "ar": ""
+    "fr": "Récit à questions multiples — Récit",
+    "ar": "قصة متعددة الأسئلة — قصة"
   },
   {
     "domain": "problemes",
     "skill": "recit_multi_questions",
     "format": "multi_questions",
-    "fr": "",
-    "ar": ""
+    "fr": "Récit à questions multiples — Questions multiples",
+    "ar": "قصة متعددة الأسئلة — أسئلة متعددة"
   }
 ]
