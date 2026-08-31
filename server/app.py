@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from data.skills_matrix import SKILLS_MATRIX
 from diagnostic_engine import diagnose
@@ -21,6 +21,11 @@ LEVELS = {
     "4": "4ème année primaire",
     "5": "5ème année primaire",
 }
+
+
+@app.get("/")
+def index():
+    return send_from_directory(app.root_path.replace("server", "web"), "index_smartprof_arabe_complet.html")
 
 
 @app.get("/api/health")
