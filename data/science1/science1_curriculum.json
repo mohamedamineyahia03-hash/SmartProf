@@ -1,56 +1,129 @@
 {
   "level": 1,
   "subject": "science",
-  "languages": ["fr", "ar"],
+  "languages": [
+    "fr",
+    "ar"
+  ],
   "domains": [
     {
       "id": "corps_humain",
       "name_fr": "Le corps humain",
       "name_ar": "جسم الإنسان",
-      "skills": ["les_sens", "parties_du_corps"],
+      "skills": [
+        "les_sens",
+        "parties_du_corps",
+        "alimentation_saine"
+      ],
       "exercise_formats": {
-        "les_sens": ["selection", "association"],
-        "parties_du_corps": ["selection", "association"]
+        "les_sens": [
+          "selection",
+          "association",
+          "qcm"
+        ],
+        "parties_du_corps": [
+          "selection",
+          "association"
+        ],
+        "alimentation_saine": [
+          "qcm"
+        ]
       }
     },
     {
       "id": "etres_vivants",
       "name_fr": "Les êtres vivants",
       "name_ar": "الكائنات الحية",
-      "skills": ["vivant_non_vivant", "besoins_des_etres_vivants"],
+      "skills": [
+        "vivant_non_vivant",
+        "besoins_des_etres_vivants",
+        "animaux_domestiques",
+        "couverture_corporelle",
+        "reproduction_croissance",
+        "parties_plante"
+      ],
       "exercise_formats": {
-        "vivant_non_vivant": ["selection", "qcm"],
-        "besoins_des_etres_vivants": ["selection", "association"]
+        "vivant_non_vivant": [
+          "selection",
+          "qcm"
+        ],
+        "besoins_des_etres_vivants": [
+          "selection",
+          "association"
+        ],
+        "animaux_domestiques": [
+          "qcm"
+        ],
+        "couverture_corporelle": [
+          "qcm"
+        ],
+        "reproduction_croissance": [
+          "qcm"
+        ],
+        "parties_plante": [
+          "qcm"
+        ]
       }
     },
     {
       "id": "environnement",
       "name_fr": "Mon environnement proche",
       "name_ar": "محيطي القريب",
-      "skills": ["maison_ecole", "securite"],
+      "skills": [
+        "maison_ecole",
+        "securite"
+      ],
       "exercise_formats": {
-        "maison_ecole": ["selection", "visuel"],
-        "securite": ["selection", "qcm"]
+        "maison_ecole": [
+          "selection",
+          "visuel"
+        ],
+        "securite": [
+          "selection",
+          "qcm"
+        ]
       }
     },
     {
       "id": "eau",
       "name_fr": "L'eau",
       "name_ar": "الماء",
-      "skills": ["etats_eau", "usages_eau"],
+      "skills": [
+        "etats_eau",
+        "usages_eau"
+      ],
       "exercise_formats": {
-        "etats_eau": ["selection", "qcm"],
-        "usages_eau": ["selection", "association"]
+        "etats_eau": [
+          "selection",
+          "qcm"
+        ],
+        "usages_eau": [
+          "selection",
+          "association"
+        ]
       }
     },
     {
       "id": "saisons",
       "name_fr": "Les saisons",
       "name_ar": "الفصول",
-      "skills": ["reconnaissance_saisons", "activites_saisonnieres"],
+      "skills": [
+        "reconnaissance_saisons",
+        "activites_saisonnieres",
+        "moments_journee"
+      ],
       "exercise_formats": {
-        "reconnaissance_saisons": ["selection", "qcm"],
-        "activites_saisonnieres": ["selection", "association"]
+        "reconnaissance_saisons": [
+          "selection",
+          "qcm"
+        ],
+        "activites_saisonnieres": [
+          "selection",
+          "association"
+        ],
+        "moments_journee": [
+          "qcm"
+        ]
       }
     }
   ]

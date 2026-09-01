@@ -614,5 +614,61 @@
     "format": "selection",
     "fr": "Ordre des nombres — Sélection",
     "ar": "ترتيب الأعداد — اختيار"
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "formes",
+    "format": "qcm",
+    "fr": "Formes géométriques — Question à choix multiples",
+    "ar": "الأشكال الهندسية — اختيار من متعدد"
+  },
+  {
+    "domain": "espace_geometrie",
+    "skill": "positions",
+    "format": "qcm",
+    "fr": "Positions — Question à choix multiples",
+    "ar": "المواقع — اختيار من متعدد"
+  },
+  {
+    "domain": "mesure",
+    "skill": "comparaison_longueurs",
+    "format": "qcm",
+    "fr": "Comparaison de longueurs — Question à choix multiples",
+    "ar": "مقارنة الأطوال — اختيار من متعدد"
+  },
+  {
+    "domain": "mesure",
+    "skill": "reconnaissance_monnaie",
+    "format": "saisie_nombre",
+    "fr": "Reconnaissance de la monnaie — Saisie d’un nombre",
+    "ar": "التعرّف على النقود — إدخال عدد"
+  },
+  {
+    "domain": "mesure",
+    "skill": "utilisation_dinar",
+    "format": "qcm",
+    "fr": "Utilisation du Dinar tunisien — Question à choix multiples",
+    "ar": "استعمال الدينار التونسي — اختيار من متعدد"
+  },
+  {
+    "domain": "numeration",
+    "skill": "lecture_nombre",
+    "format": "saisie_nombre",
+    "fr": "Lecture des nombres — Saisie d’un nombre",
+    "ar": "قراءة الأعداد — إدخال عدد"
+  },
+  {
+    "domain": "numeration",
+    "skill": "ordre_nombres",
+    "format": "qcm",
+    "fr": "Ordre des nombres — Question à choix multiples",
+    "ar": "ترتيب الأعداد — اختيار من متعدد"
+  },
+  {
+    "domain": "pre_numeric",
+    "skill": "classement",
+    "format": "qcm",
+    "fr": "Classement — Question à choix multiples",
+    "ar": "التصنيف — اختيار من متعدد"
   }
 ]

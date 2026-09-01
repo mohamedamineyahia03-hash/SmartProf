@@ -117,6 +117,9 @@ jobs:
       - name: Seed library-service example exercises
         run: python library-service/seed/seed_example_exercises.py
 
+      - name: Seed library-service exercise bank (user-supplied import)
+        run: python library-service/seed/seed_banque_1ere.py
+
       - name: Validate library-service and Main App sync
         run: |
           python server/app.py &

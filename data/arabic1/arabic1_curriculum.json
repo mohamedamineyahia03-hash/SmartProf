@@ -1,55 +1,116 @@
 {
   "level": 1,
   "subject": "ar",
-  "languages": ["fr", "ar"],
+  "languages": [
+    "fr",
+    "ar"
+  ],
   "domains": [
     {
       "id": "huruf",
       "name_fr": "Les lettres de l'alphabet",
       "name_ar": "الحروف الهجائية",
-      "skills": ["tamyiz_huruf", "aswat_huruf", "kitabat_huruf"],
+      "skills": [
+        "tamyiz_huruf",
+        "aswat_huruf",
+        "kitabat_huruf",
+        "tanwin",
+        "lam_shamsiya_qamariya"
+      ],
       "exercise_formats": {
-        "tamyiz_huruf": ["selection", "association"],
-        "aswat_huruf": ["selection", "qcm"],
-        "kitabat_huruf": ["tracé"]
+        "tamyiz_huruf": [
+          "selection",
+          "association",
+          "qcm"
+        ],
+        "aswat_huruf": [
+          "selection",
+          "qcm"
+        ],
+        "kitabat_huruf": [
+          "tracé"
+        ],
+        "tanwin": [
+          "qcm"
+        ],
+        "lam_shamsiya_qamariya": [
+          "qcm"
+        ]
       }
     },
     {
       "id": "qiraa",
       "name_fr": "Lecture",
       "name_ar": "القراءة",
-      "skills": ["qiraat_maqate", "qiraat_kalimat"],
+      "skills": [
+        "qiraat_maqate",
+        "qiraat_kalimat"
+      ],
       "exercise_formats": {
-        "qiraat_maqate": ["selection", "qcm"],
-        "qiraat_kalimat": ["selection", "qcm"]
+        "qiraat_maqate": [
+          "selection",
+          "qcm"
+        ],
+        "qiraat_kalimat": [
+          "selection",
+          "qcm"
+        ]
       }
     },
     {
       "id": "fahm",
       "name_fr": "Compréhension",
       "name_ar": "الفهم",
-      "skills": ["fahm_jumla"],
+      "skills": [
+        "fahm_jumla"
+      ],
       "exercise_formats": {
-        "fahm_jumla": ["qcm", "selection"]
+        "fahm_jumla": [
+          "qcm",
+          "selection"
+        ]
       }
     },
     {
       "id": "taabir",
       "name_fr": "Expression orale",
       "name_ar": "التعبير الشفوي",
-      "skills": ["wasf_sura"],
+      "skills": [
+        "wasf_sura",
+        "tartib_kalimat"
+      ],
       "exercise_formats": {
-        "wasf_sura": ["réponse_libre"]
+        "wasf_sura": [
+          "réponse_libre"
+        ],
+        "tartib_kalimat": [
+          "qcm"
+        ]
       }
     },
     {
       "id": "kitaba",
       "name_fr": "Écriture",
       "name_ar": "الكتابة",
-      "skills": ["naskh_huruf", "naskh_kalimat"],
+      "skills": [
+        "naskh_huruf",
+        "naskh_kalimat",
+        "imla_kalima",
+        "damir_munasib"
+      ],
       "exercise_formats": {
-        "naskh_huruf": ["tracé"],
-        "naskh_kalimat": ["tracé"]
+        "naskh_huruf": [
+          "tracé"
+        ],
+        "naskh_kalimat": [
+          "tracé"
+        ],
+        "imla_kalima": [
+          "qcm"
+        ],
+        "damir_munasib": [
+          "qcm"
+        ]
       }
     }
   ]

@@ -24,7 +24,8 @@
         ],
         "classement": [
           "selection",
-          "drag_drop"
+          "drag_drop",
+          "qcm"
         ],
         "correspondance": [
           "association",
@@ -68,7 +69,8 @@
         ],
         "lecture_nombre": [
           "selection",
-          "qcm"
+          "qcm",
+          "saisie_nombre"
         ],
         "ecriture_nombre": [
           "saisie_nombre"
@@ -84,7 +86,8 @@
         "ordre_nombres": [
           "classement",
           "drag_drop",
-          "selection"
+          "selection",
+          "qcm"
         ],
         "composition": [
           "saisie_nombre",
@@ -161,7 +164,8 @@
       "exercise_formats": {
         "positions": [
           "selection",
-          "visuel"
+          "visuel",
+          "qcm"
         ],
         "gauche_droite": [
           "selection",
@@ -197,7 +201,8 @@
         ],
         "formes": [
           "selection",
-          "association"
+          "association",
+          "qcm"
         ],
         "frises": [
           "suite_visuelle",
@@ -222,12 +227,14 @@
         "rangement_longueurs",
         "comparaison_masses",
         "reconnaissance_monnaie",
-        "addition_monnaie"
+        "addition_monnaie",
+        "utilisation_dinar"
       ],
       "exercise_formats": {
         "comparaison_longueurs": [
           "selection",
-          "classement"
+          "classement",
+          "qcm"
         ],
         "rangement_longueurs": [
           "classement",
@@ -239,10 +246,14 @@
         ],
         "reconnaissance_monnaie": [
           "selection",
-          "qcm"
+          "qcm",
+          "saisie_nombre"
         ],
         "addition_monnaie": [
           "saisie_nombre",
+          "qcm"
+        ],
+        "utilisation_dinar": [
           "qcm"
         ]
       }

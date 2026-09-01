@@ -133,7 +133,8 @@ const SmartProfTranslator = {
             drag_drop: "اسحب العناصر وضعها في المكان الصحيح.",
             association: "اربط كل عنصر بما يناسبه.",
             classement: "صنّف العناصر في المكان المناسب.",
-            suite_visuelle: "أكمل النمط البصري."
+            suite_visuelle: "أكمل النمط البصري.",
+            qcm: "اختر الإجابة الصحيحة من بين الاقتراحات."
         };
 
         if (!fr[skill] || !formats[format])
@@ -234,7 +235,8 @@ const SmartProfTranslator = {
             visuel: "انظر إلى الشكل ثم اختر الإجابة الصحيحة.",
             association: "اربط كل شكل بما يناسبه.",
             suite_visuelle: "أكمل النمط البصري.",
-            "tracé": "تتبّع وارسم حسب المطلوب."
+            "tracé": "تتبّع وارسم حسب المطلوب.",
+            qcm: "اختر الإجابة الصحيحة من بين الاقتراحات."
         };
 
         if (!ar[skill] || !formats[format]) return null;
@@ -247,7 +249,7 @@ const SmartProfTranslator = {
         };
     },
 
-    translateMeasures(skill,format){const a={comparaison_longueurs:"قارن بين الأطوال.",rangement_longueurs:"رتّب الأطوال حسب المطلوب.",comparaison_masses:"قارن بين الكتل.",reconnaissance_monnaie:"تعرّف على قطع النقود.",addition_monnaie:"احسب مجموع النقود."};const f={selection:"اختر الإجابة الصحيحة.",classement:"رتّب العناصر حسب المطلوب.",drag_drop:"اسحب العناصر وضعها في الترتيب الصحيح.",qcm:"اختر الإجابة الصحيحة من بين الاقتراحات.",saisie_nombre:"اكتب العدد الصحيح."};return a[skill]&&f[format]?{skill,format,instruction_ar:a[skill],format_ar:f[format]}:null;},
+    translateMeasures(skill,format){const a={comparaison_longueurs:"قارن بين الأطوال.",rangement_longueurs:"رتّب الأطوال حسب المطلوب.",comparaison_masses:"قارن بين الكتل.",reconnaissance_monnaie:"تعرّف على قطع النقود.",addition_monnaie:"احسب مجموع النقود.",utilisation_dinar:"استعمل الدينار التونسي."};const f={selection:"اختر الإجابة الصحيحة.",classement:"رتّب العناصر حسب المطلوب.",drag_drop:"اسحب العناصر وضعها في الترتيب الصحيح.",qcm:"اختر الإجابة الصحيحة من بين الاقتراحات.",saisie_nombre:"اكتب العدد الصحيح."};return a[skill]&&f[format]?{skill,format,instruction_ar:a[skill],format_ar:f[format]}:null;},
 
     translateProblems(skill, format, data={}) {
         const ar = {
