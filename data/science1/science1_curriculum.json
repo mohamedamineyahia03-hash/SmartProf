@@ -1,0 +1,57 @@
+{
+  "level": 1,
+  "subject": "science",
+  "languages": ["fr", "ar"],
+  "domains": [
+    {
+      "id": "corps_humain",
+      "name_fr": "Le corps humain",
+      "name_ar": "جسم الإنسان",
+      "skills": ["les_sens", "parties_du_corps"],
+      "exercise_formats": {
+        "les_sens": ["selection", "association"],
+        "parties_du_corps": ["selection", "association"]
+      }
+    },
+    {
+      "id": "etres_vivants",
+      "name_fr": "Les êtres vivants",
+      "name_ar": "الكائنات الحية",
+      "skills": ["vivant_non_vivant", "besoins_des_etres_vivants"],
+      "exercise_formats": {
+        "vivant_non_vivant": ["selection", "qcm"],
+        "besoins_des_etres_vivants": ["selection", "association"]
+      }
+    },
+    {
+      "id": "environnement",
+      "name_fr": "Mon environnement proche",
+      "name_ar": "محيطي القريب",
+      "skills": ["maison_ecole", "securite"],
+      "exercise_formats": {
+        "maison_ecole": ["selection", "visuel"],
+        "securite": ["selection", "qcm"]
+      }
+    },
+    {
+      "id": "eau",
+      "name_fr": "L'eau",
+      "name_ar": "الماء",
+      "skills": ["etats_eau", "usages_eau"],
+      "exercise_formats": {
+        "etats_eau": ["selection", "qcm"],
+        "usages_eau": ["selection", "association"]
+      }
+    },
+    {
+      "id": "saisons",
+      "name_fr": "Les saisons",
+      "name_ar": "الفصول",
+      "skills": ["reconnaissance_saisons", "activites_saisonnieres"],
+      "exercise_formats": {
+        "reconnaissance_saisons": ["selection", "qcm"],
+        "activites_saisonnieres": ["selection", "association"]
+      }
+    }
+  ]
+}

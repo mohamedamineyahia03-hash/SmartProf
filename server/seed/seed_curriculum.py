@@ -1,12 +1,10 @@
 """One-time/idempotent import of curriculum data into the generalized DB schema.
 
-Level 1 Mathematics is imported at full skill granularity from the existing
-data/math1/math1_curriculum.json. Levels 2-5 Mathematics only ever existed as a
-domain-name list in the legacy SKILLS_MATRIX (server/data/skills_matrix.py), so
-each domain doubles as its own single skill here — same granularity as before,
-just represented in the new schema. The other four subjects (fr, science, en, ar)
-get their level/subject rows created with zero domains for now: content authoring
-for those is out of scope for this phase.
+Full-detail curriculum (domains -> skills -> exercise_formats, bilingual)
+exists for level 1 of Math, Arabic, and Science. Math and Science also have a
+domain-only skeleton for levels 2-5 (each domain doubles as its own single
+skill — no finer breakdown authored yet). Français and Anglais still have
+zero domains at any level: content authoring for those hasn't started.
 """
 
 import json
@@ -85,9 +83,41 @@ ARABIC1_TRIMESTERS = {
     "T3": ["qiraa", "fahm", "taabir", "kitaba"],
 }
 
+SCIENCE_SKELETON = {
+    "2": {
+        "T1": ["Le corps humain", "Les animaux"],
+        "T2": ["Les plantes", "L'alimentation"],
+        "T3": ["L'eau", "Les saisons"],
+    },
+    "3": {
+        "T1": ["Les organes des sens", "La respiration"],
+        "T2": ["Les plantes et leur croissance", "L'alimentation et la santé"],
+        "T3": ["Les états de la matière", "L'environnement"],
+    },
+    "4": {
+        "T1": ["Le corps humain", "Les animaux et leur milieu"],
+        "T2": ["Les plantes: reproduction", "Les matériaux"],
+        "T3": ["L'électricité simple", "Le ciel et la Terre"],
+    },
+    "5": {
+        "T1": ["Le corps humain: circulation", "Écosystèmes"],
+        "T2": ["Les changements d'état de la matière", "Les forces et mouvements"],
+        "T3": ["L'énergie", "Protection de l'environnement"],
+    },
+}
+
+# Level 1 Science domain -> trimester(s): the body and living things first,
+# surroundings/water mid-year, seasons wrap up the year.
+SCIENCE1_TRIMESTERS = {
+    "T1": ["corps_humain", "etres_vivants"],
+    "T2": ["etres_vivants", "environnement", "eau"],
+    "T3": ["eau", "saisons"],
+}
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MATH1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "math1", "math1_curriculum.json")
 ARABIC1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "arabic1", "arabic1_curriculum.json")
+SCIENCE1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "science1", "science1_curriculum.json")
 
 
 def slugify(text):
@@ -174,9 +204,12 @@ def seed_domain_curriculum(levels, subjects, level_code, subject_code, curriculu
     db.session.commit()
 
 
-def seed_math_skeleton(levels, subjects):
-    subject = subjects["math"]
-    for level_code, trimesters in MATH_SKELETON.items():
+def seed_skeleton_curriculum(levels, subjects, subject_code, skeleton):
+    """Domain-name-only curriculum (no finer skill breakdown authored yet) —
+    each domain doubles as its own single skill. Shared by every subject that
+    only has a trimester->domain-name list so far, not a full JSON curriculum."""
+    subject = subjects[subject_code]
+    for level_code, trimesters in skeleton.items():
         level = levels[level_code]
         if CurriculumDomain.query.filter_by(level_id=level.id, subject_id=subject.id).first():
             continue
@@ -204,8 +237,6 @@ def seed_math_skeleton(levels, subjects):
             for trimester in domain_trimesters[name]:
                 db.session.add(CurriculumDomainTrimester(domain_id=domain.id, trimester=trimester))
 
-            # No finer skill breakdown exists yet at these levels (legacy data was
-            # domain-granularity only) — the domain doubles as its own single skill.
             db.session.add(
                 CurriculumSkill(domain_id=domain.id, code=code, name_fr=name, name_ar=name, sort_order=0)
             )
@@ -218,8 +249,10 @@ def main():
         db.create_all()
         levels, subjects = seed_levels_and_subjects()
         seed_domain_curriculum(levels, subjects, "1", "math", MATH1_CURRICULUM_PATH, MATH1_TRIMESTERS)
-        seed_math_skeleton(levels, subjects)
+        seed_skeleton_curriculum(levels, subjects, "math", MATH_SKELETON)
         seed_domain_curriculum(levels, subjects, "1", "ar", ARABIC1_CURRICULUM_PATH, ARABIC1_TRIMESTERS)
+        seed_domain_curriculum(levels, subjects, "1", "science", SCIENCE1_CURRICULUM_PATH, SCIENCE1_TRIMESTERS)
+        seed_skeleton_curriculum(levels, subjects, "science", SCIENCE_SKELETON)
         print("Seed complete.")
 
 
