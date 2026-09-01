@@ -11,7 +11,13 @@ from db import db
 
 LICENSE_STATUSES = ("explicit_open", "unlicensed", "proprietary_excluded")
 SOURCE_STATUSES = ("pending_classification", "classified", "rejected", "used_for_generation")
-REGION_SCOPES = ("tunisia_official", "tunisia_web", "fr_ministry_approved", "uk_approved")
+REGION_SCOPES = (
+    "tunisia_official",
+    "tunisia_web",
+    "fr_ministry_approved",
+    "uk_approved",
+    "international_aligned",  # any country's resource, used only where its topic genuinely matches the Tunisian program
+)
 CRAWL_TRIGGERS = ("scheduled", "demand_signal", "manual")
 GENERATION_STATUSES = ("success", "failed", "flagged_for_review")
 REVIEW_STATUSES = ("auto_passed_schema", "pending_human_review", "approved", "rejected")
