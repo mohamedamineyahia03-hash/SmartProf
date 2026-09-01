@@ -1,4 +1,4 @@
-from data.skills_matrix import SKILLS_MATRIX
+from models import CurriculumDomain, CurriculumLevel, CurriculumSubject
 
 
 def calculate_mastery(correct, total):
@@ -28,25 +28,36 @@ def mastery_level(score):
 
 
 def diagnose(level, subject, results=None):
-    skills = SKILLS_MATRIX.get(str(level), {}).get(subject, {})
     results = results if isinstance(results, dict) else {}
     diagnosis = []
 
-    for trimester, domains in skills.items():
-        for domain in domains:
-            result = results.get(domain, {})
-            if not isinstance(result, dict):
-                result = {}
+    domains = (
+        CurriculumDomain.query.join(CurriculumLevel)
+        .join(CurriculumSubject)
+        .filter(CurriculumLevel.code == str(level), CurriculumSubject.code == subject)
+        .order_by(CurriculumDomain.sort_order)
+        .all()
+    )
 
-            correct = result.get("correct", 0)
-            total = result.get("total", 0)
-            score = calculate_mastery(correct, total)
+    for domain in domains:
+        trimesters = [t.trimester for t in domain.trimesters] or ["T1"]
+        for trimester in trimesters:
+            for skill in domain.skills:
+                result = results.get(skill.code, {})
+                if not isinstance(result, dict):
+                    result = {}
 
-            diagnosis.append({
-                "trimester": trimester,
-                "skill": domain,
-                "score": score,
-                "level": mastery_level(score),
-            })
+                correct = result.get("correct", 0)
+                total = result.get("total", 0)
+                score = calculate_mastery(correct, total)
+
+                diagnosis.append(
+                    {
+                        "trimester": trimester,
+                        "skill": skill.code,
+                        "score": score,
+                        "level": mastery_level(score),
+                    }
+                )
 
     return diagnosis

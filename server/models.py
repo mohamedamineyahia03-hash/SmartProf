@@ -1,0 +1,163 @@
+from db import db
+
+
+class CurriculumLevel(db.Model):
+    __tablename__ = "curriculum_level"
+
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(1), unique=True, nullable=False)  # "1".."5"
+    label_fr = db.Column(db.String(64), nullable=False)
+    label_ar = db.Column(db.String(64), nullable=False)
+
+
+class CurriculumSubject(db.Model):
+    __tablename__ = "curriculum_subject"
+
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(16), unique=True, nullable=False)  # math/fr/science/en/ar
+    label_fr = db.Column(db.String(64), nullable=False)
+    label_ar = db.Column(db.String(64), nullable=False)
+    is_free_at_level1_2 = db.Column(db.Boolean, nullable=False, default=False)
+    is_free_at_level3_5 = db.Column(db.Boolean, nullable=False, default=True)
+
+
+class CurriculumDomain(db.Model):
+    __tablename__ = "curriculum_domain"
+
+    id = db.Column(db.Integer, primary_key=True)
+    level_id = db.Column(db.Integer, db.ForeignKey("curriculum_level.id"), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey("curriculum_subject.id"), nullable=False)
+    code = db.Column(db.String(64), nullable=False)
+    name_fr = db.Column(db.String(128), nullable=False)
+    name_ar = db.Column(db.String(128), nullable=False)
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+
+    level = db.relationship("CurriculumLevel")
+    subject = db.relationship("CurriculumSubject")
+    skills = db.relationship(
+        "CurriculumSkill",
+        backref="domain",
+        cascade="all, delete-orphan",
+        order_by="CurriculumSkill.sort_order",
+    )
+    trimesters = db.relationship(
+        "CurriculumDomainTrimester", backref="domain", cascade="all, delete-orphan"
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint("level_id", "subject_id", "code", name="uq_domain_level_subject_code"),
+    )
+
+
+class CurriculumDomainTrimester(db.Model):
+    __tablename__ = "curriculum_domain_trimester"
+
+    id = db.Column(db.Integer, primary_key=True)
+    domain_id = db.Column(db.Integer, db.ForeignKey("curriculum_domain.id"), nullable=False)
+    trimester = db.Column(db.String(2), nullable=False)  # T1/T2/T3
+
+    __table_args__ = (
+        db.UniqueConstraint("domain_id", "trimester", name="uq_domain_trimester"),
+    )
+
+
+class CurriculumSkill(db.Model):
+    __tablename__ = "curriculum_skill"
+
+    id = db.Column(db.Integer, primary_key=True)
+    domain_id = db.Column(db.Integer, db.ForeignKey("curriculum_domain.id"), nullable=False)
+    code = db.Column(db.String(64), nullable=False)
+    name_fr = db.Column(db.String(128), nullable=False)
+    name_ar = db.Column(db.String(128), nullable=False)
+    sort_order = db.Column(db.Integer, nullable=False, default=0)
+
+    exercise_formats = db.relationship(
+        "CurriculumExerciseFormat", backref="skill", cascade="all, delete-orphan"
+    )
+
+    __table_args__ = (
+        db.UniqueConstraint("domain_id", "code", name="uq_skill_domain_code"),
+    )
+
+
+class CurriculumExerciseFormat(db.Model):
+    __tablename__ = "curriculum_exercise_format"
+
+    id = db.Column(db.Integer, primary_key=True)
+    skill_id = db.Column(db.Integer, db.ForeignKey("curriculum_skill.id"), nullable=False)
+    format_code = db.Column(db.String(32), nullable=False)
+
+    __table_args__ = (
+        db.UniqueConstraint("skill_id", "format_code", name="uq_format_skill_code"),
+    )
+
+
+# --- Phase 4 stubs (schema-first, not yet wired to routes) ---
+
+
+class User(db.Model):
+    __tablename__ = "user"
+
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    locale_pref = db.Column(db.String(8), default="fr")
+
+    children = db.relationship("ChildProfile", backref="user", cascade="all, delete-orphan")
+
+
+class ChildProfile(db.Model):
+    __tablename__ = "child_profile"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    display_name = db.Column(db.String(64), nullable=False)
+    level_code = db.Column(db.String(1), nullable=False)
+
+
+class Entitlement(db.Model):
+    __tablename__ = "entitlement"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    kind = db.Column(db.String(32), nullable=False, default="subject_unlock")
+    subject_code = db.Column(db.String(16), nullable=False)
+    level_code = db.Column(db.String(1), nullable=False)
+    granted_at = db.Column(db.DateTime, server_default=db.func.now())
+    expires_at = db.Column(db.DateTime, nullable=True)  # set for annual subscriptions
+    source = db.Column(db.String(16), nullable=False, default="purchase_onetime")
+
+
+class DiagnosticResult(db.Model):
+    __tablename__ = "diagnostic_result"
+
+    id = db.Column(db.Integer, primary_key=True)
+    child_profile_id = db.Column(db.Integer, db.ForeignKey("child_profile.id"), nullable=False)
+    level_code = db.Column(db.String(1), nullable=False)
+    subject_code = db.Column(db.String(16), nullable=False)
+    skill_code = db.Column(db.String(64), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    mastery_level = db.Column(db.String(32), nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+
+class LibraryCacheExercise(db.Model):
+    """Local mirror of published exercises pulled from the external library-service.
+    Populated by sync/library_sync.py — never written to directly by request handlers."""
+
+    __tablename__ = "library_cache_exercise"
+
+    id = db.Column(db.Integer, primary_key=True)
+    library_exercise_id = db.Column(db.Integer, unique=True, nullable=False)
+    level_code = db.Column(db.String(1), nullable=False)
+    subject_code = db.Column(db.String(16), nullable=False)
+    trimester = db.Column(db.String(2), nullable=False)
+    domain_code = db.Column(db.String(64), nullable=False)
+    skill_code = db.Column(db.String(64), nullable=False)
+    exercise_format = db.Column(db.String(32), nullable=False)
+    difficulty = db.Column(db.String(16), nullable=False)
+    content_fr = db.Column(db.JSON, nullable=False)
+    content_ar = db.Column(db.JSON, nullable=False)
+    license = db.Column(db.String(32), nullable=False, default="SmartProf")
+    synced_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())

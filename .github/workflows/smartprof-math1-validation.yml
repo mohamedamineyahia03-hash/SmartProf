@@ -16,6 +16,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install server dependencies
+        run: pip install -r server/requirements.txt
+
+      - name: Seed curriculum database
+        run: python server/seed/seed_curriculum.py
+
       - name: Validate all Math 1 JSON
         run: |
           python - <<'PY'
@@ -49,20 +60,23 @@ jobs:
 
       - name: Validate diagnostic engine
         run: |
-          python -m py_compile server/diagnostic_engine.py server/data/skills_matrix.py server/app.py
+          python -m py_compile server/diagnostic_engine.py server/models.py server/app.py
           python - <<'PY'
           import sys, json
           sys.path.insert(0,'server')
+          from app import app
           from diagnostic_engine import calculate_mastery, mastery_level, diagnose
-          from data.skills_matrix import SKILLS_MATRIX
           assert calculate_mastery(8,10)==80
           assert mastery_level(80)=='Maîtrisée'
-          for level in range(1,6):
-              result=diagnose(level,'math',{})
-              assert result
-              assert {x['trimester'] for x in result}=={'T1','T2','T3'}
+          with app.app_context():
+              results_by_level = {}
+              for level in range(1,6):
+                  result=diagnose(str(level),'math',{})
+                  assert result, f'no diagnostic rows for level {level} math'
+                  assert {x['trimester'] for x in result}=={'T1','T2','T3'}
+                  results_by_level[level]=result
           expected={x['skill'] for d in json.load(open('data/math1/math1_curriculum.json',encoding='utf-8'))['domains'] for x in [{'skill':s} for s in d['skills']]}
-          got=set(SKILLS_MATRIX['1']['math']['T1']+SKILLS_MATRIX['1']['math']['T2']+SKILLS_MATRIX['1']['math']['T3'])
+          got={x['skill'] for x in results_by_level[1]}
           assert expected==got, f'Diagnostic coverage mismatch: missing={expected-got}, extra={got-expected}'
           print('OK diagnostic: levels 1-5 and Math 1 skill coverage')
           PY
@@ -95,6 +109,45 @@ jobs:
           assert '<html' in text.lower() and '<script' in text.lower() and 'SmartProf' in text
           HTMLParser().feed(text)
           print(f'OK HTML: {p} ({len(text)} characters)')
+          PY
+
+      - name: Install library-service dependencies
+        run: pip install -r library-service/requirements.txt
+
+      - name: Seed library-service example exercises
+        run: python library-service/seed/seed_example_exercises.py
+
+      - name: Validate library-service and Main App sync
+        run: |
+          python server/app.py &
+          SERVER_PID=$!
+          python library-service/app.py &
+          LIBRARY_PID=$!
+          sleep 3
+
+          curl -sf http://127.0.0.1:5001/api/health >/dev/null
+          curl -sf http://127.0.0.1:5000/api/health >/dev/null
+
+          UNAUTHORIZED=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5001/api/v1/exercises/export)
+          if [ "$UNAUTHORIZED" != "401" ]; then
+            echo "expected 401 without API key, got $UNAUTHORIZED"
+            kill $SERVER_PID $LIBRARY_PID
+            exit 1
+          fi
+
+          python server/sync/library_sync.py
+
+          kill $SERVER_PID $LIBRARY_PID
+
+          python - <<'PY'
+          import sys
+          sys.path.insert(0, 'server')
+          from app import app
+          from models import LibraryCacheExercise
+          with app.app_context():
+              count = LibraryCacheExercise.query.count()
+          assert count >= 1, 'sync pulled zero exercises into the Main App cache'
+          print(f'OK sync: Main App cache holds {count} exercise(s) pulled from library-service')
           PY
 
       - name: Validate sync script
