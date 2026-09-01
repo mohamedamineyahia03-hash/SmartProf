@@ -143,6 +143,11 @@
   .feedback-banner.correct{background:#DCFCE7;color:#166534;}
   .feedback-banner.incorrect{background:#FEE2E2;color:#991B1B;}
   .feedback-explain{margin:8px 0 0;font-weight:500;font-size:.92rem;line-height:1.5;opacity:.92;}
+  .recit-context{background:var(--paper-soft, #f4f4f6);border-radius:14px;padding:16px 18px;margin-bottom:24px;font-size:1.05rem;line-height:1.5;}
+  .sub-question-block{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #eef0f4;}
+  .sub-question-block:last-of-type{border-bottom:none;margin-bottom:20px;}
+  .sub-question-label{font-weight:700;font-size:1.02rem;margin-bottom:12px;}
+  .sub-question-feedback{margin-top:10px;}
   .session-summary{text-align:center;}
   .session-summary .score-big{font-size:3rem;font-weight:800;font-family:'Baloo 2',sans-serif;margin:10px 0;}
 
@@ -804,6 +809,11 @@ function renderSessionQuestion(){
   const ex = currentSession.exercise;
   const content = ex['content_' + currentLang];
 
+  if(content.sub_questions){
+    renderMultiQuestionExercise(view, content);
+    return;
+  }
+
   const answerArea = content.choices
     ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
     : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
@@ -856,6 +866,60 @@ function renderSessionQuestion(){
   }
 }
 
+function renderMultiQuestionExercise(view, content){
+  const subs = content.sub_questions;
+
+  const blocksHtml = subs.map((sq, i) => {
+    const answerArea = sq.choices
+      ? `<div class="choice-list" id="choiceList-${i}">${sq.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+      : `<input type="text" class="answer-input" id="answerInput-${i}" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
+    return `
+      <div class="sub-question-block" id="subq-${i}">
+        <div class="sub-question-label">${i + 1}. ${sq.question}</div>
+        ${answerArea}
+        <div class="sub-question-feedback" id="subFeedback-${i}"></div>
+      </div>`;
+  }).join('');
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
+      <div class="recit-context">${content.question}</div>
+      ${blocksHtml}
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  const validateBtn = document.getElementById('validateBtn');
+  const selections = new Array(subs.length).fill(null);
+
+  subs.forEach((sq, i) => {
+    if(!sq.choices) return;
+    view.querySelectorAll(`#subq-${i} .choice-btn`).forEach(btn => {
+      btn.addEventListener('click', () => {
+        view.querySelectorAll(`#subq-${i} .choice-btn`).forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selections[i] = btn.dataset.choice;
+      });
+    });
+  });
+
+  // Same synchronous-disable-before-async-submit pattern as the single-question
+  // flow, applied to every sub-question's inputs at once.
+  validateBtn.addEventListener('click', () => {
+    const values = subs.map((sq, i) => sq.choices ? selections[i] : document.getElementById(`answerInput-${i}`).value.trim());
+    if(values.some(v => v === null || v === '')) return;
+    validateBtn.disabled = true;
+    view.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    view.querySelectorAll('.answer-input').forEach(inp => inp.disabled = true);
+    submitAnswer(values);
+  });
+}
+
 function feedbackBannerHtml(data){
   const correctAnswer = currentLang === 'ar' ? data.correct_answer_ar : data.correct_answer_fr;
   const explanation = currentLang === 'ar' ? data.explanation_ar : data.explanation_fr;
@@ -897,7 +961,15 @@ async function submitAnswer(answer){
 
   currentSession.answeredCount = data.total;
   currentSession.score = data.score;
-  document.getElementById('feedbackArea').innerHTML = feedbackBannerHtml(data);
+  if(data.sub_results){
+    data.sub_results.forEach((r, i) => {
+      const el = document.getElementById(`subFeedback-${i}`);
+      if(el) el.innerHTML = feedbackBannerHtml(r);
+    });
+  } else {
+    const feedbackArea = document.getElementById('feedbackArea');
+    if(feedbackArea) feedbackArea.innerHTML = feedbackBannerHtml(data);
+  }
 
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
   const input = document.getElementById('answerInput');

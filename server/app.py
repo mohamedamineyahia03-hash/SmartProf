@@ -357,21 +357,32 @@ def is_subject_locked(level_code, subject_row):
     return level_code not in (subject_row.free_levels or [])
 
 
-def public_exercise_payload(exercise):
+def public_content(content):
     """Strips the answer and the pedagogical explanation out of what's sent to
     the browser before it's answered — both are only ever revealed by
-    /api/session/<id>/answer, after the child has submitted a response."""
+    /api/session/<id>/answer, after the child has submitted a response.
+    A "récit à plusieurs questions" exercise nests its own answer/explanation
+    inside each sub_questions[i], so those need stripping too."""
+    hidden_keys = {"answer", "explanation"}
+    public = {k: v for k, v in content.items() if k not in hidden_keys}
+    if "sub_questions" in public:
+        public["sub_questions"] = [
+            {k: v for k, v in sub.items() if k not in hidden_keys} for sub in public["sub_questions"]
+        ]
+    return public
+
+
+def public_exercise_payload(exercise):
     if exercise is None:
         return None
-    hidden_keys = {"answer", "explanation"}
     return {
         "id": exercise.id,
         "domain": exercise.domain_code,
         "skill": exercise.skill_code,
         "format": exercise.exercise_format,
         "difficulty": exercise.difficulty,
-        "content_fr": {k: v for k, v in exercise.content_fr.items() if k not in hidden_keys},
-        "content_ar": {k: v for k, v in exercise.content_ar.items() if k not in hidden_keys},
+        "content_fr": public_content(exercise.content_fr),
+        "content_ar": public_content(exercise.content_ar),
     }
 
 
@@ -495,11 +506,37 @@ def answer_session(session_id):
     def normalize(value):
         return str(value).strip().lower()
 
-    correct_values = {
-        normalize(exercise.content_fr.get("answer")),
-        normalize(exercise.content_ar.get("answer")),
-    }
-    is_correct = normalize(given) in correct_values
+    sub_questions_fr = exercise.content_fr.get("sub_questions")
+    sub_results = None
+    if sub_questions_fr is not None:
+        # "Récit à plusieurs questions" (problemes/recit_multi_questions): one
+        # narrative, several sub-questions graded together as a single
+        # exercise slot — correct only if every sub-answer is correct, same
+        # binary signal the difficulty staircase expects from a normal exercise.
+        sub_questions_ar = exercise.content_ar.get("sub_questions", [])
+        given_list = given if isinstance(given, list) else []
+        sub_results = []
+        for i, sub_fr in enumerate(sub_questions_fr):
+            sub_ar = sub_questions_ar[i] if i < len(sub_questions_ar) else {}
+            sub_correct_values = {normalize(sub_fr.get("answer")), normalize(sub_ar.get("answer"))}
+            given_i = given_list[i] if i < len(given_list) else None
+            sub_correct = given_i is not None and normalize(given_i) in sub_correct_values
+            sub_results.append(
+                {
+                    "correct": sub_correct,
+                    "correct_answer_fr": sub_fr.get("answer"),
+                    "correct_answer_ar": sub_ar.get("answer"),
+                    "explanation_fr": sub_fr.get("explanation"),
+                    "explanation_ar": sub_ar.get("explanation"),
+                }
+            )
+        is_correct = all(r["correct"] for r in sub_results)
+    else:
+        correct_values = {
+            normalize(exercise.content_fr.get("answer")),
+            normalize(exercise.content_ar.get("answer")),
+        }
+        is_correct = normalize(given) in correct_values
 
     answers = dict(session_row.answers or {})
     answers[str(exercise_id)] = {"given": given, "correct": is_correct, "skill": exercise.skill_code}
@@ -525,19 +562,20 @@ def answer_session(session_id):
 
     db.session.commit()
 
-    return jsonify(
-        {
-            "correct": is_correct,
-            "correct_answer_fr": exercise.content_fr.get("answer"),
-            "correct_answer_ar": exercise.content_ar.get("answer"),
-            "explanation_fr": exercise.content_fr.get("explanation"),
-            "explanation_ar": exercise.content_ar.get("explanation"),
-            "completed": session_row.completed_at is not None,
-            "score": sum(1 for a in answers.values() if a["correct"]),
-            "total": len(answers),
-            "next_exercise": public_exercise_payload(next_exercise),
-        }
-    )
+    payload = {
+        "correct": is_correct,
+        "correct_answer_fr": exercise.content_fr.get("answer"),
+        "correct_answer_ar": exercise.content_ar.get("answer"),
+        "explanation_fr": exercise.content_fr.get("explanation"),
+        "explanation_ar": exercise.content_ar.get("explanation"),
+        "completed": session_row.completed_at is not None,
+        "score": sum(1 for a in answers.values() if a["correct"]),
+        "total": len(answers),
+        "next_exercise": public_exercise_payload(next_exercise),
+    }
+    if sub_results is not None:
+        payload["sub_results"] = sub_results
+    return jsonify(payload)
 
 
 if __name__ == "__main__":
