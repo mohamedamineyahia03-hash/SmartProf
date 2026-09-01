@@ -83,7 +83,8 @@
         ],
         "ordre_nombres": [
           "classement",
-          "drag_drop"
+          "drag_drop",
+          "selection"
         ],
         "composition": [
           "saisie_nombre",

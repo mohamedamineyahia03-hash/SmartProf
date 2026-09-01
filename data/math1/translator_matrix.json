@@ -607,5 +607,12 @@
     "format": "saisie_nombre",
     "fr": "Addition posée — Saisie d’un nombre",
     "ar": "الجمع العمودي — إدخال عدد"
+  },
+  {
+    "domain": "numeration",
+    "skill": "ordre_nombres",
+    "format": "selection",
+    "fr": "Ordre des nombres — Sélection",
+    "ar": "ترتيب الأعداد — اختيار"
   }
 ]
