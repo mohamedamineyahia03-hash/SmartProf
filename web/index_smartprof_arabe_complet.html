@@ -227,10 +227,6 @@
     <div class="header-actions">
       <button type="button" class="child-badge" id="activeChildBadge" style="display:none;"></button>
       <button type="button" class="parent-btn" id="parentToggleBtn"></button>
-      <div class="lang-toggle">
-        <button class="active" data-lang="fr">FR</button>
-        <button data-lang="ar">عربي</button>
-      </div>
     </div>
   </header>
 
@@ -576,7 +572,9 @@ function isSubjectLocked(subject, level){
 
 const root = document.documentElement.style;
 let currentLevel = 1;
-let currentLang = 'fr';
+// Interface fixe en arabe — pas de sélecteur de langue. Reste 'ar' en
+// permanence ; ne pas réintroduire de bouton pour le changer.
+const currentLang = 'ar';
 let currentSession = null;
 let lockedToastTimer = null;
 let currentUser = null; // {id, email, children, free_child_slots} or null
@@ -751,15 +749,6 @@ function render(){
   document.body.style.fontFamily = currentLang === 'ar' ? "'Baloo 2', sans-serif" : "'Inter', sans-serif";
 }
 
-document.querySelectorAll('.lang-toggle button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.lang-toggle button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentLang = btn.dataset.lang;
-    render();
-  });
-});
-
 document.getElementById('downloadBtn').addEventListener('click', () => {
   document.getElementById('downloadStatus').textContent = TEXT.downloadStatus[currentLang];
 });
@@ -804,13 +793,21 @@ async function startSession(subjectId){
   renderSessionQuestion();
 }
 
+// L'interface reste toujours en arabe (pas de sélecteur de langue), mais le
+// contenu d'un exercice de Français/Anglais est écrit entièrement dans sa
+// propre langue — il a donc besoin de son propre sens de lecture (LTR),
+// indépendant du sens RTL de l'interface autour de lui.
+function dirFor(language){
+  return language === 'ar' ? 'rtl' : 'ltr';
+}
+
 function renderSessionQuestion(){
   const view = document.getElementById('sessionView');
   const ex = currentSession.exercise;
-  const content = ex['content_' + currentLang];
+  const content = ex.content;
 
   if(content.sub_questions){
-    renderMultiQuestionExercise(view, content);
+    renderMultiQuestionExercise(view, ex, content);
     return;
   }
 
@@ -823,10 +820,12 @@ function renderSessionQuestion(){
   view.innerHTML = `
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
-      <div class="session-question">${content.question}</div>
-      ${visualArea}
-      ${answerArea}
-      <div id="feedbackArea"></div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question}</div>
+        ${visualArea}
+        ${answerArea}
+        <div id="feedbackArea"></div>
+      </div>
       <div class="session-actions">
         <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
         <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
@@ -866,7 +865,7 @@ function renderSessionQuestion(){
   }
 }
 
-function renderMultiQuestionExercise(view, content){
+function renderMultiQuestionExercise(view, ex, content){
   const subs = content.sub_questions;
 
   const blocksHtml = subs.map((sq, i) => {
@@ -884,8 +883,10 @@ function renderMultiQuestionExercise(view, content){
   view.innerHTML = `
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
-      <div class="recit-context">${content.question}</div>
-      ${blocksHtml}
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="recit-context">${content.question}</div>
+        ${blocksHtml}
+      </div>
       <div class="session-actions">
         <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
         <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
@@ -920,11 +921,14 @@ function renderMultiQuestionExercise(view, content){
   });
 }
 
-function feedbackBannerHtml(data){
-  const correctAnswer = currentLang === 'ar' ? data.correct_answer_ar : data.correct_answer_fr;
-  const explanation = currentLang === 'ar' ? data.explanation_ar : data.explanation_fr;
-  const header = data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(correctAnswer);
-  const explanationHtml = explanation ? `<p class="feedback-explain">${explanation}</p>` : '';
+function feedbackBannerHtml(data, language){
+  // The "bonne réponse"/"correct answer" wrapper phrase stays in the fixed
+  // Arabic interface; only the answer value and explanation are in the
+  // exercise's own language (dir-wrapped so LTR French/English embeds
+  // correctly inside the surrounding RTL interface).
+  const header = data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(data.correct_answer);
+  const explanationHtml = data.explanation
+    ? `<p class="feedback-explain" dir="${dirFor(language)}">${data.explanation}</p>` : '';
   return `<div class="feedback-banner ${data.correct ? 'correct' : 'incorrect'}">${header}${explanationHtml}</div>`;
 }
 
@@ -964,11 +968,11 @@ async function submitAnswer(answer){
   if(data.sub_results){
     data.sub_results.forEach((r, i) => {
       const el = document.getElementById(`subFeedback-${i}`);
-      if(el) el.innerHTML = feedbackBannerHtml(r);
+      if(el) el.innerHTML = feedbackBannerHtml(r, ex.language);
     });
   } else {
     const feedbackArea = document.getElementById('feedbackArea');
-    if(feedbackArea) feedbackArea.innerHTML = feedbackBannerHtml(data);
+    if(feedbackArea) feedbackArea.innerHTML = feedbackBannerHtml(data, ex.language);
   }
 
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);

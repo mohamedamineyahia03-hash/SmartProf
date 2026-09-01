@@ -160,8 +160,12 @@ class LibraryCacheExercise(db.Model):
     skill_code = db.Column(db.String(64), nullable=False)
     exercise_format = db.Column(db.String(32), nullable=False)
     difficulty = db.Column(db.String(16), nullable=False)
-    content_fr = db.Column(db.JSON, nullable=False)
-    content_ar = db.Column(db.JSON, nullable=False)
+    # Single-language content — Arabic for math/science/ar, French for fr,
+    # English for en. No bilingual duplication; the app interface itself is
+    # Arabic-only with no language switcher (see generate_exercise.py in
+    # library-service for LANGUAGE_BY_SUBJECT).
+    language = db.Column(db.String(2), nullable=False)
+    content = db.Column(db.JSON, nullable=False)
     license = db.Column(db.String(32), nullable=False, default="SmartProf")
     synced_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 

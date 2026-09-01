@@ -49,8 +49,8 @@ def sync_once(limit=500):
             row.skill_code = item["skill"]
             row.exercise_format = item["format"]
             row.difficulty = item["difficulty"]
-            row.content_fr = item["content_fr"]
-            row.content_ar = item["content_ar"]
+            row.language = item["language"]
+            row.content = item["content"]
             row.license = item["license"]
 
         db.session.commit()

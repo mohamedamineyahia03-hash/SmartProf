@@ -24,31 +24,29 @@ def validate(exercise, source):
     of issues found (empty list = passed)."""
     issues = []
 
-    for lang_key in ("content_fr", "content_ar"):
-        content = getattr(exercise, lang_key) or {}
-        if not str(content.get("question", "")).strip():
-            issues.append(f"{lang_key} has an empty question")
+    content = exercise.content or {}
+    if not str(content.get("question", "")).strip():
+        issues.append("content has an empty question")
 
-        sub_questions = content.get("sub_questions")
-        if sub_questions is not None:
-            # "récit à plusieurs questions" (multi_questions format): no
-            # top-level answer, each sub-question carries its own instead.
-            if not isinstance(sub_questions, list) or len(sub_questions) < 2:
-                issues.append(f"{lang_key} sub_questions must be a list of at least 2 items")
-            else:
-                for i, sub in enumerate(sub_questions):
-                    missing = REQUIRED_KEYS - sub.keys()
-                    if missing:
-                        issues.append(f"{lang_key} sub_questions[{i}] missing keys: {sorted(missing)}")
-                    if not str(sub.get("question", "")).strip():
-                        issues.append(f"{lang_key} sub_questions[{i}] has an empty question")
+    sub_questions = content.get("sub_questions")
+    if sub_questions is not None:
+        # "récit à plusieurs questions" (multi_questions format): no
+        # top-level answer, each sub-question carries its own instead.
+        if not isinstance(sub_questions, list) or len(sub_questions) < 2:
+            issues.append("content sub_questions must be a list of at least 2 items")
         else:
-            missing = REQUIRED_KEYS - content.keys()
-            if missing:
-                issues.append(f"{lang_key} missing keys: {sorted(missing)}")
+            for i, sub in enumerate(sub_questions):
+                missing = REQUIRED_KEYS - sub.keys()
+                if missing:
+                    issues.append(f"content sub_questions[{i}] missing keys: {sorted(missing)}")
+                if not str(sub.get("question", "")).strip():
+                    issues.append(f"content sub_questions[{i}] has an empty question")
+    else:
+        missing = REQUIRED_KEYS - content.keys()
+        if missing:
+            issues.append(f"content missing keys: {sorted(missing)}")
 
-    fr_question = (exercise.content_fr or {}).get("question", "")
-    overlap = _overlap_ratio(fr_question, source.content_snapshot if source else "")
+    overlap = _overlap_ratio(content.get("question", ""), source.content_snapshot if source else "")
     if overlap > MAX_SOURCE_OVERLAP:
         issues.append(f"question too similar to source ({overlap:.0%} word overlap)")
 

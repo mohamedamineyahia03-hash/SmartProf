@@ -19,6 +19,7 @@ REGION_SCOPES = (
     "uk_approved",
     "international_aligned",  # any country's resource, used only where its topic genuinely matches the Tunisian program
 )
+CONTENT_LANGUAGES = ("ar", "fr", "en")
 CRAWL_TRIGGERS = ("scheduled", "demand_signal", "manual")
 GENERATION_STATUSES = ("success", "failed", "flagged_for_review")
 REVIEW_STATUSES = ("auto_passed_schema", "pending_human_review", "approved", "rejected")
@@ -60,7 +61,7 @@ class Source(db.Model):
     region_scope = db.Column(db.Enum(*REGION_SCOPES, name="region_scope_source"), nullable=False)
 
     # Used ONLY as generation input (Section: pipeline step "Generate") — never
-    # served to end users directly, never copied into exercise.content_fr/content_ar.
+    # served to end users directly, never copied into exercise.content.
     content_snapshot = db.Column(db.Text, nullable=True)
 
     status = db.Column(db.Enum(*SOURCE_STATUSES, name="source_status"), nullable=False, default="pending_classification")
@@ -101,8 +102,15 @@ class Exercise(db.Model):
     exercise_format = db.Column(db.String(32), nullable=False)
     difficulty = db.Column(db.String(16), nullable=False, default="en_cours")
 
-    content_fr = db.Column(db.JSON, nullable=False)
-    content_ar = db.Column(db.JSON, nullable=False)
+    # Single-language content — no bilingual duplication. Language is fixed
+    # per subject: "ar" for math/science/ar, "fr" for the fr subject (French
+    # stays entirely in French, not translated), "en" for the en subject
+    # (same for English) — see generate_exercise.LANGUAGE_BY_SUBJECT. The app
+    # interface itself is Arabic-only and has no language switcher; this
+    # field is unrelated to that — it's what language THIS exercise's own
+    # content is written in.
+    language = db.Column(db.Enum(*CONTENT_LANGUAGES, name="content_language"), nullable=False)
+    content = db.Column(db.JSON, nullable=False)
 
     license = db.Column(db.String(32), nullable=False, default="SmartProf")
 

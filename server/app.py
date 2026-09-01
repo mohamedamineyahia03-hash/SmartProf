@@ -381,8 +381,8 @@ def public_exercise_payload(exercise):
         "skill": exercise.skill_code,
         "format": exercise.exercise_format,
         "difficulty": exercise.difficulty,
-        "content_fr": public_content(exercise.content_fr),
-        "content_ar": public_content(exercise.content_ar),
+        "language": exercise.language,
+        "content": public_content(exercise.content),
     }
 
 
@@ -506,37 +506,28 @@ def answer_session(session_id):
     def normalize(value):
         return str(value).strip().lower()
 
-    sub_questions_fr = exercise.content_fr.get("sub_questions")
+    sub_questions = exercise.content.get("sub_questions")
     sub_results = None
-    if sub_questions_fr is not None:
+    if sub_questions is not None:
         # "Récit à plusieurs questions" (problemes/recit_multi_questions): one
         # narrative, several sub-questions graded together as a single
         # exercise slot — correct only if every sub-answer is correct, same
         # binary signal the difficulty staircase expects from a normal exercise.
-        sub_questions_ar = exercise.content_ar.get("sub_questions", [])
         given_list = given if isinstance(given, list) else []
         sub_results = []
-        for i, sub_fr in enumerate(sub_questions_fr):
-            sub_ar = sub_questions_ar[i] if i < len(sub_questions_ar) else {}
-            sub_correct_values = {normalize(sub_fr.get("answer")), normalize(sub_ar.get("answer"))}
+        for i, sub in enumerate(sub_questions):
             given_i = given_list[i] if i < len(given_list) else None
-            sub_correct = given_i is not None and normalize(given_i) in sub_correct_values
+            sub_correct = given_i is not None and normalize(given_i) == normalize(sub.get("answer"))
             sub_results.append(
                 {
                     "correct": sub_correct,
-                    "correct_answer_fr": sub_fr.get("answer"),
-                    "correct_answer_ar": sub_ar.get("answer"),
-                    "explanation_fr": sub_fr.get("explanation"),
-                    "explanation_ar": sub_ar.get("explanation"),
+                    "correct_answer": sub.get("answer"),
+                    "explanation": sub.get("explanation"),
                 }
             )
         is_correct = all(r["correct"] for r in sub_results)
     else:
-        correct_values = {
-            normalize(exercise.content_fr.get("answer")),
-            normalize(exercise.content_ar.get("answer")),
-        }
-        is_correct = normalize(given) in correct_values
+        is_correct = normalize(given) == normalize(exercise.content.get("answer"))
 
     answers = dict(session_row.answers or {})
     answers[str(exercise_id)] = {"given": given, "correct": is_correct, "skill": exercise.skill_code}
@@ -564,10 +555,8 @@ def answer_session(session_id):
 
     payload = {
         "correct": is_correct,
-        "correct_answer_fr": exercise.content_fr.get("answer"),
-        "correct_answer_ar": exercise.content_ar.get("answer"),
-        "explanation_fr": exercise.content_fr.get("explanation"),
-        "explanation_ar": exercise.content_ar.get("explanation"),
+        "correct_answer": exercise.content.get("answer"),
+        "explanation": exercise.content.get("explanation"),
         "completed": session_row.completed_at is not None,
         "score": sum(1 for a in answers.values() if a["correct"]),
         "total": len(answers),
