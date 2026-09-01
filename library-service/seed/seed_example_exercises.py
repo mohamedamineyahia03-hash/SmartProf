@@ -330,6 +330,485 @@ EXAMPLES = [
     },
 ]
 
+# 10 additional récits (addition -> soustraction -> partage égal en 2), même
+# structure pédagogique qu'un modèle fourni par l'utilisateur (série de
+# problèmes 1ère année, programme Tunisie 2025/2026, nombres 0-19) — thèmes et
+# nombres originaux, pas une copie des énoncés fournis.
+RECIT_EXAMPLES = [
+    {
+        "theme": "poissons-aquarium",
+        "trimester": "T2",
+        "fr": {
+            "question": "Dans l'aquarium de la classe, il y a 7 poissons rouges et 5 poissons bleus.",
+            "sub_questions": [
+                {
+                    "question": "Combien de poissons y a-t-il en tout dans l'aquarium ?",
+                    "answer": 12,
+                    "explanation": "On additionne les deux groupes de poissons : 7 + 5 = 12.",
+                },
+                {
+                    "question": "La maîtresse donne 2 poissons à une autre classe. Combien de poissons reste-t-il dans l'aquarium ?",
+                    "answer": 10,
+                    "explanation": "On retire les poissons donnés : 12 − 2 = 10.",
+                },
+                {
+                    "question": "Les élèves partagent les poissons restants entre 2 aquariums, à parts égales. Combien de poissons y aura-t-il dans chaque aquarium ?",
+                    "answer": 5,
+                    "explanation": "On partage 10 poissons en 2 parts égales : 10 ÷ 2 = 5.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "في مقصورة السمك بالقسم، يوجد 7 أسماك حمراء و5 أسماك زرقاء.",
+            "sub_questions": [
+                {
+                    "question": "كم عدد الأسماك الجملي في المقصورة؟",
+                    "answer": 12,
+                    "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+                },
+                {
+                    "question": "أعطت المعلمة 2 سمكتين لقسم آخر. كم سمكة بقيت في المقصورة؟",
+                    "answer": 10,
+                    "explanation": "نطرح الأسماك التي أُعطيت: 12 − 2 = 10.",
+                },
+                {
+                    "question": "قسّم التلاميذ الأسماك الباقية بالتساوي بين مقصورتين. كم سمكة ستكون في كل مقصورة؟",
+                    "answer": 5,
+                    "explanation": "نقسم 10 أسماك على مقصورتين بالتساوي: 10 ÷ 2 = 5.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "ballons-fete",
+        "trimester": "T2",
+        "fr": {
+            "question": "Pour la fête de l'école, Yasmine gonfle 9 ballons rouges et 7 ballons jaunes.",
+            "sub_questions": [
+                {
+                    "question": "Combien de ballons Yasmine a-t-elle gonflés en tout ?",
+                    "answer": 16,
+                    "explanation": "On additionne les ballons rouges et jaunes : 9 + 7 = 16.",
+                },
+                {
+                    "question": "4 ballons éclatent avant le début de la fête. Combien de ballons reste-t-il ?",
+                    "answer": 12,
+                    "explanation": "On retire les ballons éclatés : 16 − 4 = 12.",
+                },
+                {
+                    "question": "Yasmine accroche les ballons restants également des deux côtés de la porte. Combien de ballons y aura-t-il de chaque côté ?",
+                    "answer": 6,
+                    "explanation": "On partage 12 ballons en 2 parts égales : 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "لحفل المدرسة، نفخت ياسمين 9 بالونات حمراء و7 بالونات صفراء.",
+            "sub_questions": [
+                {
+                    "question": "كم بالونًا نفخت ياسمين في المجموع؟",
+                    "answer": 16,
+                    "explanation": "نجمع البالونات الحمراء والصفراء: 9 + 7 = 16.",
+                },
+                {
+                    "question": "انفجرت 4 بالونات قبل بداية الحفل. كم بالونًا بقي؟",
+                    "answer": 12,
+                    "explanation": "نطرح البالونات التي انفجرت: 16 − 4 = 12.",
+                },
+                {
+                    "question": "علّقت ياسمين البالونات الباقية بالتساوي على جانبي الباب. كم بالونًا سيكون في كل جانب؟",
+                    "answer": 6,
+                    "explanation": "نقسم 12 بالونًا على جانبين بالتساوي: 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "biscuits-maman",
+        "trimester": "T2",
+        "fr": {
+            "question": "Maman prépare un plateau avec 8 biscuits au chocolat et 6 biscuits à la vanille.",
+            "sub_questions": [
+                {
+                    "question": "Combien de biscuits y a-t-il en tout sur le plateau ?",
+                    "answer": 14,
+                    "explanation": "On additionne les deux sortes de biscuits : 8 + 6 = 14.",
+                },
+                {
+                    "question": "Papa mange 2 biscuits en rentrant du travail. Combien de biscuits reste-t-il ?",
+                    "answer": 12,
+                    "explanation": "On retire les biscuits mangés : 14 − 2 = 12.",
+                },
+                {
+                    "question": "Les deux sœurs se partagent les biscuits restants à parts égales. Combien de biscuits chacune aura-t-elle ?",
+                    "answer": 6,
+                    "explanation": "On partage 12 biscuits en 2 parts égales : 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "تحضّر الأم صينية فيها 8 قطع حلوى بالشوكولاطة و6 قطع بالفانيليا.",
+            "sub_questions": [
+                {
+                    "question": "كم قطعة حلوى في الصينية إجمالًا؟",
+                    "answer": 14,
+                    "explanation": "نجمع النوعين: 8 + 6 = 14.",
+                },
+                {
+                    "question": "أكل الأب قطعتين بعد رجوعه من العمل. كم قطعة بقيت؟",
+                    "answer": 12,
+                    "explanation": "نطرح القطع التي أُكلت: 14 − 2 = 12.",
+                },
+                {
+                    "question": "تقاسمت الأختان القطع الباقية بالتساوي. كم قطعة ستأخذ كل واحدة؟",
+                    "answer": 6,
+                    "explanation": "نقسم 12 قطعة على الأختين بالتساوي: 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "autocollants-nour",
+        "trimester": "T2",
+        "fr": {
+            "question": "Nour a 9 autocollants en forme d'étoile et 5 autocollants en forme de cœur.",
+            "sub_questions": [
+                {
+                    "question": "Combien d'autocollants Nour a-t-elle en tout ?",
+                    "answer": 14,
+                    "explanation": "On additionne les étoiles et les cœurs : 9 + 5 = 14.",
+                },
+                {
+                    "question": "Nour donne 4 autocollants à sa meilleure amie. Combien lui en reste-t-il ?",
+                    "answer": 10,
+                    "explanation": "On retire les autocollants donnés : 14 − 4 = 10.",
+                },
+                {
+                    "question": "Nour colle les autocollants restants à parts égales sur 2 cahiers. Combien y en aura-t-il sur chaque cahier ?",
+                    "answer": 5,
+                    "explanation": "On partage 10 autocollants en 2 parts égales : 10 ÷ 2 = 5.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "لدى نور 9 ملصقات على شكل نجمة و5 ملصقات على شكل قلب.",
+            "sub_questions": [
+                {
+                    "question": "كم ملصقًا لدى نور في المجموع؟",
+                    "answer": 14,
+                    "explanation": "نجمع النجوم والقلوب: 9 + 5 = 14.",
+                },
+                {
+                    "question": "أعطت نور 4 ملصقات لصديقتها المفضلة. كم ملصقًا بقي لديها؟",
+                    "answer": 10,
+                    "explanation": "نطرح الملصقات التي أُعطيت: 14 − 4 = 10.",
+                },
+                {
+                    "question": "لصقت نور الملصقات الباقية بالتساوي على كراسين. كم ملصقًا سيكون على كل كراس؟",
+                    "answer": 5,
+                    "explanation": "نقسم 10 ملصقات على كراسين بالتساوي: 10 ÷ 2 = 5.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "coquillages-plage",
+        "trimester": "T3",
+        "fr": {
+            "question": "À la plage, Adam ramasse 8 grands coquillages et 6 petits coquillages.",
+            "sub_questions": [
+                {
+                    "question": "Combien de coquillages Adam a-t-il ramassés en tout ?",
+                    "answer": 14,
+                    "explanation": "On additionne les grands et les petits coquillages : 8 + 6 = 14.",
+                },
+                {
+                    "question": "Adam perd 2 coquillages en courant sur le sable. Combien lui en reste-t-il ?",
+                    "answer": 12,
+                    "explanation": "On retire les coquillages perdus : 14 − 2 = 12.",
+                },
+                {
+                    "question": "Adam range les coquillages restants à parts égales dans 2 petites boîtes. Combien y en aura-t-il dans chaque boîte ?",
+                    "answer": 6,
+                    "explanation": "On partage 12 coquillages en 2 parts égales : 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "على الشاطئ، جمع آدم 8 أصداف كبيرة و6 أصداف صغيرة.",
+            "sub_questions": [
+                {
+                    "question": "كم صدفة جمع آدم في المجموع؟",
+                    "answer": 14,
+                    "explanation": "نجمع الأصداف الكبيرة والصغيرة: 8 + 6 = 14.",
+                },
+                {
+                    "question": "فقد آدم صدفتين أثناء الجري على الرمل. كم صدفة بقيت لديه؟",
+                    "answer": 12,
+                    "explanation": "نطرح الأصداف المفقودة: 14 − 2 = 12.",
+                },
+                {
+                    "question": "رتّب آدم الأصداف الباقية بالتساوي في علبتين صغيرتين. كم صدفة ستكون في كل علبة؟",
+                    "answer": 6,
+                    "explanation": "نقسم 12 صدفة على علبتين بالتساوي: 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "dattes-recolte",
+        "trimester": "T3",
+        "fr": {
+            "question": "Pendant la récolte, Grand-père cueille 9 dattes bien mûres et Ali en cueille 7 autres.",
+            "sub_questions": [
+                {
+                    "question": "Combien de dattes ont-ils cueillies en tout ?",
+                    "answer": 16,
+                    "explanation": "On additionne les deux quantités de dattes : 9 + 7 = 16.",
+                },
+                {
+                    "question": "Ils offrent 4 dattes à leurs voisins. Combien de dattes leur reste-t-il ?",
+                    "answer": 12,
+                    "explanation": "On retire les dattes offertes : 16 − 4 = 12.",
+                },
+                {
+                    "question": "Ils partagent les dattes restantes à parts égales dans 2 paniers. Combien de dattes y aura-t-il dans chaque panier ?",
+                    "answer": 6,
+                    "explanation": "On partage 12 dattes en 2 parts égales : 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "أثناء جني التمور، قطف الجد 9 تمرات ناضجة وقطف علي 7 تمرات أخرى.",
+            "sub_questions": [
+                {
+                    "question": "كم تمرة قطفا في المجموع؟",
+                    "answer": 16,
+                    "explanation": "نجمع الكميتين: 9 + 7 = 16.",
+                },
+                {
+                    "question": "أهديا 4 تمرات لجيرانهما. كم تمرة بقيت لديهما؟",
+                    "answer": 12,
+                    "explanation": "نطرح التمرات المُهداة: 16 − 4 = 12.",
+                },
+                {
+                    "question": "قسّما التمرات الباقية بالتساوي في سلّتين. كم تمرة ستكون في كل سلة؟",
+                    "answer": 6,
+                    "explanation": "نقسم 12 تمرة على سلتين بالتساوي: 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "cubes-construction",
+        "trimester": "T3",
+        "fr": {
+            "question": "Dans la boîte de jeux, il y a 7 cubes rouges et 7 cubes bleus.",
+            "sub_questions": [
+                {
+                    "question": "Combien de cubes y a-t-il en tout dans la boîte ?",
+                    "answer": 14,
+                    "explanation": "On additionne les cubes rouges et bleus : 7 + 7 = 14.",
+                },
+                {
+                    "question": "Le petit frère range 6 cubes ailleurs par erreur. Combien de cubes reste-t-il dans la boîte ?",
+                    "answer": 8,
+                    "explanation": "On retire les cubes rangés ailleurs : 14 − 6 = 8.",
+                },
+                {
+                    "question": "Les enfants partagent les cubes restants à parts égales pour construire 2 tours. Combien de cubes chaque tour aura-t-elle ?",
+                    "answer": 4,
+                    "explanation": "On partage 8 cubes en 2 parts égales : 8 ÷ 2 = 4.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "في صندوق الألعاب، توجد 7 مكعبات حمراء و7 مكعبات زرقاء.",
+            "sub_questions": [
+                {
+                    "question": "كم مكعبًا في الصندوق إجمالًا؟",
+                    "answer": 14,
+                    "explanation": "نجمع المكعبات الحمراء والزرقاء: 7 + 7 = 14.",
+                },
+                {
+                    "question": "رتّب الأخ الصغير 6 مكعبات في مكان آخر بالخطأ. كم مكعبًا بقي في الصندوق؟",
+                    "answer": 8,
+                    "explanation": "نطرح المكعبات التي رُتبت في مكان آخر: 14 − 6 = 8.",
+                },
+                {
+                    "question": "قسّم الأطفال المكعبات الباقية بالتساوي لبناء برجين. كم مكعبًا سيكون في كل برج؟",
+                    "answer": 4,
+                    "explanation": "نقسم 8 مكعبات على برجين بالتساوي: 8 ÷ 2 = 4.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "papillons-jardin",
+        "trimester": "T3",
+        "fr": {
+            "question": "Dans le jardin, il y a 9 papillons blancs et 5 papillons orange.",
+            "sub_questions": [
+                {
+                    "question": "Combien de papillons y a-t-il en tout dans le jardin ?",
+                    "answer": 14,
+                    "explanation": "On additionne les papillons blancs et orange : 9 + 5 = 14.",
+                },
+                {
+                    "question": "2 papillons s'envolent par-dessus le mur. Combien de papillons reste-t-il dans le jardin ?",
+                    "answer": 12,
+                    "explanation": "On retire les papillons envolés : 14 − 2 = 12.",
+                },
+                {
+                    "question": "Les papillons restants se posent à parts égales sur 2 rosiers. Combien de papillons y aura-t-il sur chaque rosier ?",
+                    "answer": 6,
+                    "explanation": "On partage 12 papillons en 2 parts égales : 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "في الحديقة، توجد 9 فراشات بيضاء و5 فراشات برتقالية.",
+            "sub_questions": [
+                {
+                    "question": "كم فراشة في الحديقة إجمالًا؟",
+                    "answer": 14,
+                    "explanation": "نجمع الفراشات البيضاء والبرتقالية: 9 + 5 = 14.",
+                },
+                {
+                    "question": "طارت فراشتان فوق الجدار. كم فراشة بقيت في الحديقة؟",
+                    "answer": 12,
+                    "explanation": "نطرح الفراشات التي طارت: 14 − 2 = 12.",
+                },
+                {
+                    "question": "استقرت الفراشات الباقية بالتساوي على شجيرتي ورد. كم فراشة ستكون على كل شجيرة؟",
+                    "answer": 6,
+                    "explanation": "نقسم 12 فراشة على شجيرتين بالتساوي: 12 ÷ 2 = 6.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "fraises-jardin",
+        "trimester": "T2",
+        "fr": {
+            "question": "Dans le jardin, Sara cueille 8 fraises et sa maman en cueille 4 autres.",
+            "sub_questions": [
+                {
+                    "question": "Combien de fraises ont-elles cueillies en tout ?",
+                    "answer": 12,
+                    "explanation": "On additionne les deux quantités de fraises : 8 + 4 = 12.",
+                },
+                {
+                    "question": "Elles mangent 4 fraises tout de suite. Combien de fraises leur reste-t-il ?",
+                    "answer": 8,
+                    "explanation": "On retire les fraises mangées : 12 − 4 = 8.",
+                },
+                {
+                    "question": "Elles partagent les fraises restantes à parts égales dans 2 petits paniers. Combien de fraises y aura-t-il dans chaque panier ?",
+                    "answer": 4,
+                    "explanation": "On partage 8 fraises en 2 parts égales : 8 ÷ 2 = 4.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "في الحديقة، قطفت سارة 8 حبات فراولة وقطفت أمها 4 حبات أخرى.",
+            "sub_questions": [
+                {
+                    "question": "كم حبة فراولة قطفتا في المجموع؟",
+                    "answer": 12,
+                    "explanation": "نجمع الكميتين: 8 + 4 = 12.",
+                },
+                {
+                    "question": "أكلتا 4 حبات على الفور. كم حبة بقيت لديهما؟",
+                    "answer": 8,
+                    "explanation": "نطرح الحبات التي أُكلت: 12 − 4 = 8.",
+                },
+                {
+                    "question": "قسّمتا الحبات الباقية بالتساوي في سلتين صغيرتين. كم حبة ستكون في كل سلة؟",
+                    "answer": 4,
+                    "explanation": "نقسم 8 حبات على سلتين بالتساوي: 8 ÷ 2 = 4.",
+                },
+            ],
+        },
+    },
+    {
+        "theme": "bougies-gateau",
+        "trimester": "T3",
+        "fr": {
+            "question": "Pour l'anniversaire, Maman achète 9 bougies rouges et 9 bougies dorées.",
+            "sub_questions": [
+                {
+                    "question": "Combien de bougies Maman a-t-elle achetées en tout ?",
+                    "answer": 18,
+                    "explanation": "On additionne les bougies rouges et dorées : 9 + 9 = 18.",
+                },
+                {
+                    "question": "4 bougies tombent et se cassent avant la fête. Combien de bougies utilisables reste-t-il ?",
+                    "answer": 14,
+                    "explanation": "On retire les bougies cassées : 18 − 4 = 14.",
+                },
+                {
+                    "question": "Maman met les bougies restantes à parts égales sur 2 gâteaux. Combien de bougies y aura-t-il sur chaque gâteau ?",
+                    "answer": 7,
+                    "explanation": "On partage 14 bougies en 2 parts égales : 14 ÷ 2 = 7.",
+                },
+            ],
+        },
+        "ar": {
+            "question": "لعيد الميلاد، اشترت الأم 9 شموع حمراء و9 شموع ذهبية.",
+            "sub_questions": [
+                {
+                    "question": "كم شمعة اشترت الأم في المجموع؟",
+                    "answer": 18,
+                    "explanation": "نجمع الشموع الحمراء والذهبية: 9 + 9 = 18.",
+                },
+                {
+                    "question": "سقطت 4 شموع وانكسرت قبل الحفل. كم شمعة صالحة بقيت؟",
+                    "answer": 14,
+                    "explanation": "نطرح الشموع المكسورة: 18 − 4 = 14.",
+                },
+                {
+                    "question": "وضعت الأم الشموع الباقية بالتساوي على كعكتين. كم شمعة ستكون على كل كعكة؟",
+                    "answer": 7,
+                    "explanation": "نقسم 14 شمعة على كعكتين بالتساوي: 14 ÷ 2 = 7.",
+                },
+            ],
+        },
+    },
+]
+
+for _item in RECIT_EXAMPLES:
+    EXAMPLES.append(
+        {
+            "source": {
+                "url": f"local://exercices_math_1ere_annee_tunisie.docx#{_item['theme']}",
+                "title": "Série de récits mathématiques 1ère année (fournie par l'utilisateur, programme Tunisie 2025/2026)",
+                "license_status": "unlicensed",
+                "subject_code": "math",
+                "level_code": "1",
+                "domain_hint": "problemes",
+                "trimester_hint": _item["trimester"],
+                "region_scope": "tunisia_web",
+                "content_snapshot": (
+                    "Modèle fourni par l'utilisateur : récit + addition + soustraction + partage égal en 2, "
+                    "nombres 0-19, servant uniquement d'inspiration de structure pour ce nouvel exercice."
+                ),
+                "status": "used_for_generation",
+            },
+            "exercise": {
+                "subject_code": "math",
+                "level_code": "1",
+                "trimester": _item["trimester"],
+                "domain_code": "problemes",
+                "skill_code": "recit_multi_questions",
+                "exercise_format": "multi_questions",
+                "difficulty": "maitrise",
+                "content_fr": _item["fr"],
+                "content_ar": _item["ar"],
+            },
+        }
+    )
+
 
 def main():
     with app.app_context():
