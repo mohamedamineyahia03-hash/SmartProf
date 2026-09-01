@@ -109,14 +109,14 @@ EXAMPLES = [
             "difficulty": "decouverte",
             "content_fr": {
                 "question": "Quelle forme a 3 côtés ?",
-                "choices": ["carré", "triangle", "cercle"],
-                "answer": "triangle",
+                "choices": ["⬛ Carré", "🔺 Triangle", "⚪ Cercle"],
+                "answer": "🔺 Triangle",
                 "explanation": "Un triangle a exactement 3 côtés et 3 sommets. Le carré en a 4, et le cercle n'a pas de côtés droits.",
             },
             "content_ar": {
                 "question": "أي شكل له 3 أضلاع؟",
-                "choices": ["مربع", "مثلث", "دائرة"],
-                "answer": "مثلث",
+                "choices": ["⬛ مربع", "🔺 مثلث", "⚪ دائرة"],
+                "answer": "🔺 مثلث",
                 "explanation": "المثلث له بالضبط 3 أضلاع و3 رؤوس. أما المربع فله 4 أضلاع، والدائرة ليس لها أضلاع مستقيمة.",
             },
         },

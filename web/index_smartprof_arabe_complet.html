@@ -129,7 +129,7 @@
   .session-question{font-size:1.25rem;font-weight:700;margin-bottom:22px;}
   .session-visual{font-size:2.6rem;text-align:center;margin:-6px 0 22px;letter-spacing:.15em;}
   .choice-list{display:grid;gap:12px;margin-bottom:20px;}
-  .choice-btn{padding:16px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .2s ease;}
+  .choice-btn{padding:16px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:1.15rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .2s ease;}
   .choice-btn:hover{border-color:var(--accent);}
   .choice-btn.selected{border-color:var(--accent);background:var(--paper-soft);}
   .choice-btn:disabled{cursor:default;}
@@ -171,6 +171,22 @@
   .skill-badge{padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:600;}
   .skill-badge.good{background:#DCFCE7;color:#166534;}
   .skill-badge.weak{background:#FEE2E2;color:#991B1B;}
+
+  .supervision-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ececec;}
+  .supervision-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+  .supervision-name{font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1.2rem;}
+  .supervision-status{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);margin-top:2px;}
+  .status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;}
+  .stat-grid{display:grid;grid-template-columns:repeat(2, 1fr);gap:12px;margin-bottom:24px;}
+  .stat-tile{background:var(--paper-soft);border-radius:16px;padding:16px;text-align:center;}
+  .stat-icon{font-size:1.3rem;margin-bottom:4px;}
+  .stat-value{font-family:'Baloo 2',sans-serif;font-size:1.6rem;font-weight:800;}
+  .stat-label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
+  .supervision-section{margin-bottom:20px;}
+  .supervision-section-title{font-weight:700;font-size:.9rem;margin-bottom:10px;}
+  .supervision-log{display:flex;flex-direction:column;gap:6px;}
+  .supervision-log-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;background:#fafafa;border-radius:10px;font-size:.88rem;}
+  .supervision-log-score{font-weight:700;}
 
   .level-panel{background:var(--paper-soft);border-radius:var(--radius);padding:28px 26px;margin-bottom:40px;transition:background .6s ease, border-radius .5s ease;}
   .level-panel h2{margin:0 0 8px;font-size:1.4rem;}
@@ -568,11 +584,6 @@ const REPORT_TEXT = {
   backToDashboard:{fr:"Retour", ar:"رجوع"}
 };
 
-function sessionsCountText(n){
-  if(currentLang === 'ar') return `${n} حصة`;
-  return `${n} séance${n > 1 ? 's' : ''}`;
-}
-
 function formatRelativeTime(isoString){
   if(!isoString) return null;
   const date = new Date(isoString.endsWith('Z') ? isoString : isoString + 'Z');
@@ -789,6 +800,17 @@ function renderSessionQuestion(){
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
   const validateBtn = document.getElementById('validateBtn');
 
+  // Disables everything synchronously, before the async submitAnswer() call
+  // even starts — closes the window where a fast double-click/double-tap on
+  // "Valider" could fire two submissions for the same exercise.
+  function lockAndSubmit(value){
+    validateBtn.disabled = true;
+    view.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+    const input = document.getElementById('answerInput');
+    if(input) input.disabled = true;
+    submitAnswer(value);
+  }
+
   if(content.choices){
     let selected = null;
     view.querySelectorAll('.choice-btn').forEach(btn => {
@@ -798,11 +820,11 @@ function renderSessionQuestion(){
         selected = btn.dataset.choice;
       });
     });
-    validateBtn.addEventListener('click', () => { if(selected !== null) submitAnswer(selected); });
+    validateBtn.addEventListener('click', () => { if(selected !== null) lockAndSubmit(selected); });
   } else {
     validateBtn.addEventListener('click', () => {
       const val = document.getElementById('answerInput').value.trim();
-      if(val) submitAnswer(val);
+      if(val) lockAndSubmit(val);
     });
   }
 }
@@ -826,6 +848,13 @@ async function submitAnswer(answer){
     });
     data = await res.json();
   } catch(e){
+    // Network failure: re-enable so the child can retry instead of being
+    // stuck on a permanently-disabled question.
+    document.querySelectorAll('.choice-btn').forEach(b => b.disabled = false);
+    const input = document.getElementById('answerInput');
+    if(input) input.disabled = false;
+    const btn = document.getElementById('validateBtn');
+    if(btn) btn.disabled = false;
     showLockedToast(TEXT.genericError[currentLang]);
     return;
   }
@@ -1126,10 +1155,6 @@ async function openChildReport(childId){
 function renderChildReportContent(view, data){
   const lastActivityText = data.last_activity ? formatRelativeTime(data.last_activity) : REPORT_TEXT.neverActive[currentLang];
 
-  const weekText = data.sessions_this_week > 0
-    ? `${sessionsCountText(data.sessions_this_week)}${data.average_this_week !== null ? ` — ${REPORT_TEXT.averageLabel[currentLang]} ${data.average_this_week}%` : ''}`
-    : REPORT_TEXT.noSessionThisWeek[currentLang];
-
   const strengthsHtml = data.strengths.length
     ? `<div class="skill-badges">${data.strengths.map(s => `<span class="skill-badge good">${s.label} (${s.percentage}%)</span>`).join('')}</div>`
     : `<p class="muted-note">${REPORT_TEXT.notEnoughData[currentLang]}</p>`;
@@ -1142,26 +1167,50 @@ function renderChildReportContent(view, data){
     ? data.recent_sessions.map(s => {
         const subj = SUBJECTS.find(x => x.id === s.subject);
         const subjName = subj ? subj.name[currentLang] : s.subject;
-        return `<div class="child-row"><span>${subjName}</span><span class="child-level">${formatRelativeTime(s.created_at)}</span><span class="child-level">${s.score} / ${s.total}</span></div>`;
+        return `<div class="supervision-log-row"><span>${subjName}</span><span class="child-level">${formatRelativeTime(s.created_at)}</span><span class="supervision-log-score">${s.score} / ${s.total}</span></div>`;
       }).join('')
     : `<p class="muted-note">${REPORT_TEXT.noSessions[currentLang]}</p>`;
 
+  const averageDisplay = data.average_this_week !== null ? `${data.average_this_week}%` : '—';
+
   view.innerHTML = `
-    <div class="session-card">
-      <h3 class="parent-section-title" style="margin-top:0;">${REPORT_TEXT.title[currentLang]} ${data.child.display_name}</h3>
-      <p class="muted-note">${REPORT_TEXT.lastActivity[currentLang]} : ${lastActivityText}</p>
+    <div class="session-card supervision-card">
+      <div class="supervision-header">
+        <div class="supervision-avatar">🧑‍🎓</div>
+        <div>
+          <div class="supervision-name">${data.child.display_name}</div>
+          <div class="supervision-status"><span class="status-dot"></span>${REPORT_TEXT.lastActivity[currentLang]} : ${lastActivityText}</div>
+        </div>
+      </div>
 
-      <h3 class="parent-section-title">${REPORT_TEXT.thisWeek[currentLang]}</h3>
-      <p>${weekText}</p>
+      <div class="stat-grid">
+        <div class="stat-tile">
+          <div class="stat-icon">📅</div>
+          <div class="stat-value">${data.sessions_this_week}</div>
+          <div class="stat-label">${REPORT_TEXT.thisWeek[currentLang]}</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-value">${averageDisplay}</div>
+          <div class="stat-label">${REPORT_TEXT.averageLabel[currentLang]}</div>
+        </div>
+      </div>
+      ${data.sessions_this_week === 0 ? `<p class="muted-note" style="margin:-14px 0 20px;">${REPORT_TEXT.noSessionThisWeek[currentLang]}</p>` : ''}
 
-      <h3 class="parent-section-title">${REPORT_TEXT.strengths[currentLang]}</h3>
-      ${strengthsHtml}
+      <div class="supervision-section">
+        <div class="supervision-section-title">💪 ${REPORT_TEXT.strengths[currentLang]}</div>
+        ${strengthsHtml}
+      </div>
 
-      <h3 class="parent-section-title">${REPORT_TEXT.weaknesses[currentLang]}</h3>
-      ${weaknessesHtml}
+      <div class="supervision-section">
+        <div class="supervision-section-title">🎯 ${REPORT_TEXT.weaknesses[currentLang]}</div>
+        ${weaknessesHtml}
+      </div>
 
-      <h3 class="parent-section-title">${REPORT_TEXT.recentSessions[currentLang]}</h3>
-      <div class="children-list">${sessionsHtml}</div>
+      <div class="supervision-section">
+        <div class="supervision-section-title">🕓 ${REPORT_TEXT.recentSessions[currentLang]}</div>
+        <div class="supervision-log">${sessionsHtml}</div>
+      </div>
 
       <div class="session-actions" style="justify-content:center;">
         <button type="button" class="btn-secondary" id="reportBackBtn">${REPORT_TEXT.backToDashboard[currentLang]}</button>
