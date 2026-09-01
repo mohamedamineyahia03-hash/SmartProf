@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -9,6 +9,7 @@ from models import (
     ChildProfile,
     CurriculumDomain,
     CurriculumLevel,
+    CurriculumSkill,
     CurriculumSubject,
     LibraryCacheExercise,
     Session,
@@ -236,6 +237,117 @@ def add_child():
     db.session.commit()
 
     return jsonify(child_payload(child)), 201
+
+
+def _as_naive_utc(dt):
+    """Normalizes a datetime for comparison regardless of whether it came back
+    tz-aware or naive from the DB (SQLite doesn't consistently preserve tzinfo)."""
+    if dt is None:
+        return None
+    if dt.tzinfo is not None:
+        return dt.astimezone(timezone.utc).replace(tzinfo=None)
+    return dt
+
+
+def _skill_label(skill_code, lang):
+    skill = CurriculumSkill.query.filter_by(code=skill_code).first()
+    if skill is None:
+        return skill_code.replace("_", " ")
+    return skill.name_ar if lang == "ar" else skill.name_fr
+
+
+def _session_score(session_row):
+    answers = session_row.answers or {}
+    correct = sum(1 for a in answers.values() if a.get("correct"))
+    return correct, len(answers)
+
+
+@app.get("/api/children/<int:child_id>/report")
+def child_report(child_id):
+    """Progress report: last activity + trends, deliberately NOT live/real-time
+    presence — the design choice is to show history, not surveil whether a
+    child is 'online right now', which reads as monitoring rather than support."""
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "not_authenticated"}), 401
+
+    child = ChildProfile.query.filter_by(id=child_id, user_id=user.id).first()
+    if child is None:
+        return jsonify({"error": "not_found"}), 404
+
+    lang = request.args.get("lang", "fr")
+    sessions = (
+        Session.query.filter_by(child_profile_id=child.id).order_by(Session.created_at.desc()).all()
+    )
+
+    last_activity = sessions[0].created_at if sessions else None
+
+    week_ago = _as_naive_utc(datetime.now(timezone.utc) - timedelta(days=7))
+    week_sessions = [s for s in sessions if _as_naive_utc(s.created_at) and _as_naive_utc(s.created_at) >= week_ago]
+
+    week_correct = week_total = 0
+    for s in week_sessions:
+        c, t = _session_score(s)
+        week_correct += c
+        week_total += t
+    average_this_week = round(100 * week_correct / week_total) if week_total else None
+
+    skill_stats = {}
+    for s in sessions:
+        for answer in (s.answers or {}).values():
+            skill = answer.get("skill")
+            if not skill:
+                continue
+            stats = skill_stats.setdefault(skill, {"correct": 0, "total": 0})
+            stats["total"] += 1
+            if answer.get("correct"):
+                stats["correct"] += 1
+
+    skills = [
+        {
+            "skill": skill,
+            "label": _skill_label(skill, lang),
+            "correct": stats["correct"],
+            "total": stats["total"],
+            "percentage": round(100 * stats["correct"] / stats["total"]) if stats["total"] else 0,
+        }
+        for skill, stats in skill_stats.items()
+    ]
+    skills.sort(key=lambda s: s["percentage"], reverse=True)
+
+    # Require at least 2 attempts before calling something a strength/weakness —
+    # one lucky or unlucky answer isn't a pattern.
+    evaluable = [s for s in skills if s["total"] >= 2]
+    strengths = [s for s in evaluable if s["percentage"] >= 70][:3]
+    weaknesses = [s for s in evaluable if s["percentage"] < 50][:3]
+
+    recent_sessions = []
+    for s in sessions[:10]:
+        correct, total = _session_score(s)
+        recent_sessions.append(
+            {
+                "id": s.id,
+                "subject": s.subject_code,
+                "level": s.level_code,
+                "score": correct,
+                "total": total,
+                "created_at": s.created_at.isoformat() if s.created_at else None,
+                "completed": s.completed_at is not None,
+            }
+        )
+
+    return jsonify(
+        {
+            "child": child_payload(child),
+            "last_activity": last_activity.isoformat() if last_activity else None,
+            "sessions_this_week": len(week_sessions),
+            "average_this_week": average_this_week,
+            "strengths": strengths,
+            "weaknesses": weaknesses,
+            "skills": skills,
+            "recent_sessions": recent_sessions,
+        }
+    )
 
 
 def is_subject_locked(level_code, subject_row):

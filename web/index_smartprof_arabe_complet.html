@@ -166,6 +166,10 @@
   .child-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;background:var(--paper-soft);border-radius:12px;font-weight:600;}
   .child-level{color:var(--muted);font-weight:500;}
   .muted-note{font-size:.82rem;color:var(--muted);margin:6px 0 0;}
+  .skill-badges{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px;}
+  .skill-badge{padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:600;}
+  .skill-badge.good{background:#DCFCE7;color:#166534;}
+  .skill-badge.weak{background:#FEE2E2;color:#991B1B;}
 
   .level-panel{background:var(--paper-soft);border-radius:var(--radius);padding:28px 26px;margin-bottom:40px;transition:background .6s ease, border-radius .5s ease;}
   .level-panel h2{margin:0 0 8px;font-size:1.4rem;}
@@ -543,8 +547,45 @@ const PARENT_TEXT = {
   addChild:{fr:"Ajouter un enfant", ar:"إضافة طفل"},
   childNamePlaceholder:{fr:"Prénom de l'enfant", ar:"اسم الطفل"},
   addChildSubmit:{fr:"Ajouter", ar:"إضافة"},
-  supplementNotice:{fr:"Les 2 premiers enfants sont inclus. Un supplément payant sera bientôt disponible à partir du 3ème.", ar:"أول طفلين مشمولان مجانًا. سيتوفر قريبًا اشتراك إضافي مدفوع ابتداءً من الطفل الثالث."}
+  supplementNotice:{fr:"Les 2 premiers enfants sont inclus. Un supplément payant sera bientôt disponible à partir du 3ème.", ar:"أول طفلين مشمولان مجانًا. سيتوفر قريبًا اشتراك إضافي مدفوع ابتداءً من الطفل الثالث."},
+  reportLabel:{fr:"📊 Rapport", ar:"📊 التقرير"}
 };
+
+const REPORT_TEXT = {
+  title:{fr:"Rapport de", ar:"تقرير"},
+  loading:{fr:"Chargement...", ar:"جارٍ التحميل..."},
+  lastActivity:{fr:"Dernière activité", ar:"آخر نشاط"},
+  neverActive:{fr:"Aucune séance effectuée pour l'instant.", ar:"لم يتم إجراء أي حصة بعد."},
+  thisWeek:{fr:"Cette semaine", ar:"هذا الأسبوع"},
+  noSessionThisWeek:{fr:"Aucune séance cette semaine.", ar:"لا توجد حصة هذا الأسبوع."},
+  averageLabel:{fr:"moyenne", ar:"المعدل"},
+  strengths:{fr:"Points forts", ar:"نقاط القوة"},
+  weaknesses:{fr:"À renforcer", ar:"للتحسين"},
+  notEnoughData:{fr:"Pas encore assez de données pour l'évaluer.", ar:"لا توجد بيانات كافية بعد للتقييم."},
+  recentSessions:{fr:"Historique récent", ar:"السجل الأخير"},
+  noSessions:{fr:"Aucune séance pour l'instant.", ar:"لا توجد حصص بعد."},
+  backToDashboard:{fr:"Retour", ar:"رجوع"}
+};
+
+function sessionsCountText(n){
+  if(currentLang === 'ar') return `${n} حصة`;
+  return `${n} séance${n > 1 ? 's' : ''}`;
+}
+
+function formatRelativeTime(isoString){
+  if(!isoString) return null;
+  const date = new Date(isoString.endsWith('Z') ? isoString : isoString + 'Z');
+  const diffMin = Math.floor((Date.now() - date.getTime()) / 60000);
+  const diffH = Math.floor(diffMin / 60);
+  const diffDays = Math.floor(diffH / 24);
+
+  if(diffMin < 1) return currentLang === 'ar' ? "الآن" : "à l'instant";
+  if(diffMin < 60) return currentLang === 'ar' ? `منذ ${diffMin} دقيقة` : `il y a ${diffMin} min`;
+  if(diffH < 24) return currentLang === 'ar' ? `منذ ${diffH} ساعة` : `il y a ${diffH} h`;
+  if(diffDays === 1) return currentLang === 'ar' ? "أمس" : "hier";
+  if(diffDays < 7) return currentLang === 'ar' ? `منذ ${diffDays} أيام` : `il y a ${diffDays} jours`;
+  return date.toLocaleDateString(currentLang === 'ar' ? 'ar-TN' : 'fr-FR');
+}
 
 const AUTH_ERROR_TEXT = {
   invalid_email:{fr:"Adresse email invalide.", ar:"البريد الإلكتروني غير صالح."},
@@ -966,6 +1007,7 @@ function renderParentDashboard(view){
         return `<div class="child-row">
           <span>${c.display_name}</span>
           <span class="child-level">${levelName}</span>
+          <button type="button" class="start-btn child-report-btn" data-child-id="${c.id}">${PARENT_TEXT.reportLabel[currentLang]}</button>
           <button type="button" class="start-btn child-start-btn" data-child-id="${c.id}" data-child-name="${c.display_name.replace(/"/g,'&quot;')}" data-child-level="${c.level_code}">${TEXT.startLabel[currentLang]}</button>
         </div>`;
       }).join('')
@@ -1016,6 +1058,10 @@ function renderParentDashboard(view){
     });
   });
 
+  view.querySelectorAll('.child-report-btn').forEach(btn => {
+    btn.addEventListener('click', () => openChildReport(Number(btn.dataset.childId)));
+  });
+
   document.getElementById('addChildForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const display_name = document.getElementById('childName').value.trim();
@@ -1039,6 +1085,78 @@ function renderParentDashboard(view){
     currentUser.children.push(data);
     renderParentView();
   });
+}
+
+async function openChildReport(childId){
+  const view = document.getElementById('parentView');
+  view.innerHTML = `<div class="session-card"><p class="muted-note">${REPORT_TEXT.loading[currentLang]}</p></div>`;
+
+  let data;
+  try {
+    const res = await fetch(`/api/children/${childId}/report?lang=${currentLang}`);
+    if(!res.ok) throw new Error('bad status');
+    data = await res.json();
+  } catch(e){
+    view.innerHTML = `
+      <div class="session-card">
+        <p class="form-error">${TEXT.genericError[currentLang]}</p>
+        <div class="session-actions" style="justify-content:center;">
+          <button type="button" class="btn-secondary" id="reportBackBtn">${REPORT_TEXT.backToDashboard[currentLang]}</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('reportBackBtn').addEventListener('click', renderParentView);
+    return;
+  }
+  renderChildReportContent(view, data);
+}
+
+function renderChildReportContent(view, data){
+  const lastActivityText = data.last_activity ? formatRelativeTime(data.last_activity) : REPORT_TEXT.neverActive[currentLang];
+
+  const weekText = data.sessions_this_week > 0
+    ? `${sessionsCountText(data.sessions_this_week)}${data.average_this_week !== null ? ` — ${REPORT_TEXT.averageLabel[currentLang]} ${data.average_this_week}%` : ''}`
+    : REPORT_TEXT.noSessionThisWeek[currentLang];
+
+  const strengthsHtml = data.strengths.length
+    ? `<div class="skill-badges">${data.strengths.map(s => `<span class="skill-badge good">${s.label} (${s.percentage}%)</span>`).join('')}</div>`
+    : `<p class="muted-note">${REPORT_TEXT.notEnoughData[currentLang]}</p>`;
+
+  const weaknessesHtml = data.weaknesses.length
+    ? `<div class="skill-badges">${data.weaknesses.map(s => `<span class="skill-badge weak">${s.label} (${s.percentage}%)</span>`).join('')}</div>`
+    : `<p class="muted-note">${REPORT_TEXT.notEnoughData[currentLang]}</p>`;
+
+  const sessionsHtml = data.recent_sessions.length
+    ? data.recent_sessions.map(s => {
+        const subj = SUBJECTS.find(x => x.id === s.subject);
+        const subjName = subj ? subj.name[currentLang] : s.subject;
+        return `<div class="child-row"><span>${subjName}</span><span class="child-level">${formatRelativeTime(s.created_at)}</span><span class="child-level">${s.score} / ${s.total}</span></div>`;
+      }).join('')
+    : `<p class="muted-note">${REPORT_TEXT.noSessions[currentLang]}</p>`;
+
+  view.innerHTML = `
+    <div class="session-card">
+      <h3 class="parent-section-title" style="margin-top:0;">${REPORT_TEXT.title[currentLang]} ${data.child.display_name}</h3>
+      <p class="muted-note">${REPORT_TEXT.lastActivity[currentLang]} : ${lastActivityText}</p>
+
+      <h3 class="parent-section-title">${REPORT_TEXT.thisWeek[currentLang]}</h3>
+      <p>${weekText}</p>
+
+      <h3 class="parent-section-title">${REPORT_TEXT.strengths[currentLang]}</h3>
+      ${strengthsHtml}
+
+      <h3 class="parent-section-title">${REPORT_TEXT.weaknesses[currentLang]}</h3>
+      ${weaknessesHtml}
+
+      <h3 class="parent-section-title">${REPORT_TEXT.recentSessions[currentLang]}</h3>
+      <div class="children-list">${sessionsHtml}</div>
+
+      <div class="session-actions" style="justify-content:center;">
+        <button type="button" class="btn-secondary" id="reportBackBtn">${REPORT_TEXT.backToDashboard[currentLang]}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('reportBackBtn').addEventListener('click', renderParentView);
 }
 
 document.getElementById('parentToggleBtn').addEventListener('click', openParentView);
