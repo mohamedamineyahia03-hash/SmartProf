@@ -2,9 +2,13 @@
 
 Full-detail curriculum (domains -> skills -> exercise_formats, bilingual)
 exists for level 1 of Math, Arabic, and Science. Math and Science also have a
-domain-only skeleton for levels 2-5 (each domain doubles as its own single
-skill — no finer breakdown authored yet). Français and Anglais still have
-zero domains at any level: content authoring for those hasn't started.
+domain-only skeleton for levels 2-6 (each domain doubles as its own single
+skill — no finer breakdown authored yet). Level 6 is the last year of
+Tunisian primary school and ends with the Concours National de la 6ème, so
+its T3 skeleton replaces ordinary domains with a dedicated revision +
+"Concours blanc" (mock exam) track instead of new material. Français and
+Anglais still have zero domains at any level: content authoring for those
+hasn't started.
 """
 
 import json
@@ -32,17 +36,18 @@ LEVELS = [
     ("3", "3ème année", "السنة الثالثة"),
     ("4", "4ème année", "السنة الرابعة"),
     ("5", "5ème année", "السنة الخامسة"),
+    ("6", "6ème année", "السنة السادسة"),  # last year of primary — Concours National de la 6ème
 ]
 
-ALL_LEVELS = ["1", "2", "3", "4", "5"]
+ALL_LEVELS = ["1", "2", "3", "4", "5", "6"]
 
 # code, label_fr, label_ar, free_levels
 SUBJECTS = [
     ("math", "Mathématiques", "الرياضيات", ALL_LEVELS),
     ("science", "Éveil scientifique", "الإيقاظ العلمي", ALL_LEVELS),
     ("ar", "Arabe", "العربية", ALL_LEVELS),
-    ("fr", "Français", "الفرنسية", ["3", "4", "5"]),
-    ("en", "Anglais", "الإنجليزية", ["4", "5"]),  # paid unlock at levels 1-2-3
+    ("fr", "Français", "الفرنسية", ["3", "4", "5", "6"]),
+    ("en", "Anglais", "الإنجليزية", ["4", "5", "6"]),  # paid unlock at levels 1-2-3
 ]
 
 MATH_SKELETON = {
@@ -65,6 +70,11 @@ MATH_SKELETON = {
         "T1": ["Nombres", "Calcul", "Fractions", "Problèmes"],
         "T2": ["Fractions", "Décimaux", "Mesures", "Géométrie", "Problèmes"],
         "T3": ["Calcul", "Géométrie", "Mesures", "Problèmes"],
+    },
+    "6": {
+        "T1": ["Nombres", "Calcul", "Fractions", "Problèmes"],
+        "T2": ["Fractions", "Décimaux", "Mesures", "Géométrie", "Problèmes"],
+        "T3": ["Révision générale", "Concours blanc"],
     },
 }
 
@@ -103,6 +113,11 @@ SCIENCE_SKELETON = {
         "T1": ["Le corps humain: circulation", "Écosystèmes"],
         "T2": ["Les changements d'état de la matière", "Les forces et mouvements"],
         "T3": ["L'énergie", "Protection de l'environnement"],
+    },
+    "6": {
+        "T1": ["Le corps humain: révision", "Écosystèmes: révision"],
+        "T2": ["L'énergie et l'électricité", "La Terre et l'univers"],
+        "T3": ["Révision générale", "Concours blanc"],
     },
 }
 

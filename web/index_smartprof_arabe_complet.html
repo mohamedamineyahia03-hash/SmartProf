@@ -424,7 +424,30 @@ function mascotOwl(a,a2){
     </g>
   </svg>`;
 }
-const MASCOTS = {1:mascotUnicorn, 2:mascotDolphin, 3:mascotRocket, 4:mascotRobot, 5:mascotOwl};
+
+function mascotFox(a,a2){
+  return `<svg viewBox="0 0 200 200">
+    <defs>${lgrad('gFoxBody', a, a2, 60)}${lgrad('gFoxPatch','#FFFFFF','#FBF3DE',90)}</defs>
+    ${shadowEllipse(100,180,44,8)}
+    <g class="m-body">
+      <path d="M56 66 l-14 -36 36 16 Z" fill="url(#gFoxBody)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M144 66 l14 -36 -36 16 Z" fill="url(#gFoxBody)" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M50 56 l-4 -18 20 10 Z" fill="url(#gFoxPatch)"/>
+      <path d="M150 56 l4 -18 -20 10 Z" fill="url(#gFoxPatch)"/>
+      <ellipse cx="100" cy="112" rx="54" ry="56" fill="url(#gFoxBody)" stroke="${INK}" stroke-width="3"/>
+      <path d="M100 118 q-30 4 -22 34 q22 14 44 0 q8 -30 -22 -34 Z" fill="url(#gFoxPatch)" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+      ${eyesFace(78,122,102,13,6.5)}
+      <path d="M94 128 q6 5 12 0 l-3 6 q-3 3 -6 0 Z" fill="${INK}"/>
+      ${shine(70,84,10,6,-20)}
+    </g>
+    <g class="m-float">
+      <circle cx="100" cy="158" r="15" fill="${a2}" stroke="${INK}" stroke-width="2.5"/>
+      <circle cx="100" cy="158" r="9" fill="#FFD60A" stroke="${INK}" stroke-width="1.6"/>
+      <path d="M90 146 L100 160 L110 146" fill="none" stroke="${a2}" stroke-width="6" stroke-linecap="round" class="m-wag"/>
+    </g>
+  </svg>`;
+}
+const MASCOTS = {1:mascotUnicorn, 2:mascotDolphin, 3:mascotRocket, 4:mascotRobot, 5:mascotOwl, 6:mascotFox};
 
 /* ---- Icônes matières ---- */
 function iconMath(a,a2){
@@ -499,17 +522,21 @@ const LEVELS = [
   {id:5, name:{fr:"5ème année", ar:"السنة الخامسة"}, accent:"#00C896", accent2:"#023E7D", glow:"rgba(0,200,150,.45)",
    paper:"#EAF6F1", panel:"#DCEFE7", radius:14, stageSize:158, titleSize:"clamp(1.9rem, 4vw, 2.8rem)",
    title:{fr:"Prépare-toi pour la suite avec sérieux", ar:"استعدّ للمرحلة القادمة بجدّية"},
-   desc:{fr:"Un habillage sobre et clair, pensé pour te concentrer sur l'essentiel.", ar:"تصميم بسيط وواضح، يساعدك على التركيز على الأهمّ."}}
+   desc:{fr:"Un habillage sobre et clair, pensé pour te concentrer sur l'essentiel.", ar:"تصميم بسيط وواضح، يساعدك على التركيز على الأهمّ."}},
+  {id:6, name:{fr:"6ème année", ar:"السنة السادسة"}, accent:"#B08D57", accent2:"#1B263B", glow:"rgba(176,141,87,.45)",
+   paper:"#F4F0E8", panel:"#E7DFC9", radius:10, stageSize:148, titleSize:"clamp(1.8rem, 3.6vw, 2.6rem)",
+   title:{fr:"Objectif Concours National de la 6ème", ar:"هدفك: الامتحان الوطني للسنة السادسة"},
+   desc:{fr:"Un entraînement ciblé, avec des révisions générales et des concours blancs.", ar:"تدريب مركّز يشمل مراجعات شاملة وامتحانات تجريبية."}}
 ];
 
 // Valeurs par défaut utilisées uniquement si /api/subjects est injoignable
 // (ex: page ouverte hors du serveur Flask) — sinon remplacées par loadSubjects().
 let SUBJECTS = [
-  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}, freeLevels:["1","2","3","4","5"]},
-  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}, freeLevels:["3","4","5"]},
-  {id:"science", name:{fr:"Sciences", ar:"العلوم"}, freeLevels:["1","2","3","4","5"]},
-  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}, freeLevels:["4","5"]},
-  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}, freeLevels:["1","2","3","4","5"]}
+  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}, freeLevels:["1","2","3","4","5","6"]},
+  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}, freeLevels:["3","4","5","6"]},
+  {id:"science", name:{fr:"Sciences", ar:"العلوم"}, freeLevels:["1","2","3","4","5","6"]},
+  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}, freeLevels:["4","5","6"]},
+  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}, freeLevels:["1","2","3","4","5","6"]}
 ];
 
 const TEXT = {
