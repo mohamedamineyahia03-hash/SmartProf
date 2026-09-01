@@ -83,6 +83,8 @@ VISUAL_REQUIRED_SKILLS = {
     "comparaison_longueurs",
     "rangement_longueurs",
     "comparaison_masses",
+    "reconnaissance_monnaie",
+    "dizaine_unites",
 }
 
 VISUAL_INSTRUCTION = """

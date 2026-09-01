@@ -54,7 +54,8 @@
         "ordre_nombres",
         "composition",
         "decomposition",
-        "nombre_manquant"
+        "nombre_manquant",
+        "dizaine_unites"
       ],
       "exercise_formats": {
         "denombrement": [
@@ -95,6 +96,10 @@
         "nombre_manquant": [
           "saisie_nombre",
           "qcm"
+        ],
+        "dizaine_unites": [
+          "saisie_nombre",
+          "qcm"
         ]
       }
     },
@@ -106,7 +111,8 @@
         "addition",
         "calcul_mental",
         "egalite",
-        "situations_additives"
+        "situations_additives",
+        "addition_verticale"
       ],
       "exercise_formats": {
         "addition": [
@@ -125,6 +131,10 @@
         "situations_additives": [
           "probleme",
           "recit"
+        ],
+        "addition_verticale": [
+          "calcul",
+          "saisie_nombre"
         ]
       }
     },
@@ -209,7 +219,9 @@
       "skills": [
         "comparaison_longueurs",
         "rangement_longueurs",
-        "comparaison_masses"
+        "comparaison_masses",
+        "reconnaissance_monnaie",
+        "addition_monnaie"
       ],
       "exercise_formats": {
         "comparaison_longueurs": [
@@ -223,6 +235,14 @@
         "comparaison_masses": [
           "selection",
           "classement"
+        ],
+        "reconnaissance_monnaie": [
+          "selection",
+          "qcm"
+        ],
+        "addition_monnaie": [
+          "saisie_nombre",
+          "qcm"
         ]
       }
     },

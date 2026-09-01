@@ -78,11 +78,16 @@ MATH_SKELETON = {
     },
 }
 
-# Level 1 Math domain -> trimester(s), lifted from the legacy SKILLS_MATRIX.
+# Level 1 Math domain -> trimester(s), refined against the official Tunisia
+# 2025/2026 trimester breakdown: T1 also covers basic spatial positioning
+# (repérage gauche/droite, haut/bas), and numeration/calcul now extend into
+# T3 for the "dizaine" (tens/units, numbers 10-19) and vertical-addition
+# content introduced there — a domain still spans every trimester it has
+# real content for, since trimester tagging is domain-level, not per-skill.
 MATH1_TRIMESTERS = {
-    "T1": ["pre_numeric", "numeration", "calcul"],
+    "T1": ["pre_numeric", "numeration", "calcul", "espace_geometrie"],
     "T2": ["numeration", "calcul", "mesure", "problemes"],
-    "T3": ["espace_geometrie", "mesure", "problemes"],
+    "T3": ["numeration", "calcul", "espace_geometrie", "mesure", "problemes"],
 }
 
 # Level 1 Arabic domain -> trimester(s): letters first, reading from T2,

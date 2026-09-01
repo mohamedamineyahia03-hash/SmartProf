@@ -809,6 +809,129 @@ for _item in RECIT_EXAMPLES:
         }
     )
 
+# 4 examples covering the curriculum gap found via the user-supplied trimester
+# breakdown docx: Tunisian money (monnaie, T2) and the tens/units concept +
+# vertical addition (dizaine, T3) — neither existed in math1_curriculum.json
+# before this pass.
+CURRICULUM_GAP_EXAMPLES = [
+    {
+        "url": "local://je-vais-te-communiquer-la-repartition-du-programme-tunisien.docx#monnaie-reconnaissance",
+        "domain_hint": "mesure",
+        "trimester": "T2",
+        "domain_code": "mesure",
+        "skill_code": "reconnaissance_monnaie",
+        "exercise_format": "selection",
+        "difficulty": "en_cours",
+        "content_fr": {
+            "question": "Combien de millimes y a-t-il en tout dans la main de Yassine ?",
+            "visual": "🪙🪙🪙🪙🪙 + 🪙🪙",
+            "choices": ["6", "7", "8"],
+            "answer": "7",
+            "explanation": "On compte toutes les pièces : 5 pièces + 2 pièces = 7 millimes.",
+        },
+        "content_ar": {
+            "question": "كم مليمًا يوجد في يد ياسين إجمالًا؟",
+            "visual": "🪙🪙🪙🪙🪙 + 🪙🪙",
+            "choices": ["6", "7", "8"],
+            "answer": "7",
+            "explanation": "نعدّ كل القطع: 5 قطع + قطعتان = 7 مليمات.",
+        },
+    },
+    {
+        "url": "local://je-vais-te-communiquer-la-repartition-du-programme-tunisien.docx#monnaie-addition",
+        "domain_hint": "mesure",
+        "trimester": "T2",
+        "domain_code": "mesure",
+        "skill_code": "addition_monnaie",
+        "exercise_format": "saisie_nombre",
+        "difficulty": "en_cours",
+        "content_fr": {
+            "question": "Amal a une pièce de 5 millimes et une pièce de 3 millimes dans sa poche.",
+            "visual": "🪙×5 + 🪙×3",
+            "answer": 8,
+            "explanation": "On additionne les deux valeurs : 5 + 3 = 8 millimes.",
+        },
+        "content_ar": {
+            "question": "لدى أمل قطعة من 5 مليمات وقطعة من 3 مليمات في جيبها.",
+            "visual": "🪙×5 + 🪙×3",
+            "answer": 8,
+            "explanation": "نجمع القيمتين: 5 + 3 = 8 مليمات.",
+        },
+    },
+    {
+        "url": "local://je-vais-te-communiquer-la-repartition-du-programme-tunisien.docx#dizaine-unites",
+        "domain_hint": "numeration",
+        "trimester": "T3",
+        "domain_code": "numeration",
+        "skill_code": "dizaine_unites",
+        "exercise_format": "saisie_nombre",
+        "difficulty": "maitrise",
+        "content_fr": {
+            "question": "Quel nombre forment 1 dizaine et 4 unités ?",
+            "visual": "📦 (1 dizaine = 10)<br>🔵 🔵 🔵 🔵 (4 unités)",
+            "answer": 14,
+            "explanation": "1 dizaine vaut 10. On ajoute les 4 unités : 10 + 4 = 14.",
+        },
+        "content_ar": {
+            "question": "ما هو العدد المكوَّن من عشرة واحدة و4 آحاد؟",
+            "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 🔵 (4 آحاد)",
+            "answer": 14,
+            "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد الأربعة: 10 + 4 = 14.",
+        },
+    },
+    {
+        "url": "local://je-vais-te-communiquer-la-repartition-du-programme-tunisien.docx#addition-verticale",
+        "domain_hint": "calcul",
+        "trimester": "T3",
+        "domain_code": "calcul",
+        "skill_code": "addition_verticale",
+        "exercise_format": "saisie_nombre",
+        "difficulty": "maitrise",
+        "content_fr": {
+            "question": "Pose et calcule : 13 + 6",
+            "answer": 19,
+            "explanation": "On aligne unités sous unités et dizaines sous dizaines : 3 + 6 = 9 unités, 1 dizaine ne change pas. Donc 13 + 6 = 19.",
+        },
+        "content_ar": {
+            "question": "ضع العملية عموديًا واحسب: 13 + 6",
+            "answer": 19,
+            "explanation": "نرتب الآحاد تحت الآحاد والعشرات تحت العشرات: 3 + 6 = 9 آحاد، والعشرة الواحدة تبقى كما هي. إذن 13 + 6 = 19.",
+        },
+    },
+]
+
+for _gap in CURRICULUM_GAP_EXAMPLES:
+    EXAMPLES.append(
+        {
+            "source": {
+                "url": _gap["url"],
+                "title": "Répartition trimestrielle du programme tunisien, 1ère année (fournie par l'utilisateur)",
+                "license_status": "unlicensed",
+                "subject_code": "math",
+                "level_code": "1",
+                "domain_hint": _gap["domain_hint"],
+                "trimester_hint": _gap["trimester"],
+                "region_scope": "tunisia_web",
+                "content_snapshot": (
+                    "Répartition trimestrielle fournie par l'utilisateur (programme Tunisie 2025/2026) : "
+                    "sert uniquement à confirmer quels sujets couvrir, pas comme contenu recopié."
+                ),
+                "status": "used_for_generation",
+            },
+            "exercise": {
+                "subject_code": "math",
+                "level_code": "1",
+                "trimester": _gap["trimester"],
+                "domain_code": _gap["domain_code"],
+                "skill_code": _gap["skill_code"],
+                "exercise_format": _gap["exercise_format"],
+                "difficulty": _gap["difficulty"],
+                "content_fr": _gap["content_fr"],
+                "content_ar": _gap["content_ar"],
+            },
+        }
+    )
+
 
 def main():
     with app.app_context():
