@@ -39,11 +39,13 @@ EXAMPLES = [
             "difficulty": "en_cours",
             "content_fr": {
                 "question": "Compte les pommes et écris le nombre.",
+                "visual": "🍎 🍎 🍎 🍎",
                 "answer": 4,
                 "explanation": "Pointe chaque pomme du doigt en comptant une seule fois : 1, 2, 3, 4. Il y a bien 4 pommes en tout.",
             },
             "content_ar": {
                 "question": "عدّ التفاحات واكتب العدد.",
+                "visual": "🍎 🍎 🍎 🍎",
                 "answer": 4,
                 "explanation": "أشر إلى كل تفاحة وعدّها مرة واحدة فقط: 1، 2، 3، 4. المجموع هو 4 تفاحات.",
             },

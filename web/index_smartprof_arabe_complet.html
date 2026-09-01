@@ -127,6 +127,7 @@
   .session-card{background:var(--card);border-radius:var(--radius);padding:30px 26px;box-shadow:0 4px 20px rgba(27,35,64,.08);margin-bottom:24px;}
   .session-progress{font-weight:600;color:var(--muted);margin-bottom:14px;font-size:.85rem;}
   .session-question{font-size:1.25rem;font-weight:700;margin-bottom:22px;}
+  .session-visual{font-size:2.6rem;text-align:center;margin:-6px 0 22px;letter-spacing:.15em;}
   .choice-list{display:grid;gap:12px;margin-bottom:20px;}
   .choice-btn{padding:16px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .2s ease;}
   .choice-btn:hover{border-color:var(--accent);}
@@ -769,10 +770,13 @@ function renderSessionQuestion(){
     ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
     : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
 
+  const visualArea = content.visual ? `<div class="session-visual">${content.visual}</div>` : '';
+
   view.innerHTML = `
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
       <div class="session-question">${content.question}</div>
+      ${visualArea}
       ${answerArea}
       <div id="feedbackArea"></div>
       <div class="session-actions">
@@ -813,9 +817,9 @@ function feedbackBannerHtml(data){
 
 async function submitAnswer(answer){
   const ex = currentSession.exercise;
-  let data;
+  let res, data;
   try {
-    const res = await fetch(`/api/session/${currentSession.sessionId}/answer`, {
+    res = await fetch(`/api/session/${currentSession.sessionId}/answer`, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({exercise_id: ex.id, answer})
@@ -823,6 +827,15 @@ async function submitAnswer(answer){
     data = await res.json();
   } catch(e){
     showLockedToast(TEXT.genericError[currentLang]);
+    return;
+  }
+
+  if(!res.ok){
+    // The session/exercise no longer matches what the server has (e.g. the
+    // server was restarted mid-session) - never render this as a wrong
+    // answer, since data.correct is undefined here, not false.
+    showLockedToast(TEXT.genericError[currentLang]);
+    backToHome();
     return;
   }
 
