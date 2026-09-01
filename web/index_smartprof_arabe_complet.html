@@ -488,11 +488,11 @@ const LEVELS = [
 // Valeurs par défaut utilisées uniquement si /api/subjects est injoignable
 // (ex: page ouverte hors du serveur Flask) — sinon remplacées par loadSubjects().
 let SUBJECTS = [
-  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}, isFreeAt1_2:true, isFreeAt3_5:true},
-  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}, isFreeAt1_2:false, isFreeAt3_5:true},
-  {id:"science", name:{fr:"Sciences", ar:"العلوم"}, isFreeAt1_2:true, isFreeAt3_5:true},
-  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}, isFreeAt1_2:false, isFreeAt3_5:true},
-  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}, isFreeAt1_2:true, isFreeAt3_5:true}
+  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}, freeLevels:["1","2","3","4","5"]},
+  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}, freeLevels:["3","4","5"]},
+  {id:"science", name:{fr:"Sciences", ar:"العلوم"}, freeLevels:["1","2","3","4","5"]},
+  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}, freeLevels:["4","5"]},
+  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}, freeLevels:["1","2","3","4","5"]}
 ];
 
 const TEXT = {
@@ -522,7 +522,7 @@ function incorrectFeedbackText(correctAnswer){
   return currentLang === 'ar' ? `❌ الإجابة الصحيحة: ${correctAnswer}` : `❌ La bonne réponse était : ${correctAnswer}`;
 }
 function isSubjectLocked(subject, level){
-  return level <= 2 ? !subject.isFreeAt1_2 : !subject.isFreeAt3_5;
+  return !subject.freeLevels.includes(String(level));
 }
 
 const root = document.documentElement.style;
@@ -876,8 +876,7 @@ async function loadSubjects(){
     SUBJECTS = data.map(s => ({
       id: s.id,
       name: {fr: s.name, ar: s.name_ar},
-      isFreeAt1_2: s.is_free_at_level1_2,
-      isFreeAt3_5: s.is_free_at_level3_5
+      freeLevels: s.free_levels
     }));
   } catch(e){
     console.warn('Impossible de charger /api/subjects, utilisation des valeurs par défaut.', e);

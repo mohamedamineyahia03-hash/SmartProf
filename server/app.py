@@ -54,8 +54,7 @@ def subjects():
                 "id": s.code,
                 "name": s.label_fr,
                 "name_ar": s.label_ar,
-                "is_free_at_level1_2": s.is_free_at_level1_2,
-                "is_free_at_level3_5": s.is_free_at_level3_5,
+                "free_levels": s.free_levels,
             }
             for s in rows
         ]
@@ -351,12 +350,11 @@ def child_report(child_id):
 
 
 def is_subject_locked(level_code, subject_row):
-    """Fr/En require an unlock at levels 1-2; no account/entitlement system exists
-    yet (Phase 4), so those two are always locked for now — the free subjects
-    (math/science/ar, and everything at levels 3-5) are never affected."""
-    if level_code in ("1", "2"):
-        return not subject_row.is_free_at_level1_2
-    return not subject_row.is_free_at_level3_5
+    """A subject requires an unlock at any level not listed in its free_levels
+    (e.g. Fr/En at levels 1-2, En also at level 3). No account/entitlement
+    system exists yet (Phase 4), so any locked combination is always locked
+    for now — the free ones are never affected."""
+    return level_code not in (subject_row.free_levels or [])
 
 
 def public_exercise_payload(exercise):

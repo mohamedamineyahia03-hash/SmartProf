@@ -17,8 +17,11 @@ class CurriculumSubject(db.Model):
     code = db.Column(db.String(16), unique=True, nullable=False)  # math/fr/science/en/ar
     label_fr = db.Column(db.String(64), nullable=False)
     label_ar = db.Column(db.String(64), nullable=False)
-    is_free_at_level1_2 = db.Column(db.Boolean, nullable=False, default=False)
-    is_free_at_level3_5 = db.Column(db.Boolean, nullable=False, default=True)
+    # Which level codes ("1".."5") this subject is free at — everything else
+    # requires an unlock. Per-level rather than a "1-2 vs 3-5" band so a
+    # subject can be free at some levels within a band and paid at others
+    # (e.g. English free at 4-5 but still paid at 3).
+    free_levels = db.Column(db.JSON, nullable=False, default=list)
 
 
 class CurriculumDomain(db.Model):

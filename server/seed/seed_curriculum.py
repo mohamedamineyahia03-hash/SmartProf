@@ -36,13 +36,15 @@ LEVELS = [
     ("5", "5ème année", "السنة الخامسة"),
 ]
 
-# code, label_fr, label_ar, is_free_at_level1_2, is_free_at_level3_5
+ALL_LEVELS = ["1", "2", "3", "4", "5"]
+
+# code, label_fr, label_ar, free_levels
 SUBJECTS = [
-    ("math", "Mathématiques", "الرياضيات", True, True),
-    ("science", "Éveil scientifique", "الإيقاظ العلمي", True, True),
-    ("ar", "Arabe", "العربية", True, True),
-    ("fr", "Français", "الفرنسية", False, True),
-    ("en", "Anglais", "الإنجليزية", False, True),
+    ("math", "Mathématiques", "الرياضيات", ALL_LEVELS),
+    ("science", "Éveil scientifique", "الإيقاظ العلمي", ALL_LEVELS),
+    ("ar", "Arabe", "العربية", ALL_LEVELS),
+    ("fr", "Français", "الفرنسية", ["3", "4", "5"]),
+    ("en", "Anglais", "الإنجليزية", ["4", "5"]),  # paid unlock at levels 1-2-3
 ]
 
 MATH_SKELETON = {
@@ -94,15 +96,14 @@ def seed_levels_and_subjects():
         levels[code] = row
 
     subjects = {}
-    for code, label_fr, label_ar, free_1_2, free_3_5 in SUBJECTS:
+    for code, label_fr, label_ar, free_levels in SUBJECTS:
         row = CurriculumSubject.query.filter_by(code=code).first()
         if row is None:
             row = CurriculumSubject(
                 code=code,
                 label_fr=label_fr,
                 label_ar=label_ar,
-                is_free_at_level1_2=free_1_2,
-                is_free_at_level3_5=free_3_5,
+                free_levels=free_levels,
             )
             db.session.add(row)
         subjects[code] = row
