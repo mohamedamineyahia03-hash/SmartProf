@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timezone
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -6,11 +7,14 @@ from flask_cors import CORS
 from db import db
 from models import (
     CurriculumDomain,
-    CurriculumDomainTrimester,
     CurriculumLevel,
     CurriculumSubject,
+    LibraryCacheExercise,
+    Session,
 )
+from academic_calendar import current_trimester
 from diagnostic_engine import diagnose
+from session_engine import build_session
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -138,6 +142,154 @@ def diagnostic():
         return jsonify({"error": "Invalid subject"}), 400
 
     return jsonify(diagnose(str(level), subject, results))
+
+
+def is_subject_locked(level_code, subject_row):
+    """Fr/En require an unlock at levels 1-2; no account/entitlement system exists
+    yet (Phase 4), so those two are always locked for now — the free subjects
+    (math/science/ar, and everything at levels 3-5) are never affected."""
+    if level_code in ("1", "2"):
+        return not subject_row.is_free_at_level1_2
+    return not subject_row.is_free_at_level3_5
+
+
+def public_exercise_payload(exercise):
+    """Strips the answer out of what's sent to the browser — correctness is
+    always checked server-side in /api/session/<id>/answer."""
+    return {
+        "id": exercise.id,
+        "domain": exercise.domain_code,
+        "skill": exercise.skill_code,
+        "format": exercise.exercise_format,
+        "difficulty": exercise.difficulty,
+        "content_fr": {k: v for k, v in exercise.content_fr.items() if k != "answer"},
+        "content_ar": {k: v for k, v in exercise.content_ar.items() if k != "answer"},
+    }
+
+
+@app.post("/api/session/start")
+def start_session():
+    data = request.get_json(silent=True) or {}
+    level_code = str(data.get("level", ""))
+    subject_code = data.get("subject", "")
+
+    if not CurriculumLevel.query.filter_by(code=level_code).first():
+        return jsonify({"error": "invalid_level"}), 400
+
+    subject_row = CurriculumSubject.query.filter_by(code=subject_code).first()
+    if subject_row is None:
+        return jsonify({"error": "invalid_subject"}), 400
+
+    if is_subject_locked(level_code, subject_row):
+        return jsonify(
+            {
+                "error": "subject_locked",
+                "message": "Cette matière nécessite un déblocage.",
+            }
+        ), 403
+
+    trimester = current_trimester()
+    exercises = build_session(level_code, subject_code, trimester=trimester)
+    if not exercises:
+        return jsonify(
+            {
+                "error": "no_content",
+                "message": "Aucun exercice n'est encore disponible pour ce choix.",
+            }
+        ), 404
+
+    session_row = Session(
+        level_code=level_code,
+        subject_code=subject_code,
+        trimester=trimester,
+        exercise_ids=[e.id for e in exercises],
+        answers={},
+    )
+    db.session.add(session_row)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "session_id": session_row.id,
+            "trimester": trimester,
+            "exercises": [public_exercise_payload(e) for e in exercises],
+        }
+    )
+
+
+@app.get("/api/session/<int:session_id>")
+def get_session(session_id):
+    session_row = Session.query.get(session_id)
+    if session_row is None:
+        return jsonify({"error": "not_found"}), 404
+
+    exercises = LibraryCacheExercise.query.filter(
+        LibraryCacheExercise.id.in_(session_row.exercise_ids)
+    ).all()
+    by_id = {e.id: e for e in exercises}
+    ordered = [by_id[eid] for eid in session_row.exercise_ids if eid in by_id]
+
+    return jsonify(
+        {
+            "session_id": session_row.id,
+            "level": session_row.level_code,
+            "subject": session_row.subject_code,
+            "trimester": session_row.trimester,
+            "exercises": [public_exercise_payload(e) for e in ordered],
+            "answers": session_row.answers,
+            "completed_at": session_row.completed_at.isoformat() if session_row.completed_at else None,
+        }
+    )
+
+
+@app.post("/api/session/<int:session_id>/answer")
+def answer_session(session_id):
+    session_row = Session.query.get(session_id)
+    if session_row is None:
+        return jsonify({"error": "not_found"}), 404
+
+    data = request.get_json(silent=True) or {}
+    try:
+        exercise_id = int(data.get("exercise_id"))
+    except (TypeError, ValueError):
+        return jsonify({"error": "invalid_exercise_id"}), 400
+    given = data.get("answer")
+
+    if exercise_id not in session_row.exercise_ids:
+        return jsonify({"error": "exercise_not_in_session"}), 400
+
+    exercise = LibraryCacheExercise.query.get(exercise_id)
+    if exercise is None:
+        return jsonify({"error": "exercise_not_found"}), 404
+
+    def normalize(value):
+        return str(value).strip().lower()
+
+    correct_values = {
+        normalize(exercise.content_fr.get("answer")),
+        normalize(exercise.content_ar.get("answer")),
+    }
+    is_correct = normalize(given) in correct_values
+
+    answers = dict(session_row.answers or {})
+    answers[str(exercise_id)] = {"given": given, "correct": is_correct}
+    session_row.answers = answers
+
+    if len(answers) >= len(session_row.exercise_ids):
+        session_row.completed_at = datetime.now(timezone.utc)
+
+    db.session.commit()
+
+    return jsonify(
+        {
+            "correct": is_correct,
+            "correct_answer_fr": exercise.content_fr.get("answer"),
+            "correct_answer_ar": exercise.content_ar.get("answer"),
+            "completed": session_row.completed_at is not None,
+            "score": sum(1 for a in answers.values() if a["correct"]),
+            "total": len(session_row.exercise_ids),
+        }
+    )
 
 
 if __name__ == "__main__":

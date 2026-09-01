@@ -161,3 +161,20 @@ class LibraryCacheExercise(db.Model):
     content_ar = db.Column(db.JSON, nullable=False)
     license = db.Column(db.String(32), nullable=False, default="SmartProf")
     synced_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
+
+
+class Session(db.Model):
+    """A 15-exercise session. child_profile_id is nullable for now — accounts
+    don't exist yet (Phase 4), so sessions are anonymous until then."""
+
+    __tablename__ = "session"
+
+    id = db.Column(db.Integer, primary_key=True)
+    child_profile_id = db.Column(db.Integer, db.ForeignKey("child_profile.id"), nullable=True)
+    level_code = db.Column(db.String(1), nullable=False)
+    subject_code = db.Column(db.String(16), nullable=False)
+    trimester = db.Column(db.String(2), nullable=False)
+    exercise_ids = db.Column(db.JSON, nullable=False)  # ordered list of library_cache_exercise ids
+    answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct}}
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    completed_at = db.Column(db.DateTime, nullable=True)

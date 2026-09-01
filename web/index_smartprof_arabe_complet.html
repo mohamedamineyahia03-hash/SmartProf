@@ -109,13 +109,43 @@
   .level-connector{position:relative;z-index:1;width:28px;height:3px;background:var(--card);border-radius:3px;margin-top:-28px;pointer-events:none;}
 
   .subjects{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:16px;margin-bottom:40px;}
-  .subject-card{background:var(--card);border-radius:var(--radius);padding:20px 14px;text-align:center;cursor:pointer;border:2px solid transparent;box-shadow:0 4px 18px rgba(27,35,64,.06);transition:all .35s ease;}
+  .subject-card{position:relative;background:var(--card);border-radius:var(--radius);padding:20px 14px;text-align:center;border:2px solid transparent;box-shadow:0 4px 18px rgba(27,35,64,.06);transition:all .35s ease;}
   .subject-card:hover{border-color:var(--accent);transform:translateY(-4px);}
+  .subject-card.locked{opacity:.75;}
   .subject-card .icon-wrap{width:72px;height:72px;margin:0 auto 8px;filter:drop-shadow(0 6px 8px rgba(27,35,64,.15)) drop-shadow(0 0 12px var(--glow));transition:filter 1s ease;}
   .subject-card .icon-wrap svg{width:100%;height:100%;overflow:visible;}
-  .subject-card .name{font-weight:600;font-size:.95rem;}
+  .subject-card .name{font-weight:600;font-size:.95rem;display:block;margin-bottom:10px;}
   .icon-anim{animation:iconbounce 2.6s ease-in-out infinite;transform-origin:center bottom;}
   @keyframes iconbounce{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-4px) rotate(-3deg);}}
+
+  .start-btn{border:0;background:var(--ink);color:#fff;padding:9px 18px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:.78rem;cursor:pointer;transition:transform .2s ease;}
+  .start-btn:hover{transform:translateY(-2px);}
+  .subject-card.locked .start-btn{background:var(--muted);}
+
+  .session-view{display:none;}
+  .session-view.active{display:block;}
+  .session-card{background:var(--card);border-radius:var(--radius);padding:30px 26px;box-shadow:0 4px 20px rgba(27,35,64,.08);margin-bottom:24px;}
+  .session-progress{font-weight:600;color:var(--muted);margin-bottom:14px;font-size:.85rem;}
+  .session-question{font-size:1.25rem;font-weight:700;margin-bottom:22px;}
+  .choice-list{display:grid;gap:12px;margin-bottom:20px;}
+  .choice-btn{padding:16px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .2s ease;}
+  .choice-btn:hover{border-color:var(--accent);}
+  .choice-btn.selected{border-color:var(--accent);background:var(--paper-soft);}
+  .choice-btn:disabled{cursor:default;}
+  .answer-input{width:100%;padding:14px;border-radius:10px;border:2px solid #e5e7eb;font-size:1rem;margin-bottom:20px;font-family:'Inter',sans-serif;}
+  .session-actions{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;}
+  .session-actions button{border:0;border-radius:999px;padding:12px 24px;font-family:'Baloo 2',sans-serif;font-weight:700;cursor:pointer;}
+  .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff;}
+  .btn-primary:disabled{opacity:.5;cursor:default;}
+  .btn-secondary{background:#eee;color:var(--ink);}
+  .feedback-banner{padding:14px 18px;border-radius:12px;margin-bottom:18px;font-weight:600;}
+  .feedback-banner.correct{background:#DCFCE7;color:#166534;}
+  .feedback-banner.incorrect{background:#FEE2E2;color:#991B1B;}
+  .session-summary{text-align:center;}
+  .session-summary .score-big{font-size:3rem;font-weight:800;font-family:'Baloo 2',sans-serif;margin:10px 0;}
+
+  .locked-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:14px 22px;border-radius:999px;font-weight:600;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;max-width:90vw;text-align:center;}
+  .locked-toast.show{opacity:1;}
 
   .level-panel{background:var(--paper-soft);border-radius:var(--radius);padding:28px 26px;margin-bottom:40px;transition:background .6s ease, border-radius .5s ease;}
   .level-panel h2{margin:0 0 8px;font-size:1.4rem;}
@@ -154,36 +184,42 @@
     </div>
   </header>
 
-  <section class="hero">
-    <div class="burst" id="burst"></div>
-    <div class="aura" id="aura"></div>
-    <div class="mascot-stage" id="mascotStage"></div>
-    <h1 id="heroTitle">Choisis ton année et pars à l'aventure</h1>
-  </section>
+  <div id="homeView">
+    <section class="hero">
+      <div class="burst" id="burst"></div>
+      <div class="aura" id="aura"></div>
+      <div class="mascot-stage" id="mascotStage"></div>
+      <h1 id="heroTitle">Choisis ton année et pars à l'aventure</h1>
+    </section>
 
-  <div class="level-path" id="levelPath"></div>
+    <div class="level-path" id="levelPath"></div>
 
-  <div class="level-panel" id="levelPanel">
-    <span class="tag" id="levelTag"></span>
-    <h2 id="levelTitle"></h2>
-    <p id="levelDesc"></p>
+    <div class="level-panel" id="levelPanel">
+      <span class="tag" id="levelTag"></span>
+      <h2 id="levelTitle"></h2>
+      <p id="levelDesc"></p>
+    </div>
+
+    <div class="subjects" id="subjects"></div>
+
+    <div class="download">
+      <h2 id="downloadTitle">Emporte SmartProf partout</h2>
+      <p id="downloadNote"></p>
+      <button class="download-btn" id="downloadBtn">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="downloadBtnLabel"></span>
+      </button>
+      <div class="download-note" id="downloadStatus"></div>
+    </div>
   </div>
 
-  <div class="subjects" id="subjects"></div>
-
-  <div class="download">
-    <h2 id="downloadTitle">Emporte SmartProf partout</h2>
-    <p id="downloadNote"></p>
-    <button class="download-btn" id="downloadBtn">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span id="downloadBtnLabel"></span>
-    </button>
-    <div class="download-note" id="downloadStatus"></div>
-  </div>
+  <div class="session-view" id="sessionView"></div>
 
   <footer>SmartProf — plateforme éducative pour le primaire</footer>
 
 </div>
+
+<div class="locked-toast" id="lockedToast"></div>
 
 <script>
 const INK = "#1B2340";
@@ -419,12 +455,14 @@ const LEVELS = [
    desc:{fr:"Un habillage sobre et clair, pensé pour te concentrer sur l'essentiel.", ar:"تصميم بسيط وواضح، يساعدك على التركيز على الأهمّ."}}
 ];
 
-const SUBJECTS = [
-  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}},
-  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}},
-  {id:"science", name:{fr:"Sciences", ar:"العلوم"}},
-  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}},
-  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}}
+// Valeurs par défaut utilisées uniquement si /api/subjects est injoignable
+// (ex: page ouverte hors du serveur Flask) — sinon remplacées par loadSubjects().
+let SUBJECTS = [
+  {id:"math", name:{fr:"Mathématiques", ar:"الرياضيات"}, isFreeAt1_2:true, isFreeAt3_5:true},
+  {id:"fr", name:{fr:"Français", ar:"اللغة الفرنسية"}, isFreeAt1_2:false, isFreeAt3_5:true},
+  {id:"science", name:{fr:"Sciences", ar:"العلوم"}, isFreeAt1_2:true, isFreeAt3_5:true},
+  {id:"en", name:{fr:"Anglais", ar:"اللغة الإنجليزية"}, isFreeAt1_2:false, isFreeAt3_5:true},
+  {id:"ar", name:{fr:"Arabe", ar:"اللغة العربية"}, isFreeAt1_2:true, isFreeAt3_5:true}
 ];
 
 const TEXT = {
@@ -432,12 +470,36 @@ const TEXT = {
   downloadTitle:{fr:"Emporte SmartProf partout", ar:"خذ سمارت بروف معك أينما ذهبت"},
   downloadNote:{fr:"L'application mobile arrive bientôt — en attendant, continue sur le site.", ar:"التطبيق قادم قريبًا — في الانتظار، تابع على الموقع."},
   downloadBtn:{fr:"Télécharger l'application", ar:"تحميل التطبيق"},
-  downloadStatus:{fr:"L'application est en cours de préparation. Reviens bientôt !", ar:"التطبيق قيد التحضير. عد قريبًا!"}
+  downloadStatus:{fr:"L'application est en cours de préparation. Reviens bientôt !", ar:"التطبيق قيد التحضير. عد قريبًا!"},
+  startLabel:{fr:"Commencer ▶", ar:"ابدأ ◀"},
+  unlockLabel:{fr:"🔒 À débloquer", ar:"🔒 غير مفعّلة"},
+  lockedMessage:{fr:"Cette matière est disponible avec un déblocage payant (bientôt disponible).", ar:"هذه المادة متاحة عبر تفعيل مدفوع (قريبًا)."},
+  noContentMessage:{fr:"Pas encore d'exercices disponibles pour ce choix, reviens bientôt !", ar:"لا توجد تمارين متاحة بعد لهذا الاختيار، عد قريبًا!"},
+  genericError:{fr:"Une erreur est survenue, réessaie.", ar:"حدث خطأ، حاول مجددًا."},
+  backHome:{fr:"Retour à l'accueil", ar:"العودة للرئيسية"},
+  validate:{fr:"Valider", ar:"تحقّق"},
+  next:{fr:"Suivant", ar:"التالي"},
+  finish:{fr:"Terminer", ar:"إنهاء"},
+  correctFeedback:{fr:"✅ Bonne réponse !", ar:"✅ إجابة صحيحة!"},
+  answerPlaceholder:{fr:"Ta réponse...", ar:"إجابتك..."},
+  summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"}
 };
+
+function exerciseProgressText(i, total){
+  return currentLang === 'ar' ? `تمرين ${i} من ${total}` : `Exercice ${i} / ${total}`;
+}
+function incorrectFeedbackText(correctAnswer){
+  return currentLang === 'ar' ? `❌ الإجابة الصحيحة: ${correctAnswer}` : `❌ La bonne réponse était : ${correctAnswer}`;
+}
+function isSubjectLocked(subject, level){
+  return level <= 2 ? !subject.isFreeAt1_2 : !subject.isFreeAt3_5;
+}
 
 const root = document.documentElement.style;
 let currentLevel = 1;
 let currentLang = 'fr';
+let currentSession = null;
+let lockedToastTimer = null;
 
 function render(){
   const lvl = LEVELS.find(l => l.id === currentLevel);
@@ -491,9 +553,18 @@ function render(){
   const subjectsEl = document.getElementById('subjects');
   subjectsEl.innerHTML = '';
   SUBJECTS.forEach(s => {
+    const locked = isSubjectLocked(s, currentLevel);
     const card = document.createElement('div');
-    card.className = 'subject-card';
-    card.innerHTML = `<div class="icon-wrap">${SUBJECT_ICONS[s.id](lvl.accent, lvl.accent2)}</div><span class="name">${s.name[currentLang]}</span>`;
+    card.className = 'subject-card' + (locked ? ' locked' : '');
+    card.innerHTML = `
+      <div class="icon-wrap">${SUBJECT_ICONS[s.id] ? SUBJECT_ICONS[s.id](lvl.accent, lvl.accent2) : ''}</div>
+      <span class="name">${s.name[currentLang]}</span>
+      <button type="button" class="start-btn">${locked ? TEXT.unlockLabel[currentLang] : TEXT.startLabel[currentLang]}</button>
+    `;
+    card.querySelector('.start-btn').addEventListener('click', () => {
+      if(locked){ showLockedToast(TEXT.lockedMessage[currentLang]); }
+      else { startSession(s.id); }
+    });
     subjectsEl.appendChild(card);
   });
 
@@ -538,7 +609,162 @@ document.getElementById('downloadBtn').addEventListener('click', () => {
   document.getElementById('downloadStatus').textContent = TEXT.downloadStatus[currentLang];
 });
 
-render();
+/* ---------- Séance d'exercices ---------- */
+
+function showLockedToast(message){
+  const toast = document.getElementById('lockedToast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(lockedToastTimer);
+  lockedToastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}
+
+async function startSession(subjectId){
+  let res, data;
+  try {
+    res = await fetch('/api/session/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({level: currentLevel, subject: subjectId})
+    });
+    data = await res.json();
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+    return;
+  }
+
+  if(res.status === 403){ showLockedToast(TEXT.lockedMessage[currentLang]); return; }
+  if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
+  if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
+
+  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, score: 0};
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('sessionView').classList.add('active');
+  renderSessionQuestion();
+}
+
+function renderSessionQuestion(){
+  const view = document.getElementById('sessionView');
+  const ex = currentSession.exercises[currentSession.index];
+  const content = ex['content_' + currentLang];
+  const total = currentSession.exercises.length;
+
+  const answerArea = content.choices
+    ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+    : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, total)}</div>
+      <div class="session-question">${content.question}</div>
+      ${answerArea}
+      <div id="feedbackArea"></div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  const validateBtn = document.getElementById('validateBtn');
+
+  if(content.choices){
+    let selected = null;
+    view.querySelectorAll('.choice-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        view.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selected = btn.dataset.choice;
+      });
+    });
+    validateBtn.addEventListener('click', () => { if(selected !== null) submitAnswer(selected); });
+  } else {
+    validateBtn.addEventListener('click', () => {
+      const val = document.getElementById('answerInput').value.trim();
+      if(val) submitAnswer(val);
+    });
+  }
+}
+
+async function submitAnswer(answer){
+  const ex = currentSession.exercises[currentSession.index];
+  let data;
+  try {
+    const res = await fetch(`/api/session/${currentSession.sessionId}/answer`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({exercise_id: ex.id, answer})
+    });
+    data = await res.json();
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+    return;
+  }
+
+  currentSession.score = data.score;
+  const correctAnswer = currentLang === 'ar' ? data.correct_answer_ar : data.correct_answer_fr;
+  document.getElementById('feedbackArea').innerHTML =
+    `<div class="feedback-banner ${data.correct ? 'correct' : 'incorrect'}">${data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(correctAnswer)}</div>`;
+
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+  const input = document.getElementById('answerInput');
+  if(input) input.disabled = true;
+
+  // Swap in a listener-free clone so this doesn't stack on top of the
+  // "Valider" click handler still attached to the original button.
+  const oldBtn = document.getElementById('validateBtn');
+  const validateBtn = oldBtn.cloneNode(true);
+  oldBtn.replaceWith(validateBtn);
+  const isLast = currentSession.index + 1 >= currentSession.exercises.length;
+  validateBtn.textContent = isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang];
+  validateBtn.disabled = false;
+  validateBtn.addEventListener('click', () => {
+    if(isLast){ renderSessionSummary(); }
+    else { currentSession.index++; renderSessionQuestion(); }
+  });
+}
+
+function renderSessionSummary(){
+  const view = document.getElementById('sessionView');
+  const total = currentSession.exercises.length;
+  view.innerHTML = `
+    <div class="session-card session-summary">
+      <div class="session-question">${TEXT.summaryTitle[currentLang]}</div>
+      <div class="score-big">${currentSession.score} / ${total}</div>
+      <div class="session-actions" style="justify-content:center;">
+        <button type="button" class="btn-primary" id="finishBackBtn">${TEXT.backHome[currentLang]}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('finishBackBtn').addEventListener('click', backToHome);
+}
+
+function backToHome(){
+  currentSession = null;
+  document.getElementById('sessionView').classList.remove('active');
+  document.getElementById('sessionView').innerHTML = '';
+  document.getElementById('homeView').style.display = '';
+}
+
+async function loadSubjects(){
+  try {
+    const res = await fetch('/api/subjects');
+    if(!res.ok) throw new Error('bad status');
+    const data = await res.json();
+    SUBJECTS = data.map(s => ({
+      id: s.id,
+      name: {fr: s.name, ar: s.name_ar},
+      isFreeAt1_2: s.is_free_at_level1_2,
+      isFreeAt3_5: s.is_free_at_level3_5
+    }));
+  } catch(e){
+    console.warn('Impossible de charger /api/subjects, utilisation des valeurs par défaut.', e);
+  }
+  render();
+}
+
+loadSubjects();
 </script>
 
 </body>
