@@ -1,5 +1,5 @@
 """Curated source list. Discover reads ONLY from here — no open web search
-yet. Three tiers, per the validated sourcing rule:
+yet. Six tiers, per the validated sourcing rule:
 
 - region_scope="tunisia_official": ministry/institutional platforms and
   manuals — highest trust, used as the primary reference for curriculum
@@ -13,15 +13,33 @@ yet. Three tiers, per the validated sourcing rule:
   where their specific topic genuinely matches a domain in the Tunisian
   program (e.g. a foreign 4th-grade "matter/technology" science lesson
   mapped to éveil scientifique) — not general-purpose foreign curricula.
+- region_scope="fr_ministry_approved": official French Ministère de
+  l'Éducation nationale resources (éduscol) — used for Français/Anglais at
+  levels 1-2, per the validated sourcing rule (these two subjects aren't
+  officially part of the Tunisian program at that age, so there's no
+  Tunisian-official tier to draw from there).
+- region_scope="fr_web": French pedagogy sites that claim alignment with
+  the French Éducation nationale programme but are privately published, not
+  the Ministry itself — same trust tier as tunisia_web, broadens the
+  inspiration pool for Français at levels 1-2.
+- region_scope="uk_approved": British Council resources — the other
+  accepted sourcing tier for Anglais at levels 1-2(-3, while it's still a
+  paid unlock and not yet part of the free Tunisian program).
 
-None of these three tiers are treated as more "legally safe" than another —
+None of these tiers are treated as more "legally safe" than another —
 classify.py defaults every one of them to license_status="unlicensed"
 (inspiration-only, see generate_exercise.py: content is never copied, only
 used to generate an original exercise) unless a page explicitly carries an
 open license. "No copyright notice visible" is not the same as "free to
 copy" in any of these tiers.
 
-Verified accessible as of 2026-09-01; add more entries as they're
+The Tunisian, French-web, and Belgian entries were verified accessible as of
+2026-09-01 (real HTTP fetch). The éduscol and British Council entries added
+later the same day are real, well-known institutional domains but weren't
+individually fetch-verified through this tool (both attempts hit generic
+network/anti-bot errors unrelated to the URLs' validity) — discover.py
+degrades gracefully (records a "(fetch failed: ...)" snapshot, doesn't
+crash) if a fetch fails in production too. Add more entries as they're
 identified and checked."""
 
 SOURCES = [
@@ -101,5 +119,61 @@ SOURCES = [
         "region_scope": "international_aligned",
         "subject_code": "science",
         "level_code": "4",
+    },
+    {
+        "url": "https://eduscol.education.fr/3830/francais-cycle-2",
+        "title": "Ressources d'accompagnement du programme de français au cycle 2 — éduscol (Ministère de l'Éducation nationale, France)",
+        "region_scope": "fr_ministry_approved",
+        "subject_code": "fr",
+        "level_code": "1",
+    },
+    {
+        "url": "https://eduscol.education.fr/3830/francais-cycle-2",
+        "title": "Ressources d'accompagnement du programme de français au cycle 2 — éduscol (Ministère de l'Éducation nationale, France)",
+        "region_scope": "fr_ministry_approved",
+        "subject_code": "fr",
+        "level_code": "2",
+    },
+    {
+        "url": "https://cahiersenfants.com/exercices-cp-ce1-ce2-gratuits-imprimer/",
+        "title": "Exercices CP, CE1, CE2 gratuits (lecture, phonologie, écriture, grammaire, conjugaison, orthographe)",
+        "region_scope": "fr_web",
+        "subject_code": "fr",
+        "level_code": "1",
+    },
+    {
+        "url": "https://poleressourcespedagogiques.fr/fiches-pedagogiques/ce1",
+        "title": "Fiches pédagogiques CE1 — Pôle Ressources Pédagogiques",
+        "region_scope": "fr_web",
+        "subject_code": "fr",
+        "level_code": "2",
+    },
+    {
+        "url": "https://learnenglishkids.britishcouncil.org/read-write/reading-practice/level-1-reading",
+        "title": "Level 1 reading — LearnEnglish Kids, British Council",
+        "region_scope": "uk_approved",
+        "subject_code": "en",
+        "level_code": "1",
+    },
+    {
+        "url": "https://learnenglishkids.britishcouncil.org/read-write/writing-practice/level-1-writing",
+        "title": "Level 1 writing — LearnEnglish Kids, British Council",
+        "region_scope": "uk_approved",
+        "subject_code": "en",
+        "level_code": "1",
+    },
+    {
+        "url": "https://learnenglishkids.britishcouncil.org/read-write/writing-practice/level-2-writing",
+        "title": "Level 2 writing — LearnEnglish Kids, British Council",
+        "region_scope": "uk_approved",
+        "subject_code": "en",
+        "level_code": "2",
+    },
+    {
+        "url": "https://learnenglishkids.britishcouncil.org/read-write/writing-practice/level-3-writing",
+        "title": "Level 3 writing — LearnEnglish Kids, British Council",
+        "region_scope": "uk_approved",
+        "subject_code": "en",
+        "level_code": "3",
     },
 ]

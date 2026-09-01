@@ -15,6 +15,7 @@ REGION_SCOPES = (
     "tunisia_official",
     "tunisia_web",
     "fr_ministry_approved",
+    "fr_web",  # French pedagogy sites that claim programme-Éducation-nationale alignment but aren't the Ministry itself
     "uk_approved",
     "international_aligned",  # any country's resource, used only where its topic genuinely matches the Tunisian program
 )

@@ -1,0 +1,58 @@
+{
+  "level": 1,
+  "subject": "fr",
+  "languages": ["fr", "ar"],
+  "domains": [
+    {
+      "id": "lecture_dechiffrage",
+      "name_fr": "Lecture et déchiffrage",
+      "name_ar": "القراءة وفك الرموز",
+      "skills": ["reconnaissance_lettres", "assemblage_syllabes", "lecture_mots_simples"],
+      "exercise_formats": {
+        "reconnaissance_lettres": ["selection", "association"],
+        "assemblage_syllabes": ["selection", "qcm"],
+        "lecture_mots_simples": ["selection", "qcm"]
+      }
+    },
+    {
+      "id": "ecriture",
+      "name_fr": "Écriture",
+      "name_ar": "الكتابة",
+      "skills": ["ecriture_lettres", "copie_mots"],
+      "exercise_formats": {
+        "ecriture_lettres": ["trace", "visuel"],
+        "copie_mots": ["saisie_texte", "visuel"]
+      }
+    },
+    {
+      "id": "vocabulaire",
+      "name_fr": "Vocabulaire",
+      "name_ar": "المفردات",
+      "skills": ["mots_du_quotidien", "classification_mots"],
+      "exercise_formats": {
+        "mots_du_quotidien": ["qcm", "association"],
+        "classification_mots": ["classement", "selection"]
+      }
+    },
+    {
+      "id": "grammaire_orthographe",
+      "name_fr": "Grammaire et orthographe",
+      "name_ar": "القواعد والإملاء",
+      "skills": ["genre_nombre", "ponctuation_simple"],
+      "exercise_formats": {
+        "genre_nombre": ["qcm", "selection"],
+        "ponctuation_simple": ["selection", "qcm"]
+      }
+    },
+    {
+      "id": "expression_orale",
+      "name_fr": "Expression orale",
+      "name_ar": "التعبير الشفوي",
+      "skills": ["decrire_image", "raconter_histoire"],
+      "exercise_formats": {
+        "decrire_image": ["reponse_libre", "visuel"],
+        "raconter_histoire": ["reponse_libre", "recit"]
+      }
+    }
+  ]
+}

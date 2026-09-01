@@ -1,0 +1,57 @@
+{
+  "level": 1,
+  "subject": "en",
+  "languages": ["fr", "ar"],
+  "domains": [
+    {
+      "id": "alphabet_phonics",
+      "name_fr": "Alphabet et phonétique",
+      "name_ar": "الحروف والأصوات",
+      "skills": ["letter_recognition", "phonics_sounds"],
+      "exercise_formats": {
+        "letter_recognition": ["selection", "association"],
+        "phonics_sounds": ["selection", "qcm"]
+      }
+    },
+    {
+      "id": "vocabulary_basics",
+      "name_fr": "Vocabulaire de base",
+      "name_ar": "المفردات الأساسية",
+      "skills": ["colors_numbers", "everyday_words"],
+      "exercise_formats": {
+        "colors_numbers": ["qcm", "selection"],
+        "everyday_words": ["association", "qcm"]
+      }
+    },
+    {
+      "id": "listening_speaking",
+      "name_fr": "Écoute et expression orale",
+      "name_ar": "الاستماع والتعبير الشفوي",
+      "skills": ["greetings", "simple_questions"],
+      "exercise_formats": {
+        "greetings": ["qcm", "reponse_libre"],
+        "simple_questions": ["qcm", "selection"]
+      }
+    },
+    {
+      "id": "reading_basics",
+      "name_fr": "Lecture de base",
+      "name_ar": "القراءة الأساسية",
+      "skills": ["sight_words", "simple_sentences"],
+      "exercise_formats": {
+        "sight_words": ["selection", "qcm"],
+        "simple_sentences": ["selection", "qcm"]
+      }
+    },
+    {
+      "id": "writing_basics",
+      "name_fr": "Écriture de base",
+      "name_ar": "الكتابة الأساسية",
+      "skills": ["tracing_letters", "copying_words"],
+      "exercise_formats": {
+        "tracing_letters": ["trace", "visuel"],
+        "copying_words": ["saisie_texte", "visuel"]
+      }
+    }
+  ]
+}

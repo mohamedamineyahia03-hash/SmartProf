@@ -1,14 +1,14 @@
 """One-time/idempotent import of curriculum data into the generalized DB schema.
 
 Full-detail curriculum (domains -> skills -> exercise_formats, bilingual)
-exists for level 1 of Math, Arabic, and Science. Math and Science also have a
-domain-only skeleton for levels 2-6 (each domain doubles as its own single
-skill — no finer breakdown authored yet). Level 6 is the last year of
-Tunisian primary school and ends with the Concours National de la 6ème, so
-its T3 skeleton replaces ordinary domains with a dedicated revision +
-"Concours blanc" (mock exam) track instead of new material. Français and
-Anglais still have zero domains at any level: content authoring for those
-hasn't started.
+exists for level 1 of Math, Arabic, Science, Français, and Anglais. All five
+subjects also have a domain-only skeleton for levels 2-6 (each domain
+doubles as its own single skill — no finer breakdown authored yet). Level 6
+is the last year of Tunisian primary school and ends with the Concours
+National de la 6ème: Math, Science, and Français dedicate their T3 skeleton
+to revision + a "Concours blanc" (mock exam) track instead of new material.
+Anglais gets a revision-only T3 at level 6 (its place in the actual concours
+exam isn't confirmed, so no "Concours blanc" label is claimed for it).
 """
 
 import json
@@ -129,10 +129,86 @@ SCIENCE1_TRIMESTERS = {
     "T3": ["eau", "saisons"],
 }
 
+FR_SKELETON = {
+    "2": {
+        "T1": ["Lecture", "Écriture", "Vocabulaire"],
+        "T2": ["Grammaire", "Orthographe", "Vocabulaire"],
+        "T3": ["Conjugaison", "Expression écrite"],
+    },
+    "3": {
+        "T1": ["Lecture et compréhension", "Grammaire"],
+        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
+        "T3": ["Production d'écrits", "Expression orale"],
+    },
+    "4": {
+        "T1": ["Lecture et compréhension", "Grammaire"],
+        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
+        "T3": ["Production d'écrits", "Expression orale"],
+    },
+    "5": {
+        "T1": ["Lecture et compréhension", "Grammaire"],
+        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
+        "T3": ["Production d'écrits", "Expression orale"],
+    },
+    "6": {
+        "T1": ["Lecture et compréhension", "Grammaire"],
+        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
+        "T3": ["Révision générale", "Concours blanc"],
+    },
+}
+
+EN_SKELETON = {
+    "2": {
+        "T1": ["Vocabulary", "Grammar basics"],
+        "T2": ["Listening & speaking", "Reading"],
+        "T3": ["Writing", "Vocabulary"],
+    },
+    "3": {
+        "T1": ["Vocabulary", "Grammar"],
+        "T2": ["Reading comprehension", "Listening & speaking"],
+        "T3": ["Writing", "Grammar"],
+    },
+    "4": {
+        "T1": ["Vocabulary", "Grammar"],
+        "T2": ["Reading comprehension", "Listening & speaking"],
+        "T3": ["Writing", "Grammar"],
+    },
+    "5": {
+        "T1": ["Vocabulary", "Grammar"],
+        "T2": ["Reading comprehension", "Listening & speaking"],
+        "T3": ["Writing", "Grammar"],
+    },
+    "6": {
+        "T1": ["Vocabulary", "Grammar"],
+        "T2": ["Reading comprehension", "Listening & speaking"],
+        "T3": ["Révision générale"],
+    },
+}
+
+# Level 1 Français domain -> trimester(s): letters/reading and writing start
+# together, vocabulary joins mid-year, grammar/orthographe and oral expression
+# consolidate in T3 — same shape as Arabic1.
+FR1_TRIMESTERS = {
+    "T1": ["lecture_dechiffrage", "ecriture"],
+    "T2": ["lecture_dechiffrage", "vocabulaire", "ecriture"],
+    "T3": ["grammaire_orthographe", "expression_orale", "vocabulaire"],
+}
+
+# Level 1 Anglais domain -> trimester(s): alphabet/phonics and basic
+# vocabulary first, listening/reading join mid-year, reading/writing/
+# vocabulary consolidate in T3.
+EN1_TRIMESTERS = {
+    "T1": ["alphabet_phonics", "vocabulary_basics"],
+    "T2": ["alphabet_phonics", "listening_speaking", "reading_basics"],
+    "T3": ["reading_basics", "writing_basics", "vocabulary_basics"],
+}
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MATH1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "math1", "math1_curriculum.json")
 ARABIC1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "arabic1", "arabic1_curriculum.json")
 SCIENCE1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "science1", "science1_curriculum.json")
+FR1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "fr1", "fr1_curriculum.json")
+EN1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "en1", "en1_curriculum.json")
 
 
 def slugify(text):
@@ -268,6 +344,10 @@ def main():
         seed_domain_curriculum(levels, subjects, "1", "ar", ARABIC1_CURRICULUM_PATH, ARABIC1_TRIMESTERS)
         seed_domain_curriculum(levels, subjects, "1", "science", SCIENCE1_CURRICULUM_PATH, SCIENCE1_TRIMESTERS)
         seed_skeleton_curriculum(levels, subjects, "science", SCIENCE_SKELETON)
+        seed_domain_curriculum(levels, subjects, "1", "fr", FR1_CURRICULUM_PATH, FR1_TRIMESTERS)
+        seed_skeleton_curriculum(levels, subjects, "fr", FR_SKELETON)
+        seed_domain_curriculum(levels, subjects, "1", "en", EN1_CURRICULUM_PATH, EN1_TRIMESTERS)
+        seed_skeleton_curriculum(levels, subjects, "en", EN_SKELETON)
         print("Seed complete.")
 
 
