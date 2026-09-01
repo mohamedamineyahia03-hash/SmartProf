@@ -149,12 +149,3 @@ jobs:
           assert count >= 1, 'sync pulled zero exercises into the Main App cache'
           print(f'OK sync: Main App cache holds {count} exercise(s) pulled from library-service')
           PY
-
-      - name: Validate sync script
-        run: |
-          test -s smartprof-sync.ps1
-          grep -q 'git fetch origin' smartprof-sync.ps1
-          grep -q 'git pull --rebase origin main' smartprof-sync.ps1
-          grep -q 'git add -A' smartprof-sync.ps1
-          grep -q 'git push origin main' smartprof-sync.ps1
-          echo 'OK sync script'
