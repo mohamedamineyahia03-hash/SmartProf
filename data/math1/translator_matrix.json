@@ -551,5 +551,61 @@
     "format": "multi_questions",
     "fr": "Récit à questions multiples — Questions multiples",
     "ar": "قصة متعددة الأسئلة — أسئلة متعددة"
+  },
+  {
+    "domain": "mesure",
+    "skill": "reconnaissance_monnaie",
+    "format": "selection",
+    "fr": "Reconnaissance de la monnaie — Sélection",
+    "ar": "التعرّف على النقود — اختيار"
+  },
+  {
+    "domain": "mesure",
+    "skill": "reconnaissance_monnaie",
+    "format": "qcm",
+    "fr": "Reconnaissance de la monnaie — Question à choix multiples",
+    "ar": "التعرّف على النقود — اختيار من متعدد"
+  },
+  {
+    "domain": "mesure",
+    "skill": "addition_monnaie",
+    "format": "saisie_nombre",
+    "fr": "Addition de monnaie — Saisie d’un nombre",
+    "ar": "جمع النقود — إدخال عدد"
+  },
+  {
+    "domain": "mesure",
+    "skill": "addition_monnaie",
+    "format": "qcm",
+    "fr": "Addition de monnaie — Question à choix multiples",
+    "ar": "جمع النقود — اختيار من متعدد"
+  },
+  {
+    "domain": "numeration",
+    "skill": "dizaine_unites",
+    "format": "saisie_nombre",
+    "fr": "Dizaines et unités — Saisie d’un nombre",
+    "ar": "العشرات والآحاد — إدخال عدد"
+  },
+  {
+    "domain": "numeration",
+    "skill": "dizaine_unites",
+    "format": "qcm",
+    "fr": "Dizaines et unités — Question à choix multiples",
+    "ar": "العشرات والآحاد — اختيار من متعدد"
+  },
+  {
+    "domain": "calcul",
+    "skill": "addition_verticale",
+    "format": "calcul",
+    "fr": "Addition posée — Calcul",
+    "ar": "الجمع العمودي — حساب"
+  },
+  {
+    "domain": "calcul",
+    "skill": "addition_verticale",
+    "format": "saisie_nombre",
+    "fr": "Addition posée — Saisie d’un nombre",
+    "ar": "الجمع العمودي — إدخال عدد"
   }
 ]

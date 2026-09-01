@@ -160,7 +160,8 @@ const SmartProfTranslator = {
             ordre_nombres: "رتّب الأعداد حسب المطلوب.",
             composition: "كوّن العدد.",
             decomposition: "فكّك العدد.",
-            nombre_manquant: "أوجد العدد الناقص."
+            nombre_manquant: "أوجد العدد الناقص.",
+            dizaine_unites: "حدّد العشرات والآحاد."
         };
 
         const formats = {
@@ -188,7 +189,8 @@ const SmartProfTranslator = {
             addition: "احسب عملية الجمع.",
             calcul_mental: "احسب ذهنيًا.",
             egalite: "تحقّق من المساواة.",
-            situations_additives: "حلّ المسألة."
+            situations_additives: "حلّ المسألة.",
+            addition_verticale: "احسب الجمع العمودي."
         };
 
         const formats = {
@@ -245,7 +247,7 @@ const SmartProfTranslator = {
         };
     },
 
-    translateMeasures(skill,format){const a={comparaison_longueurs:"قارن بين الأطوال.",rangement_longueurs:"رتّب الأطوال حسب المطلوب.",comparaison_masses:"قارن بين الكتل."};const f={selection:"اختر الإجابة الصحيحة.",classement:"رتّب العناصر حسب المطلوب.",drag_drop:"اسحب العناصر وضعها في الترتيب الصحيح."};return a[skill]&&f[format]?{skill,format,instruction_ar:a[skill],format_ar:f[format]}:null;},
+    translateMeasures(skill,format){const a={comparaison_longueurs:"قارن بين الأطوال.",rangement_longueurs:"رتّب الأطوال حسب المطلوب.",comparaison_masses:"قارن بين الكتل.",reconnaissance_monnaie:"تعرّف على قطع النقود.",addition_monnaie:"احسب مجموع النقود."};const f={selection:"اختر الإجابة الصحيحة.",classement:"رتّب العناصر حسب المطلوب.",drag_drop:"اسحب العناصر وضعها في الترتيب الصحيح.",qcm:"اختر الإجابة الصحيحة من بين الاقتراحات.",saisie_nombre:"اكتب العدد الصحيح."};return a[skill]&&f[format]?{skill,format,instruction_ar:a[skill],format_ar:f[format]}:null;},
 
     translateProblems(skill, format, data={}) {
         const ar = {
