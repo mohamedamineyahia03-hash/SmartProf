@@ -5,6 +5,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from db import db
+from generation.publish import approve, reject
 from models import Exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -95,6 +96,41 @@ def get_exercise(exercise_id):
     if exercise is None:
         return jsonify({"error": "not found"}), 404
     return jsonify(serialize_exercise(exercise))
+
+
+def serialize_admin_exercise(exercise):
+    payload = serialize_exercise(exercise)
+    payload["review_status"] = exercise.review_status
+    payload["reviewed_by"] = exercise.reviewed_by
+    return payload
+
+
+@app.get("/api/admin/exercises/pending")
+@require_service_api_key
+def admin_pending_exercises():
+    """Internal review queue — not exposed to the Main App or end users."""
+    rows = Exercise.query.filter_by(status="draft").order_by(Exercise.created_at).all()
+    return jsonify([serialize_admin_exercise(e) for e in rows])
+
+
+@app.post("/api/admin/exercises/<int:exercise_id>/approve")
+@require_service_api_key
+def admin_approve_exercise(exercise_id):
+    exercise = Exercise.query.get(exercise_id)
+    if exercise is None:
+        return jsonify({"error": "not_found"}), 404
+    approve(exercise)
+    return jsonify(serialize_admin_exercise(exercise))
+
+
+@app.post("/api/admin/exercises/<int:exercise_id>/reject")
+@require_service_api_key
+def admin_reject_exercise(exercise_id):
+    exercise = Exercise.query.get(exercise_id)
+    if exercise is None:
+        return jsonify({"error": "not_found"}), 404
+    reject(exercise)
+    return jsonify(serialize_admin_exercise(exercise))
 
 
 if __name__ == "__main__":
