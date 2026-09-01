@@ -14,11 +14,6 @@ FETCH_TIMEOUT = 10
 MAX_SNAPSHOT_CHARS = 4000
 USER_AGENT = "SmartProfBot/0.1 (+educational content discovery, contact: smartprof project)"
 
-# Tunisian school-year sources are commonly labeled "2023-2024" or just
-# "2023" (the school year's start year). Matches anywhere from 2015 up to
-# next year, and keeps the most recent one found.
-YEAR_PATTERN = re.compile(r"\b(20[1-2][0-9])(?:\s*[-/]\s*20[1-2][0-9])?\b")
-
 
 def _strip_html(html):
     text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
@@ -26,15 +21,6 @@ def _strip_html(html):
     text = re.sub(r"&nbsp;|&amp;|&quot;|&#\d+;", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text[:MAX_SNAPSHOT_CHARS]
-
-
-def _extract_source_year(text, title):
-    """Best-effort only: scans title + snapshot for a plausible school/publication
-    year and returns the most recent match, or None if nothing looks like a year.
-    Never treated as authoritative — see Source.source_year in models.py."""
-    matches = YEAR_PATTERN.findall(f"{title or ''} {text or ''}")
-    years = [int(y) for y in matches]
-    return max(years) if years else None
 
 
 def fetch_snapshot(url):
@@ -65,7 +51,6 @@ def discover(entries, trigger="manual"):
             level_code=entry["level_code"],
             region_scope=entry["region_scope"],
             content_snapshot=snapshot,
-            source_year=_extract_source_year(snapshot, entry.get("title")),
             status="pending_classification",
         )
         db.session.add(source)

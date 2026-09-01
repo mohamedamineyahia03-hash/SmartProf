@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from db import db
-from generation.publish import approve, is_source_stale, reject
+from generation.publish import approve, reject
 from models import Exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -102,9 +102,6 @@ def serialize_admin_exercise(exercise):
     payload = serialize_exercise(exercise)
     payload["review_status"] = exercise.review_status
     payload["reviewed_by"] = exercise.reviewed_by
-    source = exercise.generation_run.source if exercise.generation_run else None
-    payload["source_year"] = source.source_year if source else None
-    payload["source_stale"] = is_source_stale(exercise)
     return payload
 
 

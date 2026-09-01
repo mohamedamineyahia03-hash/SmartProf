@@ -58,15 +58,6 @@ class Source(db.Model):
     trimester_hint = db.Column(db.String(2), nullable=True)
     region_scope = db.Column(db.Enum(*REGION_SCOPES, name="region_scope_source"), nullable=False)
 
-    # Best-effort year the source's content targets (school year or publication
-    # year, detected from the page text). NULL when no year could be found.
-    # Sources can be several years old (down to ~2022) or have no detectable
-    # date at all — generate_exercise.py is told to treat them as inspiration
-    # only and align strictly with the current curriculum, and publish.py
-    # never auto-publishes from a stale/undated source regardless of how
-    # trusted its bucket is (see STALE_SOURCE_MAX_AGE_YEARS).
-    source_year = db.Column(db.Integer, nullable=True)
-
     # Used ONLY as generation input (Section: pipeline step "Generate") — never
     # served to end users directly, never copied into exercise.content_fr/content_ar.
     content_snapshot = db.Column(db.Text, nullable=True)
