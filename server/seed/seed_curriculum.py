@@ -77,8 +77,17 @@ MATH1_TRIMESTERS = {
     "T3": ["espace_geometrie", "mesure", "problemes"],
 }
 
+# Level 1 Arabic domain -> trimester(s): letters first, reading from T2,
+# comprehension/expression/writing consolidated in T3.
+ARABIC1_TRIMESTERS = {
+    "T1": ["huruf"],
+    "T2": ["huruf", "qiraa"],
+    "T3": ["qiraa", "fahm", "taabir", "kitaba"],
+}
+
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MATH1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "math1", "math1_curriculum.json")
+ARABIC1_CURRICULUM_PATH = os.path.join(REPO_ROOT, "data", "arabic1", "arabic1_curriculum.json")
 
 
 def slugify(text):
@@ -112,18 +121,21 @@ def seed_levels_and_subjects():
     return levels, subjects
 
 
-def seed_math1(levels, subjects):
-    level = levels["1"]
-    subject = subjects["math"]
+def seed_domain_curriculum(levels, subjects, level_code, subject_code, curriculum_path, trimester_map):
+    """Imports a full-granularity curriculum JSON (domains -> skills ->
+    exercise_formats, bilingual) for one level/subject — the pattern shared by
+    math1 and every subsequent subject seeded at full detail."""
+    level = levels[level_code]
+    subject = subjects[subject_code]
 
     if CurriculumDomain.query.filter_by(level_id=level.id, subject_id=subject.id).first():
         return
 
-    with open(MATH1_CURRICULUM_PATH, encoding="utf-8") as f:
+    with open(curriculum_path, encoding="utf-8") as f:
         curriculum = json.load(f)
 
     domain_trimesters = {}
-    for trimester, domain_codes in MATH1_TRIMESTERS.items():
+    for trimester, domain_codes in trimester_map.items():
         for domain_code in domain_codes:
             domain_trimesters.setdefault(domain_code, []).append(trimester)
 
@@ -205,8 +217,9 @@ def main():
     with app.app_context():
         db.create_all()
         levels, subjects = seed_levels_and_subjects()
-        seed_math1(levels, subjects)
+        seed_domain_curriculum(levels, subjects, "1", "math", MATH1_CURRICULUM_PATH, MATH1_TRIMESTERS)
         seed_math_skeleton(levels, subjects)
+        seed_domain_curriculum(levels, subjects, "1", "ar", ARABIC1_CURRICULUM_PATH, ARABIC1_TRIMESTERS)
         print("Seed complete.")
 
 
