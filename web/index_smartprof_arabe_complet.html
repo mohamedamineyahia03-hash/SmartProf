@@ -557,7 +557,8 @@ const TEXT = {
   finish:{fr:"Terminer", ar:"إنهاء"},
   correctFeedback:{fr:"✅ Bonne réponse !", ar:"✅ إجابة صحيحة!"},
   answerPlaceholder:{fr:"Ta réponse...", ar:"إجابتك..."},
-  summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"}
+  summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"},
+  downloadPdf:{fr:"Télécharger en PDF", ar:"📄 تحميل كملف PDF"}
 };
 
 function exerciseProgressText(i, total){
@@ -999,11 +1000,17 @@ function renderSessionSummary(){
       <div class="session-question">${TEXT.summaryTitle[currentLang]}</div>
       <div class="score-big">${currentSession.score} / ${currentSession.answeredCount}</div>
       <div class="session-actions" style="justify-content:center;">
+        <button type="button" class="btn-secondary" id="downloadPdfBtn">${TEXT.downloadPdf[currentLang]}</button>
         <button type="button" class="btn-primary" id="finishBackBtn">${TEXT.backHome[currentLang]}</button>
       </div>
     </div>
   `;
   document.getElementById('finishBackBtn').addEventListener('click', backToHome);
+  // A plain navigation (not fetch+blob) so the browser's own download
+  // handling takes over from the Content-Disposition header the server sends.
+  document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+    window.open(`/api/session/${currentSession.sessionId}/pdf`, '_blank');
+  });
 }
 
 function backToHome(){
