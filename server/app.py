@@ -14,7 +14,7 @@ from models import (
 )
 from academic_calendar import current_trimester
 from diagnostic_engine import diagnose
-from session_engine import build_session
+from session_engine import SESSION_SIZE, STARTING_DIFFICULTY, next_difficulty, pick_next_exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -154,16 +154,20 @@ def is_subject_locked(level_code, subject_row):
 
 
 def public_exercise_payload(exercise):
-    """Strips the answer out of what's sent to the browser — correctness is
-    always checked server-side in /api/session/<id>/answer."""
+    """Strips the answer and the pedagogical explanation out of what's sent to
+    the browser before it's answered — both are only ever revealed by
+    /api/session/<id>/answer, after the child has submitted a response."""
+    if exercise is None:
+        return None
+    hidden_keys = {"answer", "explanation"}
     return {
         "id": exercise.id,
         "domain": exercise.domain_code,
         "skill": exercise.skill_code,
         "format": exercise.exercise_format,
         "difficulty": exercise.difficulty,
-        "content_fr": {k: v for k, v in exercise.content_fr.items() if k != "answer"},
-        "content_ar": {k: v for k, v in exercise.content_ar.items() if k != "answer"},
+        "content_fr": {k: v for k, v in exercise.content_fr.items() if k not in hidden_keys},
+        "content_ar": {k: v for k, v in exercise.content_ar.items() if k not in hidden_keys},
     }
 
 
@@ -189,8 +193,8 @@ def start_session():
         ), 403
 
     trimester = current_trimester()
-    exercises = build_session(level_code, subject_code, trimester=trimester)
-    if not exercises:
+    exercise = pick_next_exercise(level_code, subject_code, trimester, STARTING_DIFFICULTY)
+    if exercise is None:
         return jsonify(
             {
                 "error": "no_content",
@@ -202,8 +206,9 @@ def start_session():
         level_code=level_code,
         subject_code=subject_code,
         trimester=trimester,
-        exercise_ids=[e.id for e in exercises],
+        exercise_ids=[exercise.id],
         answers={},
+        current_difficulty=STARTING_DIFFICULTY,
     )
     db.session.add(session_row)
     db.session.commit()
@@ -212,7 +217,8 @@ def start_session():
         {
             "session_id": session_row.id,
             "trimester": trimester,
-            "exercises": [public_exercise_payload(e) for e in exercises],
+            "total_target": SESSION_SIZE,
+            "exercise": public_exercise_payload(exercise),
         }
     )
 
@@ -247,6 +253,8 @@ def answer_session(session_id):
     session_row = Session.query.get(session_id)
     if session_row is None:
         return jsonify({"error": "not_found"}), 404
+    if session_row.completed_at is not None:
+        return jsonify({"error": "session_already_completed"}), 400
 
     data = request.get_json(silent=True) or {}
     try:
@@ -272,10 +280,25 @@ def answer_session(session_id):
     is_correct = normalize(given) in correct_values
 
     answers = dict(session_row.answers or {})
-    answers[str(exercise_id)] = {"given": given, "correct": is_correct}
+    answers[str(exercise_id)] = {"given": given, "correct": is_correct, "skill": exercise.skill_code}
     session_row.answers = answers
+    session_row.current_difficulty = next_difficulty(session_row.current_difficulty, is_correct)
 
-    if len(answers) >= len(session_row.exercise_ids):
+    next_exercise = None
+    if len(answers) < SESSION_SIZE:
+        weak_skills = {a["skill"] for a in answers.values() if not a["correct"]}
+        next_exercise = pick_next_exercise(
+            session_row.level_code,
+            session_row.subject_code,
+            session_row.trimester,
+            session_row.current_difficulty,
+            excluded_ids=session_row.exercise_ids,
+            weak_skill_codes=weak_skills,
+        )
+        if next_exercise is not None:
+            session_row.exercise_ids = session_row.exercise_ids + [next_exercise.id]
+
+    if next_exercise is None:
         session_row.completed_at = datetime.now(timezone.utc)
 
     db.session.commit()
@@ -285,9 +308,12 @@ def answer_session(session_id):
             "correct": is_correct,
             "correct_answer_fr": exercise.content_fr.get("answer"),
             "correct_answer_ar": exercise.content_ar.get("answer"),
+            "explanation_fr": exercise.content_fr.get("explanation"),
+            "explanation_ar": exercise.content_ar.get("explanation"),
             "completed": session_row.completed_at is not None,
             "score": sum(1 for a in answers.values() if a["correct"]),
-            "total": len(session_row.exercise_ids),
+            "total": len(answers),
+            "next_exercise": public_exercise_payload(next_exercise),
         }
     )
 

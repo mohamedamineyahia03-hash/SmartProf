@@ -141,6 +141,7 @@
   .feedback-banner{padding:14px 18px;border-radius:12px;margin-bottom:18px;font-weight:600;}
   .feedback-banner.correct{background:#DCFCE7;color:#166534;}
   .feedback-banner.incorrect{background:#FEE2E2;color:#991B1B;}
+  .feedback-explain{margin:8px 0 0;font-weight:500;font-size:.92rem;line-height:1.5;opacity:.92;}
   .session-summary{text-align:center;}
   .session-summary .score-big{font-size:3rem;font-weight:800;font-family:'Baloo 2',sans-serif;margin:10px 0;}
 
@@ -637,7 +638,13 @@ async function startSession(subjectId){
   if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
   if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
 
-  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, score: 0};
+  currentSession = {
+    sessionId: data.session_id,
+    exercise: data.exercise,
+    answeredCount: 0,
+    score: 0,
+    totalTarget: data.total_target
+  };
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('sessionView').classList.add('active');
   renderSessionQuestion();
@@ -645,9 +652,8 @@ async function startSession(subjectId){
 
 function renderSessionQuestion(){
   const view = document.getElementById('sessionView');
-  const ex = currentSession.exercises[currentSession.index];
+  const ex = currentSession.exercise;
   const content = ex['content_' + currentLang];
-  const total = currentSession.exercises.length;
 
   const answerArea = content.choices
     ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
@@ -655,7 +661,7 @@ function renderSessionQuestion(){
 
   view.innerHTML = `
     <div class="session-card">
-      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, total)}</div>
+      <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
       <div class="session-question">${content.question}</div>
       ${answerArea}
       <div id="feedbackArea"></div>
@@ -687,8 +693,16 @@ function renderSessionQuestion(){
   }
 }
 
+function feedbackBannerHtml(data){
+  const correctAnswer = currentLang === 'ar' ? data.correct_answer_ar : data.correct_answer_fr;
+  const explanation = currentLang === 'ar' ? data.explanation_ar : data.explanation_fr;
+  const header = data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(correctAnswer);
+  const explanationHtml = explanation ? `<p class="feedback-explain">${explanation}</p>` : '';
+  return `<div class="feedback-banner ${data.correct ? 'correct' : 'incorrect'}">${header}${explanationHtml}</div>`;
+}
+
 async function submitAnswer(answer){
-  const ex = currentSession.exercises[currentSession.index];
+  const ex = currentSession.exercise;
   let data;
   try {
     const res = await fetch(`/api/session/${currentSession.sessionId}/answer`, {
@@ -702,10 +716,9 @@ async function submitAnswer(answer){
     return;
   }
 
+  currentSession.answeredCount = data.total;
   currentSession.score = data.score;
-  const correctAnswer = currentLang === 'ar' ? data.correct_answer_ar : data.correct_answer_fr;
-  document.getElementById('feedbackArea').innerHTML =
-    `<div class="feedback-banner ${data.correct ? 'correct' : 'incorrect'}">${data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(correctAnswer)}</div>`;
+  document.getElementById('feedbackArea').innerHTML = feedbackBannerHtml(data);
 
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
   const input = document.getElementById('answerInput');
@@ -716,22 +729,20 @@ async function submitAnswer(answer){
   const oldBtn = document.getElementById('validateBtn');
   const validateBtn = oldBtn.cloneNode(true);
   oldBtn.replaceWith(validateBtn);
-  const isLast = currentSession.index + 1 >= currentSession.exercises.length;
-  validateBtn.textContent = isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang];
+  validateBtn.textContent = data.completed ? TEXT.finish[currentLang] : TEXT.next[currentLang];
   validateBtn.disabled = false;
   validateBtn.addEventListener('click', () => {
-    if(isLast){ renderSessionSummary(); }
-    else { currentSession.index++; renderSessionQuestion(); }
+    if(data.completed){ renderSessionSummary(); }
+    else { currentSession.exercise = data.next_exercise; renderSessionQuestion(); }
   });
 }
 
 function renderSessionSummary(){
   const view = document.getElementById('sessionView');
-  const total = currentSession.exercises.length;
   view.innerHTML = `
     <div class="session-card session-summary">
       <div class="session-question">${TEXT.summaryTitle[currentLang]}</div>
-      <div class="score-big">${currentSession.score} / ${total}</div>
+      <div class="score-big">${currentSession.score} / ${currentSession.answeredCount}</div>
       <div class="session-actions" style="justify-content:center;">
         <button type="button" class="btn-primary" id="finishBackBtn">${TEXT.backHome[currentLang]}</button>
       </div>

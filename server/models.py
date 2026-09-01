@@ -164,8 +164,10 @@ class LibraryCacheExercise(db.Model):
 
 
 class Session(db.Model):
-    """A 15-exercise session. child_profile_id is nullable for now — accounts
-    don't exist yet (Phase 4), so sessions are anonymous until then."""
+    """A session of up to SESSION_SIZE exercises, built one exercise at a time as
+    the child answers — see server/session_engine.py. child_profile_id is nullable
+    for now — accounts don't exist yet (Phase 4), so sessions are anonymous until
+    then."""
 
     __tablename__ = "session"
 
@@ -174,7 +176,8 @@ class Session(db.Model):
     level_code = db.Column(db.String(1), nullable=False)
     subject_code = db.Column(db.String(16), nullable=False)
     trimester = db.Column(db.String(2), nullable=False)
-    exercise_ids = db.Column(db.JSON, nullable=False)  # ordered list of library_cache_exercise ids
-    answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct}}
+    exercise_ids = db.Column(db.JSON, nullable=False)  # ordered list of library_cache_exercise ids, grows as answered
+    answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct, skill}}
+    current_difficulty = db.Column(db.String(16), nullable=False, default="en_cours")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     completed_at = db.Column(db.DateTime, nullable=True)
