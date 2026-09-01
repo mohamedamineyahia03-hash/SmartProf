@@ -148,6 +148,23 @@
   .locked-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:14px 22px;border-radius:999px;font-weight:600;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;max-width:90vw;text-align:center;}
   .locked-toast.show{opacity:1;}
 
+  .header-actions{display:flex;align-items:center;gap:10px;}
+  .parent-btn{border:0;background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;box-shadow:0 4px 16px rgba(27,35,64,.08);transition:transform .2s ease;}
+  .parent-btn:hover{transform:translateY(-2px);}
+
+  .parent-tabs{display:flex;gap:8px;margin-bottom:20px;}
+  .parent-tab{flex:1;border:0;background:#f1f1f1;color:var(--muted);padding:10px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s ease;}
+  .parent-tab.active{background:var(--ink);color:#fff;}
+  .form-label{display:block;font-weight:600;font-size:.82rem;color:var(--muted);margin:14px 0 6px;}
+  .form-error{color:#991B1B;font-size:.85rem;font-weight:600;min-height:1.2em;margin-top:6px;}
+  select.answer-input{cursor:pointer;}
+  .parent-account-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-weight:600;flex-wrap:wrap;gap:10px;}
+  .parent-section-title{font-size:1rem;margin:18px 0 10px;}
+  .children-list{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
+  .child-row{display:flex;justify-content:space-between;padding:12px 16px;background:var(--paper-soft);border-radius:12px;font-weight:600;}
+  .child-level{color:var(--muted);font-weight:500;}
+  .muted-note{font-size:.82rem;color:var(--muted);margin:6px 0 0;}
+
   .level-panel{background:var(--paper-soft);border-radius:var(--radius);padding:28px 26px;margin-bottom:40px;transition:background .6s ease, border-radius .5s ease;}
   .level-panel h2{margin:0 0 8px;font-size:1.4rem;}
   .level-panel p{margin:0;color:var(--muted);line-height:1.5;}
@@ -179,9 +196,12 @@
       <div class="logo-badge" id="logoBadge"></div>
       SmartProf
     </div>
-    <div class="lang-toggle">
-      <button class="active" data-lang="fr">FR</button>
-      <button data-lang="ar">عربي</button>
+    <div class="header-actions">
+      <button type="button" class="parent-btn" id="parentToggleBtn"></button>
+      <div class="lang-toggle">
+        <button class="active" data-lang="fr">FR</button>
+        <button data-lang="ar">عربي</button>
+      </div>
     </div>
   </header>
 
@@ -215,6 +235,8 @@
   </div>
 
   <div class="session-view" id="sessionView"></div>
+
+  <div class="session-view" id="parentView"></div>
 
   <footer>SmartProf — plateforme éducative pour le primaire</footer>
 
@@ -501,6 +523,39 @@ let currentLevel = 1;
 let currentLang = 'fr';
 let currentSession = null;
 let lockedToastTimer = null;
+let currentUser = null; // {id, email, children, free_child_slots} or null
+
+const PARENT_TEXT = {
+  headerButton:{fr:"👤 Espace parent", ar:"👤 مساحة الوالدين"},
+  loginTab:{fr:"Se connecter", ar:"تسجيل الدخول"},
+  registerTab:{fr:"Créer un compte", ar:"إنشاء حساب"},
+  emailLabel:{fr:"Email", ar:"البريد الإلكتروني"},
+  passwordLabel:{fr:"Mot de passe", ar:"كلمة المرور"},
+  loginSubmit:{fr:"Se connecter", ar:"دخول"},
+  registerSubmit:{fr:"Créer mon compte", ar:"إنشاء الحساب"},
+  logout:{fr:"Se déconnecter", ar:"تسجيل الخروج"},
+  myChildren:{fr:"Mes enfants", ar:"أبنائي"},
+  noChildren:{fr:"Aucun enfant ajouté pour l'instant.", ar:"لم تتم إضافة أي طفل بعد."},
+  addChild:{fr:"Ajouter un enfant", ar:"إضافة طفل"},
+  childNamePlaceholder:{fr:"Prénom de l'enfant", ar:"اسم الطفل"},
+  addChildSubmit:{fr:"Ajouter", ar:"إضافة"},
+  supplementNotice:{fr:"Les 2 premiers enfants sont inclus. Un supplément payant sera bientôt disponible à partir du 3ème.", ar:"أول طفلين مشمولان مجانًا. سيتوفر قريبًا اشتراك إضافي مدفوع ابتداءً من الطفل الثالث."}
+};
+
+const AUTH_ERROR_TEXT = {
+  invalid_email:{fr:"Adresse email invalide.", ar:"البريد الإلكتروني غير صالح."},
+  password_too_short:{fr:"Le mot de passe doit contenir au moins 8 caractères.", ar:"يجب أن تتكون كلمة المرور من 8 أحرف على الأقل."},
+  email_already_registered:{fr:"Un compte existe déjà avec cet email.", ar:"يوجد حساب بهذا البريد الإلكتروني بالفعل."},
+  invalid_credentials:{fr:"Email ou mot de passe incorrect.", ar:"البريد الإلكتروني أو كلمة المرور غير صحيحة."},
+  display_name_required:{fr:"Le prénom de l'enfant est requis.", ar:"اسم الطفل مطلوب."},
+  invalid_level:{fr:"Niveau invalide.", ar:"مستوى غير صالح."},
+  supplement_required:{fr:"Un supplément payant est nécessaire à partir du 3ème enfant (bientôt disponible).", ar:"مطلوب اشتراك إضافي مدفوع ابتداءً من الطفل الثالث (قريبًا)."}
+};
+
+function localizedError(data){
+  const mapped = AUTH_ERROR_TEXT[data.error];
+  return mapped ? mapped[currentLang] : (data.message || TEXT.genericError[currentLang]);
+}
 
 function render(){
   const lvl = LEVELS.find(l => l.id === currentLevel);
@@ -592,6 +647,7 @@ function render(){
   document.getElementById('downloadNote').textContent = TEXT.downloadNote[currentLang];
   document.getElementById('downloadBtnLabel').textContent = TEXT.downloadBtn[currentLang];
   document.getElementById('downloadStatus').textContent = '';
+  document.getElementById('parentToggleBtn').textContent = PARENT_TEXT.headerButton[currentLang];
 
   document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
   document.body.style.fontFamily = currentLang === 'ar' ? "'Baloo 2', sans-serif" : "'Inter', sans-serif";
@@ -775,6 +831,167 @@ async function loadSubjects(){
   render();
 }
 
+async function restoreSession(){
+  try {
+    const res = await fetch('/api/auth/me');
+    if(res.ok){ currentUser = await res.json(); }
+  } catch(e){ /* pas connecté, ou hors-ligne : on reste anonyme */ }
+}
+
+/* ---------- Espace parent ---------- */
+
+function openParentView(){
+  if(currentSession){ backToHome(); }
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('sessionView').classList.remove('active');
+  document.getElementById('parentView').classList.add('active');
+  renderParentView();
+}
+
+function closeParentView(){
+  document.getElementById('parentView').classList.remove('active');
+  document.getElementById('parentView').innerHTML = '';
+  document.getElementById('homeView').style.display = '';
+}
+
+function renderParentView(){
+  const view = document.getElementById('parentView');
+  if(currentUser){ renderParentDashboard(view); }
+  else { renderAuthForms(view); }
+}
+
+function renderAuthForms(view){
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="parent-tabs">
+        <button type="button" class="parent-tab active" id="loginTabBtn">${PARENT_TEXT.loginTab[currentLang]}</button>
+        <button type="button" class="parent-tab" id="registerTabBtn">${PARENT_TEXT.registerTab[currentLang]}</button>
+      </div>
+      <form id="authForm">
+        <label class="form-label">${PARENT_TEXT.emailLabel[currentLang]}</label>
+        <input type="email" class="answer-input" id="authEmail" required>
+        <label class="form-label">${PARENT_TEXT.passwordLabel[currentLang]}</label>
+        <input type="password" class="answer-input" id="authPassword" required>
+        <div id="authError" class="form-error"></div>
+        <div class="session-actions">
+          <button type="button" class="btn-secondary" id="parentCloseBtn">${TEXT.backHome[currentLang]}</button>
+          <button type="submit" class="btn-primary" id="authSubmitBtn">${PARENT_TEXT.loginSubmit[currentLang]}</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  let mode = 'login';
+  const loginTab = document.getElementById('loginTabBtn');
+  const registerTab = document.getElementById('registerTabBtn');
+  const submitBtn = document.getElementById('authSubmitBtn');
+
+  function setMode(newMode){
+    mode = newMode;
+    loginTab.classList.toggle('active', mode === 'login');
+    registerTab.classList.toggle('active', mode === 'register');
+    submitBtn.textContent = mode === 'login' ? PARENT_TEXT.loginSubmit[currentLang] : PARENT_TEXT.registerSubmit[currentLang];
+  }
+  loginTab.addEventListener('click', () => setMode('login'));
+  registerTab.addEventListener('click', () => setMode('register'));
+  document.getElementById('parentCloseBtn').addEventListener('click', closeParentView);
+
+  document.getElementById('authForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
+    let res, data;
+    try {
+      res = await fetch(endpoint, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email, password})
+      });
+      data = await res.json();
+    } catch(err){
+      document.getElementById('authError').textContent = TEXT.genericError[currentLang];
+      return;
+    }
+    if(!res.ok){
+      document.getElementById('authError').textContent = localizedError(data);
+      return;
+    }
+    currentUser = data;
+    renderParentView();
+  });
+}
+
+function renderParentDashboard(view){
+  const childrenHtml = currentUser.children.length
+    ? currentUser.children.map(c => {
+        const level = LEVELS.find(l => l.id === Number(c.level_code));
+        const levelName = level ? level.name[currentLang] : c.level_code;
+        return `<div class="child-row"><span>${c.display_name}</span><span class="child-level">${levelName}</span></div>`;
+      }).join('')
+    : `<p class="muted-note">${PARENT_TEXT.noChildren[currentLang]}</p>`;
+
+  const canAddFree = currentUser.children.length < currentUser.free_child_slots;
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="parent-account-row">
+        <span>${currentUser.email}</span>
+        <button type="button" class="btn-secondary" id="logoutBtn">${PARENT_TEXT.logout[currentLang]}</button>
+      </div>
+      <h3 class="parent-section-title">${PARENT_TEXT.myChildren[currentLang]}</h3>
+      <div class="children-list">${childrenHtml}</div>
+      <h3 class="parent-section-title">${PARENT_TEXT.addChild[currentLang]}</h3>
+      <form id="addChildForm">
+        <input type="text" class="answer-input" id="childName" placeholder="${PARENT_TEXT.childNamePlaceholder[currentLang]}" required>
+        <select class="answer-input" id="childLevel">
+          ${LEVELS.map(l => `<option value="${l.id}">${l.name[currentLang]}</option>`).join('')}
+        </select>
+        <div id="childError" class="form-error"></div>
+        ${!canAddFree ? `<p class="muted-note">${PARENT_TEXT.supplementNotice[currentLang]}</p>` : ''}
+        <div class="session-actions">
+          <button type="button" class="btn-secondary" id="parentCloseBtn2">${TEXT.backHome[currentLang]}</button>
+          <button type="submit" class="btn-primary">${PARENT_TEXT.addChildSubmit[currentLang]}</button>
+        </div>
+      </form>
+    </div>
+  `;
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    try { await fetch('/api/auth/logout', {method: 'POST'}); } catch(e){ /* ignore */ }
+    currentUser = null;
+    renderParentView();
+  });
+  document.getElementById('parentCloseBtn2').addEventListener('click', closeParentView);
+
+  document.getElementById('addChildForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const display_name = document.getElementById('childName').value.trim();
+    const level_code = document.getElementById('childLevel').value;
+    let res, data;
+    try {
+      res = await fetch('/api/children', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({display_name, level_code})
+      });
+      data = await res.json();
+    } catch(err){
+      document.getElementById('childError').textContent = TEXT.genericError[currentLang];
+      return;
+    }
+    if(!res.ok){
+      document.getElementById('childError').textContent = localizedError(data);
+      return;
+    }
+    currentUser.children.push(data);
+    renderParentView();
+  });
+}
+
+document.getElementById('parentToggleBtn').addEventListener('click', openParentView);
+
+restoreSession();
 loadSubjects();
 </script>
 

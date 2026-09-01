@@ -6,6 +6,7 @@ from flask_cors import CORS
 
 from db import db
 from models import (
+    ChildProfile,
     CurriculumDomain,
     CurriculumLevel,
     CurriculumSubject,
@@ -13,10 +14,12 @@ from models import (
     Session,
 )
 from academic_calendar import current_trimester
+from auth import authenticate, current_user, login_user, logout_user, register_user
 from diagnostic_engine import diagnose
 from session_engine import SESSION_SIZE, STARTING_DIFFICULTY, next_difficulty, pick_next_exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FREE_CHILD_SLOTS = 2
 
 app = Flask(__name__)
 CORS(app)
@@ -25,6 +28,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "smartprof.db")
 )
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Dev fallback only — MUST be overridden via env var before any real deployment,
+# otherwise session cookies could be forged by anyone who reads this source.
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-insecure-secret-change-in-production")
 db.init_app(app)
 
 
@@ -142,6 +148,94 @@ def diagnostic():
         return jsonify({"error": "Invalid subject"}), 400
 
     return jsonify(diagnose(str(level), subject, results))
+
+
+def child_payload(child):
+    return {"id": child.id, "display_name": child.display_name, "level_code": child.level_code}
+
+
+def user_payload(user):
+    children = ChildProfile.query.filter_by(user_id=user.id).order_by(ChildProfile.id).all()
+    return {
+        "id": user.id,
+        "email": user.email,
+        "children": [child_payload(c) for c in children],
+        "free_child_slots": FREE_CHILD_SLOTS,
+    }
+
+
+@app.post("/api/auth/register")
+def register():
+    data = request.get_json(silent=True) or {}
+    user, error = register_user(data.get("email"), data.get("password"))
+
+    if error == "invalid_email":
+        return jsonify({"error": error, "message": "Adresse email invalide."}), 400
+    if error == "password_too_short":
+        return jsonify(
+            {"error": error, "message": "Le mot de passe doit contenir au moins 8 caractères."}
+        ), 400
+    if error == "email_already_registered":
+        return jsonify({"error": error, "message": "Un compte existe déjà avec cet email."}), 409
+
+    login_user(user)
+    return jsonify(user_payload(user)), 201
+
+
+@app.post("/api/auth/login")
+def login():
+    data = request.get_json(silent=True) or {}
+    user = authenticate(data.get("email"), data.get("password"))
+    if user is None:
+        return jsonify({"error": "invalid_credentials", "message": "Email ou mot de passe incorrect."}), 401
+
+    login_user(user)
+    return jsonify(user_payload(user))
+
+
+@app.post("/api/auth/logout")
+def logout():
+    logout_user()
+    return jsonify({"status": "ok"})
+
+
+@app.get("/api/auth/me")
+def me():
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "not_authenticated"}), 401
+    return jsonify(user_payload(user))
+
+
+@app.post("/api/children")
+def add_child():
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "not_authenticated"}), 401
+
+    data = request.get_json(silent=True) or {}
+    display_name = (data.get("display_name") or "").strip()
+    level_code = str(data.get("level_code", ""))
+
+    if not display_name:
+        return jsonify({"error": "display_name_required", "message": "Le prénom de l'enfant est requis."}), 400
+    if not CurriculumLevel.query.filter_by(code=level_code).first():
+        return jsonify({"error": "invalid_level", "message": "Niveau invalide."}), 400
+
+    existing_count = ChildProfile.query.filter_by(user_id=user.id).count()
+    if existing_count >= FREE_CHILD_SLOTS:
+        return jsonify(
+            {
+                "error": "supplement_required",
+                "message": f"Un supplément payant est nécessaire à partir du {FREE_CHILD_SLOTS + 1}ème enfant (bientôt disponible).",
+            }
+        ), 402
+
+    child = ChildProfile(user_id=user.id, display_name=display_name, level_code=level_code)
+    db.session.add(child)
+    db.session.commit()
+
+    return jsonify(child_payload(child)), 201
 
 
 def is_subject_locked(level_code, subject_row):
