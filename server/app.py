@@ -270,6 +270,23 @@ def start_session():
     data = request.get_json(silent=True) or {}
     level_code = str(data.get("level", ""))
     subject_code = data.get("subject", "")
+    child_id = data.get("child_id")
+
+    # child_id is optional (anonymous play still works), but when present it
+    # must belong to the logged-in parent — this is what lets two devices each
+    # attribute their own session to a different child, fully independently:
+    # nothing here serializes across devices, so two children can be mid-session
+    # in parallel with no coordination needed.
+    child = None
+    if child_id is not None:
+        user = current_user()
+        if user is None:
+            return jsonify(
+                {"error": "not_authenticated", "message": "Connexion parent requise pour sélectionner un enfant."}
+            ), 401
+        child = ChildProfile.query.filter_by(id=child_id, user_id=user.id).first()
+        if child is None:
+            return jsonify({"error": "invalid_child", "message": "Enfant introuvable."}), 400
 
     if not CurriculumLevel.query.filter_by(code=level_code).first():
         return jsonify({"error": "invalid_level"}), 400
@@ -297,6 +314,7 @@ def start_session():
         ), 404
 
     session_row = Session(
+        child_profile_id=child.id if child else None,
         level_code=level_code,
         subject_code=subject_code,
         trimester=trimester,

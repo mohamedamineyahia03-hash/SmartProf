@@ -151,6 +151,8 @@
   .header-actions{display:flex;align-items:center;gap:10px;}
   .parent-btn{border:0;background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;box-shadow:0 4px 16px rgba(27,35,64,.08);transition:transform .2s ease;}
   .parent-btn:hover{transform:translateY(-2px);}
+  .child-badge{border:0;background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff;padding:9px 16px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;box-shadow:0 4px 16px rgba(255,61,119,.25);transition:transform .2s ease;}
+  .child-badge:hover{transform:translateY(-2px);}
 
   .parent-tabs{display:flex;gap:8px;margin-bottom:20px;}
   .parent-tab{flex:1;border:0;background:#f1f1f1;color:var(--muted);padding:10px;border-radius:999px;font-family:'Inter',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s ease;}
@@ -161,7 +163,7 @@
   .parent-account-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;font-weight:600;flex-wrap:wrap;gap:10px;}
   .parent-section-title{font-size:1rem;margin:18px 0 10px;}
   .children-list{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
-  .child-row{display:flex;justify-content:space-between;padding:12px 16px;background:var(--paper-soft);border-radius:12px;font-weight:600;}
+  .child-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;background:var(--paper-soft);border-radius:12px;font-weight:600;}
   .child-level{color:var(--muted);font-weight:500;}
   .muted-note{font-size:.82rem;color:var(--muted);margin:6px 0 0;}
 
@@ -197,6 +199,7 @@
       SmartProf
     </div>
     <div class="header-actions">
+      <button type="button" class="child-badge" id="activeChildBadge" style="display:none;"></button>
       <button type="button" class="parent-btn" id="parentToggleBtn"></button>
       <div class="lang-toggle">
         <button class="active" data-lang="fr">FR</button>
@@ -524,6 +527,7 @@ let currentLang = 'fr';
 let currentSession = null;
 let lockedToastTimer = null;
 let currentUser = null; // {id, email, children, free_child_slots} or null
+let activeChild = null; // {id, display_name, level_code} or null — scoped to THIS tab/device only
 
 const PARENT_TEXT = {
   headerButton:{fr:"👤 Espace parent", ar:"👤 مساحة الوالدين"},
@@ -649,6 +653,15 @@ function render(){
   document.getElementById('downloadStatus').textContent = '';
   document.getElementById('parentToggleBtn').textContent = PARENT_TEXT.headerButton[currentLang];
 
+  const badge = document.getElementById('activeChildBadge');
+  if(activeChild){
+    badge.style.display = '';
+    badge.textContent = `🎈 ${activeChild.display_name}`;
+  } else {
+    badge.style.display = 'none';
+    badge.textContent = '';
+  }
+
   document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
   document.body.style.fontFamily = currentLang === 'ar' ? "'Baloo 2', sans-serif" : "'Inter', sans-serif";
 }
@@ -682,7 +695,7 @@ async function startSession(subjectId){
     res = await fetch('/api/session/start', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({level: currentLevel, subject: subjectId})
+      body: JSON.stringify({level: currentLevel, subject: subjectId, child_id: activeChild ? activeChild.id : undefined})
     });
     data = await res.json();
   } catch(e){
@@ -832,10 +845,33 @@ async function loadSubjects(){
 }
 
 async function restoreSession(){
+  // sessionStorage (not localStorage) on purpose: it's unique per browser tab,
+  // so two tabs/devices each keep their own active child and never clash —
+  // that's what lets two children run sessions truly in parallel.
+  try {
+    const raw = sessionStorage.getItem('smartprof_active_child');
+    if(raw) activeChild = JSON.parse(raw);
+  } catch(e){ activeChild = null; }
+
   try {
     const res = await fetch('/api/auth/me');
     if(res.ok){ currentUser = await res.json(); }
-  } catch(e){ /* pas connecté, ou hors-ligne : on reste anonyme */ }
+    else { clearActiveChild(true); }
+  } catch(e){ clearActiveChild(true); }
+}
+
+function setActiveChild(child){
+  activeChild = child;
+  try { sessionStorage.setItem('smartprof_active_child', JSON.stringify(child)); } catch(e){}
+  currentLevel = Number(child.level_code);
+  closeParentView();
+  render();
+}
+
+function clearActiveChild(silent){
+  activeChild = null;
+  try { sessionStorage.removeItem('smartprof_active_child'); } catch(e){}
+  if(!silent) render();
 }
 
 /* ---------- Espace parent ---------- */
@@ -927,7 +963,11 @@ function renderParentDashboard(view){
     ? currentUser.children.map(c => {
         const level = LEVELS.find(l => l.id === Number(c.level_code));
         const levelName = level ? level.name[currentLang] : c.level_code;
-        return `<div class="child-row"><span>${c.display_name}</span><span class="child-level">${levelName}</span></div>`;
+        return `<div class="child-row">
+          <span>${c.display_name}</span>
+          <span class="child-level">${levelName}</span>
+          <button type="button" class="start-btn child-start-btn" data-child-id="${c.id}" data-child-name="${c.display_name.replace(/"/g,'&quot;')}" data-child-level="${c.level_code}">${TEXT.startLabel[currentLang]}</button>
+        </div>`;
       }).join('')
     : `<p class="muted-note">${PARENT_TEXT.noChildren[currentLang]}</p>`;
 
@@ -960,9 +1000,21 @@ function renderParentDashboard(view){
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     try { await fetch('/api/auth/logout', {method: 'POST'}); } catch(e){ /* ignore */ }
     currentUser = null;
+    clearActiveChild(true); // a session start would fail once logged out anyway
+    render();
     renderParentView();
   });
   document.getElementById('parentCloseBtn2').addEventListener('click', closeParentView);
+
+  view.querySelectorAll('.child-start-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setActiveChild({
+        id: Number(btn.dataset.childId),
+        display_name: btn.dataset.childName,
+        level_code: btn.dataset.childLevel
+      });
+    });
+  });
 
   document.getElementById('addChildForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -990,6 +1042,7 @@ function renderParentDashboard(view){
 }
 
 document.getElementById('parentToggleBtn').addEventListener('click', openParentView);
+document.getElementById('activeChildBadge').addEventListener('click', () => clearActiveChild());
 
 restoreSession();
 loadSubjects();
