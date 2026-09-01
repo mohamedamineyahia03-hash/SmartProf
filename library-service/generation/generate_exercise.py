@@ -24,6 +24,8 @@ Texte d'inspiration (ne JAMAIS le copier ni le paraphraser de près — il sert 
 {inspiration}
 ---
 
+Attention : cette source d'inspiration peut dater d'une année scolaire antérieure ({source_year_note}). Ne reprends aucun élément qui pourrait être obsolète (dates, années scolaires, anciens repères de programme, anciens formats d'examen). Base le contenu final uniquement sur le niveau/domaine/compétence ci-dessous, tels que définis dans le programme tunisien actuel.
+
 Crée UN exercice original et différent du texte ci-dessus, pour :
 - Niveau : {level}
 - Matière : {subject}
@@ -78,8 +80,12 @@ def generate_exercise(source, level_code, subject_code, domain, skill, exercise_
     if api_key:
         import anthropic
 
+        source_year_note = (
+            f"détectée autour de {source.source_year}" if source.source_year else "année non déterminée, à traiter avec prudence"
+        )
         prompt = PROMPT_TEMPLATE.format(
             inspiration=(source.content_snapshot or "")[:2000],
+            source_year_note=source_year_note,
             level=level_code,
             subject=subject_code,
             domain_name_fr=domain["name_fr"],
