@@ -410,6 +410,7 @@ def public_exercise_payload(exercise):
         "format": exercise.exercise_format,
         "difficulty": exercise.difficulty,
         "language": exercise.language,
+        "grading_mode": exercise.grading_mode,
         "content": public_content(exercise.content),
     }
 

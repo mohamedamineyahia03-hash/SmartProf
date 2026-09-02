@@ -646,6 +646,13 @@ function iconHouseVisual(){
     <rect x="44" y="64" width="14" height="22" rx="2" fill="#8B5A2B" stroke="${INK}" stroke-width="2.5"/>
     ${shine(34,58,5,3,-15)}</svg>`;
 }
+function iconBallVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}
+    <circle cx="50" cy="48" r="30" fill="#fff" stroke="${INK}" stroke-width="4"/>
+    <path d="M50 20 L62 31 L57 46 L43 46 L38 31 Z" fill="${INK}"/>
+    <path d="M50 20 L50 9 M62 31 L75 25 M57 46 L64 63 M43 46 L36 63 M38 31 L25 25" stroke="${INK}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    ${shine(38,36,6,3.5,-20)}</svg>`;
+}
 function iconBeeVisual(){
   return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}
     <ellipse cx="46" cy="34" rx="14" ry="12" fill="#fff" stroke="${INK}" stroke-width="2" opacity=".85"/>
@@ -673,7 +680,8 @@ const VISUAL_ICON_MAP = {
   '🌳': iconTreeVisual,
   '☁': iconCloudVisual,
   '🏠': iconHouseVisual,
-  '🐝': iconBeeVisual
+  '🐝': iconBeeVisual,
+  '⚽': iconBallVisual
 };
 
 // Remplace chaque emoji connu de content.visual par son icône SVG cartoon ;
@@ -745,13 +753,13 @@ const TEXT = {
   correctFeedback:{fr:"✅ Bonne réponse !", ar:"✅ إجابة صحيحة!"},
   answerPlaceholder:{fr:"Ta réponse...", ar:"إجابتك..."},
   summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"},
-  expressionTitle:{fr:"Expression orale et écrite", ar:"التعبير الشفوي والكتابي"},
+  expressionTitle:{fr:"Sections indépendantes", ar:"أقسام إضافية"},
   emptyResultsNote:{fr:"Cette section n'a pas encore de résultat noté.", ar:"لا توجد نتيجة مُقيَّمة بعد لهذا القسم."},
   listenLabel:{fr:"🔊 Écouter", ar:"🔊 استمع"},
   recordLabel:{fr:"🎙️ S'enregistrer", ar:"🎙️ سجّل صوتك"},
   stopRecordLabel:{fr:"⏹️ Arrêter", ar:"⏹️ إيقاف"},
   micErrorMessage:{fr:"Micro indisponible ou refusé.", ar:"الميكروفون غير متاح أو تم رفض الإذن."},
-  oralPracticeHint:{fr:"Entraînement libre : écoute le modèle, puis enregistre-toi pour te réécouter. Ce n'est pas noté.", ar:"تدريب حر: استمع للنموذج ثم سجّل صوتك لتستمع لنفسك. هذا غير مُقيَّم."},
+  ttsUnavailableMessage:{fr:"Lecture à voix haute indisponible sur cet appareil.", ar:"القراءة الصوتية غير متاحة على هذا الجهاز."},
   recitationHint:{fr:"Écoute le modèle, entraîne-toi à réciter, puis enregistre-toi si tu veux te réécouter.", ar:"استمع للنموذج، تدرّب على الإلقاء، ثم سجّل صوتك إن أردت الاستماع لنفسك."}
 };
 
@@ -786,6 +794,20 @@ function incorrectFeedbackText(correctAnswer){
 }
 function skillCountText(n){
   return currentLang === 'ar' ? `${n} مهارات` : `${n} compétences`;
+}
+
+// Mélange l'ordre d'affichage des choix (Fisher-Yates) — le contenu place
+// souvent la bonne réponse en premier, sans quoi un enfant pourrait
+// apprendre à toujours cliquer la première option au lieu de lire.
+// data-choice porte toujours le texte exact, donc la correction ne dépend
+// jamais de l'ordre.
+function shuffled(array){
+  const a = array.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 function isSubjectLocked(subject, level){
   return !subject.freeLevels.includes(String(level));
@@ -1109,13 +1131,15 @@ function dirFor(language){
    Gratuit, aucun serveur : la voix exacte dépend de l'appareil/navigateur
    de l'élève (SAPI sur Windows, voix système sur mobile...). On essaie une
    voix féminine connue par son nom, sinon la première voix disponible dans
-   la bonne langue, jamais une voix d'une autre langue. */
+   la bonne langue, jamais une voix d'une autre langue. Si aucune voix n'est
+   installée sur l'appareil, le bouton 🔊 le dit au lieu de rester muet sans
+   explication — un bouton qui "ne fait rien" en silence se lit comme cassé. */
 function ttsLangCode(language){
   return {fr:'fr-FR', en:'en-US', ar:'ar-SA'}[language] || 'fr-FR';
 }
 const FEMALE_VOICE_HINTS = ['female', 'zira', 'hortense', 'julie', 'amelie', 'amélie', 'audrey', 'samantha', 'salma', 'laila', 'fatima'];
 function pickVoice(langCode){
-  if(!('speechSynthesis' in window)) return null;
+  if(!(window.speechSynthesis)) return null;
   const voices = window.speechSynthesis.getVoices();
   const prefix = langCode.slice(0,2).toLowerCase();
   const matching = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
@@ -1123,17 +1147,73 @@ function pickVoice(langCode){
   const female = matching.find(v => FEMALE_VOICE_HINTS.some(hint => v.name.toLowerCase().includes(hint)));
   return female || matching[0];
 }
-function speakText(text, language){
-  if(!('speechSynthesis' in window) || !text) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  const langCode = ttsLangCode(language);
-  utterance.lang = langCode;
-  const voice = pickVoice(langCode);
-  if(voice) utterance.voice = voice;
-  utterance.rate = 0.9; // légèrement ralenti, pensé pour un enfant qui apprend à prononcer
-  window.speechSynthesis.speak(utterance);
+
+// speechSynthesis.getVoices() renvoie souvent un tableau vide au tout
+// premier appel (chargement asynchrone par le navigateur) — on attend
+// l'évènement voiceschanged une fois avant d'abandonner (max 1s).
+let voicesReadyPromise = null;
+function waitForVoices(){
+  if(!(window.speechSynthesis)) return Promise.resolve([]);
+  const existing = window.speechSynthesis.getVoices();
+  if(existing.length) return Promise.resolve(existing);
+  if(voicesReadyPromise) return voicesReadyPromise;
+  voicesReadyPromise = new Promise(resolve => {
+    const timer = setTimeout(() => resolve(window.speechSynthesis.getVoices()), 1000);
+    window.speechSynthesis.addEventListener('voiceschanged', () => {
+      clearTimeout(timer);
+      resolve(window.speechSynthesis.getVoices());
+    }, {once: true});
+  });
+  return voicesReadyPromise;
 }
+
+function speakUtterance(text, language){
+  return new Promise(resolve => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = ttsLangCode(language);
+    const voice = pickVoice(utterance.lang);
+    if(voice) utterance.voice = voice;
+    utterance.rate = 0.9; // légèrement ralenti, pensé pour un enfant qui apprend à prononcer
+    utterance.onend = () => resolve(true);
+    utterance.onerror = () => resolve(false);
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+// Lit un texte à voix haute. Affiche un message si la synthèse vocale
+// n'est pas disponible sur cet appareil plutôt que de rester silencieux.
+async function speakText(text, language){
+  if(!(window.speechSynthesis) || !text){
+    showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
+    return;
+  }
+  window.speechSynthesis.cancel();
+  await waitForVoices();
+  const ok = await speakUtterance(text, language);
+  if(!ok) showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
+}
+
+// Lecture "au rythme" pour la récitation : un vers à la fois avec une
+// courte pause entre chaque, plus proche du phrasé d'une récitation que de
+// lire tout le poème d'une traite.
+async function speakLines(text, language){
+  if(!(window.speechSynthesis) || !text){
+    showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
+    return;
+  }
+  window.speechSynthesis.cancel();
+  await waitForVoices();
+  const lines = text.split('\n').filter(l => l.trim());
+  let anySucceeded = false;
+  for(const line of lines){
+    const ok = await speakUtterance(line, language);
+    anySucceeded = anySucceeded || ok;
+    if(!ok) break;
+    await new Promise(r => setTimeout(r, 350)); // pause entre les vers
+  }
+  if(!anySucceeded) showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
+}
+
 function ttsButtonHtml(){
   return `<button type="button" class="tts-btn" id="ttsBtn" title="${TEXT.listenLabel[currentLang]}">🔊</button>`;
 }
@@ -1201,11 +1281,10 @@ function renderSessionQuestion(){
     renderRecitationExercise(view, ex, content, isLast);
     return;
   }
-  if(content.mode === 'orale'){
-    renderOralExpressionExercise(view, ex, content, isLast);
-    return;
-  }
-  if(content.mode === 'ecrite'){
+  // grading_mode "open" = production écrite (pas de réponse exacte à
+  // vérifier) : toujours une réponse tapée, jamais orale — voir le
+  // commentaire en tête de seed_expression_recitation.py.
+  if(ex.grading_mode === 'open'){
     renderWrittenExpressionExercise(view, ex, content, isLast);
     return;
   }
@@ -1215,7 +1294,7 @@ function renderSessionQuestion(){
   }
 
   const answerArea = content.choices
-    ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+    ? `<div class="choice-list" id="choiceList">${shuffled(content.choices).map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${renderVisual(c)}</button>`).join('')}</div>`
     : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
 
   const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
@@ -1296,7 +1375,7 @@ function renderRecitationExercise(view, ex, content, isLast){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('listenBtn').addEventListener('click', () => speakText(content.text, ex.language));
+  document.getElementById('listenBtn').addEventListener('click', () => speakLines(content.text, ex.language));
   wireRecordControls(view);
   document.getElementById('validateBtn').addEventListener('click', () => {
     document.getElementById('validateBtn').disabled = true;
@@ -1304,37 +1383,7 @@ function renderRecitationExercise(view, ex, content, isLast){
   });
 }
 
-// Section Expression orale : écoute du modèle + auto-enregistrement, pas de
-// réponse à taper — entraînement libre, jamais noté.
-function renderOralExpressionExercise(view, ex, content, isLast){
-  const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
-
-  view.innerHTML = `
-    <div class="session-card">
-      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
-      <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
-        ${visualArea}
-        <p class="muted-note oral-hint">${TEXT.oralPracticeHint[currentLang]}</p>
-        <div class="tts-row">${recordControlsHtml()}</div>
-      </div>
-      <div class="session-actions">
-        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
-        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
-      </div>
-    </div>
-  `;
-
-  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
-  wireRecordControls(view);
-  document.getElementById('validateBtn').addEventListener('click', () => {
-    document.getElementById('validateBtn').disabled = true;
-    submitAnswer(null);
-  });
-}
-
-// Section Expression écrite : réponse libre tapée, enregistrée en
+// Production écrite : réponse libre tapée, enregistrée en
 // grading_mode "open" (jamais notée exactement, réponse-modèle affichée au
 // corrigé comme repère).
 function renderWrittenExpressionExercise(view, ex, content, isLast){
@@ -1373,7 +1422,7 @@ function renderMultiQuestionExercise(view, ex, content, isLast){
 
   const blocksHtml = subs.map((sq, i) => {
     const answerArea = sq.choices
-      ? `<div class="choice-list" id="choiceList-${i}">${sq.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
+      ? `<div class="choice-list" id="choiceList-${i}">${shuffled(sq.choices).map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${renderVisual(c)}</button>`).join('')}</div>`
       : `<input type="text" class="answer-input" id="answerInput-${i}" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
     return `
       <div class="sub-question-block" id="subq-${i}">

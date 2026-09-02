@@ -72,23 +72,36 @@
       }
     },
     {
-      "id": "expression_orale_ecrite",
+      "id": "production_ecrite",
       "category": "expression",
-      "name_fr": "Expression orale et écrite",
-      "name_ar": "التعبير الشفوي والكتابي",
+      "name_fr": "Production écrite",
+      "name_ar": "الإنتاج الكتابي",
       "skills": [
-        "wasf_sura",
+        "ikmal_al_jumla",
         "tartib_kalimat",
-        "kitaba_qasira"
+        "takwin_jumla",
+        "taabir_an_sura",
+        "tartib_ahdath",
+        "intaj_hurr_muwajjah"
       ],
       "exercise_formats": {
-        "wasf_sura": [
-          "reponse_libre"
+        "ikmal_al_jumla": [
+          "qcm"
         ],
         "tartib_kalimat": [
           "qcm"
         ],
-        "kitaba_qasira": [
+        "takwin_jumla": [
+          "reponse_libre"
+        ],
+        "taabir_an_sura": [
+          "reponse_libre",
+          "visuel"
+        ],
+        "tartib_ahdath": [
+          "reponse_libre"
+        ],
+        "intaj_hurr_muwajjah": [
           "reponse_libre"
         ]
       }

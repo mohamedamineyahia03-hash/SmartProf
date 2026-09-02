@@ -45,10 +45,10 @@
       }
     },
     {
-      "id": "expression_orale_ecrite",
+      "id": "production_ecrite",
       "category": "expression",
-      "name_fr": "Expression orale et écrite",
-      "name_ar": "التعبير الشفوي والكتابي",
+      "name_fr": "Production écrite",
+      "name_ar": "الإنتاج الكتابي",
       "skills": ["decrire_image", "raconter_histoire", "redaction_courte"],
       "exercise_formats": {
         "decrire_image": ["reponse_libre", "visuel"],
