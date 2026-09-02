@@ -111,6 +111,13 @@ class User(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     locale_pref = db.Column(db.String(8), default="fr")
+    # Bouche-à-oreille : code court unique attribué à l'inscription, partagé
+    # via un lien (?ref=CODE). referred_by_user_id trace qui a amené qui, dès
+    # maintenant — la récompense (mois offert, matière débloquée...) sera
+    # décidée avec le reste de la tarification, mais la relation de parrainage
+    # est déjà capturée pour pouvoir être récompensée rétroactivement.
+    referral_code = db.Column(db.String(12), unique=True, nullable=True)
+    referred_by_user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=True)
 
     children = db.relationship("ChildProfile", backref="user", cascade="all, delete-orphan")
 

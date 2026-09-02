@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SmartProf — Apprendre, niveau par niveau</title>
+<meta name="description" content="Apprentissage personnalisé pour le primaire tunisien, suivi pour toute la fratrie, en arabe, français et anglais.">
+<!-- og:image à ajouter dès qu'une URL d'hébergement définitive existe (voir web/assets/og-image.png généré localement) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SmartProf">
+<meta property="og:title" content="SmartProf — Apprendre, niveau par niveau">
+<meta property="og:description" content="Apprentissage personnalisé pour le primaire tunisien, suivi pour toute la fratrie, en arabe, français et anglais.">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="ar_TN">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -214,6 +223,9 @@
   .children-list{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
   .child-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 16px;background:var(--paper-soft);border-radius:12px;font-weight:600;}
   .child-level{color:var(--muted);font-weight:500;}
+  .referral-row{display:flex;gap:8px;margin-bottom:6px;}
+  .referral-row .answer-input{flex:1;min-width:0;font-size:.82rem;color:var(--muted);}
+  .referral-row .btn-secondary{flex-shrink:0;white-space:nowrap;}
   .muted-note{font-size:.82rem;color:var(--muted);margin:6px 0 0;}
   .skill-badges{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px;}
   .skill-badge{padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:600;}
@@ -755,6 +767,7 @@ const TEXT = {
   noContentMessage:{fr:"Pas encore d'exercices disponibles pour ce choix, reviens bientôt !", ar:"لا توجد تمارين متاحة بعد لهذا الاختيار، عد قريبًا!"},
   genericError:{fr:"Une erreur est survenue, réessaie.", ar:"حدث خطأ، حاول مجددًا."},
   backHome:{fr:"Retour à l'accueil", ar:"العودة للرئيسية"},
+  shareResult:{fr:"📤 Partager le résultat", ar:"📤 مشاركة النتيجة"},
   validate:{fr:"Valider", ar:"تحقّق"},
   next:{fr:"Suivant", ar:"التالي"},
   finish:{fr:"Terminer", ar:"إنهاء"},
@@ -847,7 +860,11 @@ const PARENT_TEXT = {
   childNamePlaceholder:{fr:"Prénom de l'enfant", ar:"اسم الطفل"},
   addChildSubmit:{fr:"Ajouter", ar:"إضافة"},
   supplementNotice:{fr:"Les 2 premiers enfants sont inclus. Un supplément payant sera bientôt disponible à partir du 3ème.", ar:"أول طفلين مشمولان مجانًا. سيتوفر قريبًا اشتراك إضافي مدفوع ابتداءً من الطفل الثالث."},
-  reportLabel:{fr:"📊 Rapport", ar:"📊 التقرير"}
+  reportLabel:{fr:"📊 Rapport", ar:"📊 التقرير"},
+  referralTitle:{fr:"🎁 Parraine d'autres parents", ar:"🎁 ادعُ أولياء آخرين"},
+  referralNote:{fr:"Partage ce lien avec d'autres parents (groupe WhatsApp de la classe, Facebook...). Chaque parent inscrit grâce à toi te fera gagner un avantage sur SmartProf.", ar:"شارك هذا الرابط مع أولياء آخرين (مجموعة واتساب القسم، فيسبوك...). كل ولي يسجل بفضلك يمنحك ميزة على سمارت بروف."},
+  copyLink:{fr:"Copier le lien", ar:"نسخ الرابط"},
+  linkCopied:{fr:"Lien copié !", ar:"تم نسخ الرابط!"}
 };
 
 const REPORT_TEXT = {
@@ -1128,7 +1145,7 @@ async function startExamSession(subjectId, domainCode, trimester){
   if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
   if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
 
-  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0};
+  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, subjectId, level: currentLevel};
   renderSessionQuestion();
 }
 
@@ -1577,11 +1594,111 @@ async function renderSessionSummary(){
       ${scoreHtml}
       <div class="corrige-list">${data.items.map(corrigeItemHtml).join('')}</div>
       <div class="session-actions" style="justify-content:center;">
+        <button type="button" class="btn-secondary" id="shareResultBtn">${TEXT.shareResult[currentLang]}</button>
         <button type="button" class="btn-primary" id="finishBackBtn">${TEXT.backHome[currentLang]}</button>
       </div>
     </div>
   `;
   document.getElementById('finishBackBtn').addEventListener('click', backToHome);
+  document.getElementById('shareResultBtn').addEventListener('click', (e) => {
+    e.target.disabled = true;
+    shareResultCard(data.score || 0, data.graded_total || 0, currentSession && currentSession.subjectId, currentSession && currentSession.level)
+      .finally(() => { e.target.disabled = false; });
+  });
+}
+
+// Génère une image carrée (1080×1080) reprenant l'identité visuelle de
+// SmartProf (mascotte du niveau, couleurs, marque) à partir du résultat
+// d'une séance, puis propose de la partager (feuille de partage native sur
+// mobile — WhatsApp/Facebook/Messenger directement) ou la télécharge en
+// repli. C'est le principal levier de bouche-à-oreille du produit : chaque
+// séance réussie devient un contenu prêt à circuler dans les groupes de
+// parents, sans rien demander de plus à l'utilisateur qu'un clic.
+async function shareResultCard(score, total, subjectId, level){
+  const lvl = LEVELS.find(l => l.id === level) || LEVELS[0];
+  const subject = SUBJECTS.find(s => s.id === subjectId);
+  const subjectName = subject ? subject.name[currentLang] : '';
+
+  try { if(document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e){}
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+  // ctx.direction only ever set right before drawing actual Arabic text
+  // below — applying it globally also flips plain numeric/Latin strings
+  // like "12 / 15" into "15 / 12" (Canvas 2D direction has no real Unicode
+  // bidi algorithm behind it, unlike CSS text).
+  ctx.textAlign = 'center';
+
+  const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+  grad.addColorStop(0, lvl.paper || '#FFF3EC');
+  grad.addColorStop(1, lvl.panel || '#FFE3EE');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1080);
+
+  ctx.globalAlpha = .18;
+  ctx.fillStyle = lvl.accent2;
+  ctx.beginPath(); ctx.ellipse(130, 130, 220, 220, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(970, 960, 260, 260, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = '#1B2340';
+  ctx.font = "700 60px 'Baloo 2', sans-serif";
+  ctx.fillText('SmartProf', 540, 120);
+
+  try {
+    const mascotFn = MASCOTS[lvl.id];
+    if(mascotFn){
+      // MASCOTS() omits xmlns on purpose (it's normally injected via
+      // innerHTML, where the HTML parser infers the SVG namespace) — but a
+      // standalone <img> decoding an SVG data URI needs a well-formed
+      // document, xmlns included, or the browser silently fails to decode it.
+      const svg = mascotFn(lvl.accent, lvl.accent2).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+      const img = new Image();
+      const loaded = new Promise((resolve) => { img.onload = resolve; img.onerror = resolve; });
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      await loaded;
+      if(img.naturalWidth) ctx.drawImage(img, 340, 180, 400, 400);
+    }
+  } catch(e){ /* pas bloquant — carte affichée sans mascotte si le rendu SVG échoue */ }
+
+  ctx.direction = 'ltr'; // le score reste toujours en chiffres latins, même en arabe
+  if(total > 0){
+    ctx.fillStyle = lvl.accent;
+    ctx.font = "800 130px 'Baloo 2', sans-serif";
+    ctx.fillText(`${score} / ${total}`, 540, 710);
+  } else {
+    ctx.fillStyle = lvl.accent;
+    ctx.font = "700 54px 'Baloo 2', sans-serif";
+    ctx.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+    ctx.fillText(currentLang === 'ar' ? 'أنجزتُ حصتي!' : 'Séance terminée !', 540, 690);
+  }
+
+  ctx.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+  ctx.fillStyle = '#6B7280';
+  ctx.font = "600 38px 'Inter', sans-serif";
+  ctx.fillText([subjectName, lvl.name[currentLang]].filter(Boolean).join(' · '), 540, 790);
+
+  ctx.fillStyle = '#1B2340';
+  ctx.font = "500 32px 'Inter', sans-serif";
+  ctx.fillText(TEXT.heroTagline[currentLang], 540, 970);
+
+  await new Promise((resolve) => {
+    canvas.toBlob(async (blob) => {
+      if(!blob){ resolve(); return; }
+      const file = new File([blob], 'smartprof-resultat.png', {type: 'image/png'});
+      if(navigator.share && navigator.canShare && navigator.canShare({files: [file]})){
+        try { await navigator.share({files: [file], title: 'SmartProf'}); resolve(); return; }
+        catch(e){ /* partage annulé/indisponible — repli téléchargement ci-dessous */ }
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'smartprof-resultat.png';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      resolve();
+    }, 'image/png');
+  });
 }
 
 function backToHome(){
@@ -1705,10 +1822,16 @@ function renderAuthForms(view){
     const endpoint = mode === 'login' ? '/api/auth/login' : '/api/auth/register';
     let res, data;
     try {
+      const body = {email, password};
+      if(mode === 'register'){
+        let refCode = null;
+        try { refCode = localStorage.getItem('smartprof_ref_code'); } catch(e){}
+        if(refCode) body.ref = refCode;
+      }
       res = await fetch(endpoint, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password})
+        body: JSON.stringify(body)
       });
       data = await res.json();
     } catch(err){
@@ -1739,6 +1862,9 @@ function renderParentDashboard(view){
     : `<p class="muted-note">${PARENT_TEXT.noChildren[currentLang]}</p>`;
 
   const canAddFree = currentUser.children.length < currentUser.free_child_slots;
+  const referralLink = currentUser.referral_code
+    ? `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`
+    : '';
 
   view.innerHTML = `
     <div class="session-card">
@@ -1748,6 +1874,14 @@ function renderParentDashboard(view){
       </div>
       <h3 class="parent-section-title">${PARENT_TEXT.myChildren[currentLang]}</h3>
       <div class="children-list">${childrenHtml}</div>
+      ${referralLink ? `
+      <h3 class="parent-section-title">${PARENT_TEXT.referralTitle[currentLang]}</h3>
+      <p class="muted-note">${PARENT_TEXT.referralNote[currentLang]}</p>
+      <div class="referral-row">
+        <input type="text" class="answer-input" id="referralLinkInput" value="${referralLink}" readonly>
+        <button type="button" class="btn-secondary" id="copyReferralBtn">${PARENT_TEXT.copyLink[currentLang]}</button>
+      </div>
+      ` : ''}
       <h3 class="parent-section-title">${PARENT_TEXT.addChild[currentLang]}</h3>
       <form id="addChildForm">
         <input type="text" class="answer-input" id="childName" placeholder="${PARENT_TEXT.childNamePlaceholder[currentLang]}" required>
@@ -1772,6 +1906,22 @@ function renderParentDashboard(view){
     renderParentView();
   });
   document.getElementById('parentCloseBtn2').addEventListener('click', closeParentView);
+
+  const copyReferralBtn = document.getElementById('copyReferralBtn');
+  if(copyReferralBtn){
+    copyReferralBtn.addEventListener('click', async () => {
+      const input = document.getElementById('referralLinkInput');
+      try {
+        await navigator.clipboard.writeText(input.value);
+      } catch(e){
+        input.select(); // repli navigateurs/contextes sans Clipboard API
+        try { document.execCommand('copy'); } catch(e2){ /* rien de plus possible */ }
+      }
+      const original = copyReferralBtn.textContent;
+      copyReferralBtn.textContent = PARENT_TEXT.linkCopied[currentLang];
+      setTimeout(() => { copyReferralBtn.textContent = original; }, 2000);
+    });
+  }
 
   view.querySelectorAll('.child-start-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -1907,8 +2057,23 @@ function renderChildReportContent(view, data){
 document.getElementById('parentToggleBtn').addEventListener('click', openParentView);
 document.getElementById('activeChildBadge').addEventListener('click', () => clearActiveChild());
 
+captureReferralCode();
 restoreSession();
 loadSubjects();
+
+// Parrainage : premier lien cliqué gagne (on ne remplace jamais un code déjà
+// mémorisé par une visite ultérieure sans ?ref=), mémorisé jusqu'à
+// l'inscription — l'utilisateur peut cliquer le lien, fermer l'onglet,
+// revenir plus tard s'inscrire, le parrain reste crédité.
+function captureReferralCode(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if(ref && !localStorage.getItem('smartprof_ref_code')){
+      localStorage.setItem('smartprof_ref_code', ref.trim().toUpperCase());
+    }
+  } catch(e){ /* localStorage indisponible — parrainage simplement ignoré */ }
+}
 </script>
 
 </body>

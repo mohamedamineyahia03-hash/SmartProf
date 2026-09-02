@@ -197,13 +197,14 @@ def user_payload(user):
         "email": user.email,
         "children": [child_payload(c) for c in children],
         "free_child_slots": FREE_CHILD_SLOTS,
+        "referral_code": user.referral_code,
     }
 
 
 @app.post("/api/auth/register")
 def register():
     data = request.get_json(silent=True) or {}
-    user, error = register_user(data.get("email"), data.get("password"))
+    user, error = register_user(data.get("email"), data.get("password"), data.get("ref"))
 
     if error == "invalid_email":
         return jsonify({"error": error, "message": "Adresse email invalide."}), 400
