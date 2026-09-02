@@ -177,6 +177,18 @@
   .corrige-answer.model{color:var(--muted);}
   .corrige-explain{margin-top:4px;font-size:.88rem;line-height:1.5;color:var(--muted);}
   .corrige-subitem{margin-top:10px;padding-inline-start:6px;}
+  .corrige-poem{margin-top:8px;font-size:.88rem;line-height:1.6;color:var(--ink);white-space:normal;}
+  .corrige-author{margin-top:4px;font-size:.8rem;color:var(--muted);}
+
+  .tts-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;border:none;background:var(--paper-soft);cursor:pointer;font-size:1rem;vertical-align:middle;margin-inline-start:6px;transition:transform .15s ease;}
+  .tts-btn:hover{transform:scale(1.08);}
+  .tts-btn:active{transform:scale(.94);}
+  .tts-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0;}
+  .recitation-poem{background:var(--paper-soft, #f4f4f6);border-radius:14px;padding:18px 20px;margin-bottom:18px;font-size:1.1rem;line-height:1.7;font-family:'Baloo 2', sans-serif;}
+  .recitation-author{margin-top:10px;font-size:.85rem;color:var(--muted);font-style:italic;}
+  .oral-hint{margin-top:2px;font-size:.82rem;}
+  .answer-textarea{width:100%;padding:14px;border-radius:10px;border:2px solid #e5e7eb;font-size:1rem;margin-bottom:20px;font-family:'Inter',sans-serif;resize:vertical;}
+  #recordPlayback{max-width:100%;height:36px;}
 
   .locked-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:14px 22px;border-radius:999px;font-weight:600;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;max-width:90vw;text-align:center;}
   .locked-toast.show{opacity:1;}
@@ -734,7 +746,13 @@ const TEXT = {
   answerPlaceholder:{fr:"Ta réponse...", ar:"إجابتك..."},
   summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"},
   expressionTitle:{fr:"Expression orale et écrite", ar:"التعبير الشفوي والكتابي"},
-  emptyResultsNote:{fr:"Cette section n'a pas encore de résultat noté.", ar:"لا توجد نتيجة مُقيَّمة بعد لهذا القسم."}
+  emptyResultsNote:{fr:"Cette section n'a pas encore de résultat noté.", ar:"لا توجد نتيجة مُقيَّمة بعد لهذا القسم."},
+  listenLabel:{fr:"🔊 Écouter", ar:"🔊 استمع"},
+  recordLabel:{fr:"🎙️ S'enregistrer", ar:"🎙️ سجّل صوتك"},
+  stopRecordLabel:{fr:"⏹️ Arrêter", ar:"⏹️ إيقاف"},
+  micErrorMessage:{fr:"Micro indisponible ou refusé.", ar:"الميكروفون غير متاح أو تم رفض الإذن."},
+  oralPracticeHint:{fr:"Entraînement libre : écoute le modèle, puis enregistre-toi pour te réécouter. Ce n'est pas noté.", ar:"تدريب حر: استمع للنموذج ثم سجّل صوتك لتستمع لنفسك. هذا غير مُقيَّم."},
+  recitationHint:{fr:"Écoute le modèle, entraîne-toi à réciter, puis enregistre-toi si tu veux te réécouter.", ar:"استمع للنموذج، تدرّب على الإلقاء، ثم سجّل صوتك إن أردت الاستماع لنفسك."}
 };
 
 const TRIMESTER_LABELS = {
@@ -1087,6 +1105,89 @@ function dirFor(language){
   return language === 'ar' ? 'rtl' : 'ltr';
 }
 
+/* ---- Lecture à voix haute (Web Speech API) ----
+   Gratuit, aucun serveur : la voix exacte dépend de l'appareil/navigateur
+   de l'élève (SAPI sur Windows, voix système sur mobile...). On essaie une
+   voix féminine connue par son nom, sinon la première voix disponible dans
+   la bonne langue, jamais une voix d'une autre langue. */
+function ttsLangCode(language){
+  return {fr:'fr-FR', en:'en-US', ar:'ar-SA'}[language] || 'fr-FR';
+}
+const FEMALE_VOICE_HINTS = ['female', 'zira', 'hortense', 'julie', 'amelie', 'amélie', 'audrey', 'samantha', 'salma', 'laila', 'fatima'];
+function pickVoice(langCode){
+  if(!('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices();
+  const prefix = langCode.slice(0,2).toLowerCase();
+  const matching = voices.filter(v => v.lang && v.lang.toLowerCase().startsWith(prefix));
+  if(!matching.length) return null;
+  const female = matching.find(v => FEMALE_VOICE_HINTS.some(hint => v.name.toLowerCase().includes(hint)));
+  return female || matching[0];
+}
+function speakText(text, language){
+  if(!('speechSynthesis' in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  const langCode = ttsLangCode(language);
+  utterance.lang = langCode;
+  const voice = pickVoice(langCode);
+  if(voice) utterance.voice = voice;
+  utterance.rate = 0.9; // légèrement ralenti, pensé pour un enfant qui apprend à prononcer
+  window.speechSynthesis.speak(utterance);
+}
+function ttsButtonHtml(){
+  return `<button type="button" class="tts-btn" id="ttsBtn" title="${TEXT.listenLabel[currentLang]}">🔊</button>`;
+}
+
+/* ---- Auto-enregistrement (micro navigateur) ----
+   Entraînement libre pour l'expression orale et la récitation : l'élève
+   s'enregistre et se réécoute localement, rien n'est envoyé au serveur,
+   rien n'est noté. */
+let activeRecorder = null;
+function recordControlsHtml(){
+  return `
+    <button type="button" class="btn-secondary" id="recordBtn">${TEXT.recordLabel[currentLang]}</button>
+    <audio id="recordPlayback" controls style="display:none;"></audio>
+  `;
+}
+function wireRecordControls(view){
+  const recordBtn = view.querySelector('#recordBtn');
+  const playback = view.querySelector('#recordPlayback');
+  if(!recordBtn) return;
+  if(!(navigator.mediaDevices && window.MediaRecorder)){
+    recordBtn.disabled = true;
+    return;
+  }
+  let recording = false;
+  let chunks = [];
+  recordBtn.addEventListener('click', async () => {
+    if(!recording){
+      let stream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({audio: true});
+      } catch(e){
+        showLockedToast(TEXT.micErrorMessage[currentLang]);
+        return;
+      }
+      chunks = [];
+      activeRecorder = new MediaRecorder(stream);
+      activeRecorder.addEventListener('dataavailable', e => { if(e.data.size > 0) chunks.push(e.data); });
+      activeRecorder.addEventListener('stop', () => {
+        const blob = new Blob(chunks, {type: 'audio/webm'});
+        playback.src = URL.createObjectURL(blob);
+        playback.style.display = '';
+        stream.getTracks().forEach(t => t.stop());
+      });
+      activeRecorder.start();
+      recording = true;
+      recordBtn.textContent = TEXT.stopRecordLabel[currentLang];
+    } else {
+      activeRecorder.stop();
+      recording = false;
+      recordBtn.textContent = TEXT.recordLabel[currentLang];
+    }
+  });
+}
+
 // Session-examen : pas de corrigé immédiat après chaque question (voir
 // GET .../corrige) — "Valider" enregistre la réponse et passe directement
 // à la question suivante, comme dans un vrai examen sur papier.
@@ -1096,6 +1197,18 @@ function renderSessionQuestion(){
   const content = ex.content;
   const isLast = currentSession.index === currentSession.exercises.length - 1;
 
+  if(ex.format === 'recitation'){
+    renderRecitationExercise(view, ex, content, isLast);
+    return;
+  }
+  if(content.mode === 'orale'){
+    renderOralExpressionExercise(view, ex, content, isLast);
+    return;
+  }
+  if(content.mode === 'ecrite'){
+    renderWrittenExpressionExercise(view, ex, content, isLast);
+    return;
+  }
   if(content.sub_questions){
     renderMultiQuestionExercise(view, ex, content, isLast);
     return;
@@ -1111,7 +1224,7 @@ function renderSessionQuestion(){
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="session-question">${content.question}</div>
+        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
         ${visualArea}
         ${answerArea}
       </div>
@@ -1123,6 +1236,7 @@ function renderSessionQuestion(){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
   const validateBtn = document.getElementById('validateBtn');
 
   // Disables everything synchronously, before the async submitAnswer() call
@@ -1154,6 +1268,106 @@ function renderSessionQuestion(){
   }
 }
 
+// Section Récitation : lecture-modèle (TTS) + auto-enregistrement pour se
+// réécouter — entraînement libre, jamais noté (voir grading_mode "open").
+function renderRecitationExercise(view, ex, content, isLast){
+  const poemHtml = (content.text || '').split('\n').map(line => line || '&nbsp;').join('<br>');
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question}</div>
+        <div class="recitation-poem">
+          ${poemHtml}
+          ${content.author ? `<div class="recitation-author">— ${content.author}</div>` : ''}
+        </div>
+        <p class="muted-note oral-hint">${TEXT.recitationHint[currentLang]}</p>
+        <div class="tts-row">
+          <button type="button" class="btn-secondary" id="listenBtn">${TEXT.listenLabel[currentLang]}</button>
+          ${recordControlsHtml()}
+        </div>
+      </div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  document.getElementById('listenBtn').addEventListener('click', () => speakText(content.text, ex.language));
+  wireRecordControls(view);
+  document.getElementById('validateBtn').addEventListener('click', () => {
+    document.getElementById('validateBtn').disabled = true;
+    submitAnswer(null);
+  });
+}
+
+// Section Expression orale : écoute du modèle + auto-enregistrement, pas de
+// réponse à taper — entraînement libre, jamais noté.
+function renderOralExpressionExercise(view, ex, content, isLast){
+  const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
+        ${visualArea}
+        <p class="muted-note oral-hint">${TEXT.oralPracticeHint[currentLang]}</p>
+        <div class="tts-row">${recordControlsHtml()}</div>
+      </div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
+  wireRecordControls(view);
+  document.getElementById('validateBtn').addEventListener('click', () => {
+    document.getElementById('validateBtn').disabled = true;
+    submitAnswer(null);
+  });
+}
+
+// Section Expression écrite : réponse libre tapée, enregistrée en
+// grading_mode "open" (jamais notée exactement, réponse-modèle affichée au
+// corrigé comme repère).
+function renderWrittenExpressionExercise(view, ex, content, isLast){
+  const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
+        ${visualArea}
+        <textarea class="answer-textarea" id="answerTextarea" placeholder="${TEXT.answerPlaceholder[currentLang]}" rows="4"></textarea>
+      </div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.validate[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
+  const validateBtn = document.getElementById('validateBtn');
+  const textarea = document.getElementById('answerTextarea');
+  validateBtn.addEventListener('click', () => {
+    const val = textarea.value.trim();
+    if(!val) return;
+    validateBtn.disabled = true;
+    textarea.disabled = true;
+    submitAnswer(val);
+  });
+}
+
 function renderMultiQuestionExercise(view, ex, content, isLast){
   const subs = content.sub_questions;
 
@@ -1172,7 +1386,7 @@ function renderMultiQuestionExercise(view, ex, content, isLast){
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="recit-context">${content.question}</div>
+        <div class="recit-context">${content.question} ${ttsButtonHtml()}</div>
         ${blocksHtml}
       </div>
       <div class="session-actions">
@@ -1183,6 +1397,7 @@ function renderMultiQuestionExercise(view, ex, content, isLast){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
   const validateBtn = document.getElementById('validateBtn');
   const selections = new Array(subs.length).fill(null);
 
@@ -1260,9 +1475,12 @@ function corrigeItemHtml(item, i){
   }
 
   if(!item.graded){
+    const poemHtml = item.text ? `<div class="corrige-poem">${item.text.split('\n').join('<br>')}</div>` : '';
+    const authorHtml = item.author ? `<div class="corrige-author">— ${item.author}</div>` : '';
     return `<div class="corrige-item">${questionLine}
       <span class="corrige-badge open">✍️</span>
       ${item.model_answer ? `<div class="corrige-answer model">${item.model_answer}</div>` : ''}
+      ${poemHtml}${authorHtml}
     </div>`;
   }
 

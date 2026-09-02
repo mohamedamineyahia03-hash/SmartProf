@@ -108,8 +108,12 @@ MATH1_TRIMESTERS = {
 ARABIC1_TRIMESTERS = {
     "T1": ["huruf"],
     "T2": ["huruf", "qiraa"],
-    "T3": ["qiraa", "fahm", "taabir", "kitaba"],
+    "T3": ["qiraa", "fahm", "kitaba"],
 }
+# "expression_orale_ecrite" (ex-"taabir") isn't listed above on purpose: its
+# category is "expression" now, an independent section outside the
+# trimester tree — see seed_domain_curriculum, which skips trimester
+# assignment entirely for that category.
 
 SCIENCE_SKELETON = {
     "2": {
@@ -246,8 +250,11 @@ EN_SKELETON = {
 FR1_TRIMESTERS = {
     "T1": ["lecture_dechiffrage", "ecriture"],
     "T2": ["lecture_dechiffrage", "vocabulaire", "ecriture"],
-    "T3": ["grammaire_orthographe", "expression_orale", "vocabulaire"],
+    "T3": ["grammaire_orthographe", "vocabulaire"],
 }
+# "expression_orale_ecrite" and "recitation" aren't listed above on
+# purpose: their category is "expression", an independent section outside
+# the trimester tree — see seed_domain_curriculum.
 
 # Level 1 Anglais domain -> trimester(s): alphabet/phonics and basic
 # vocabulary first, listening/reading join mid-year, reading/writing/

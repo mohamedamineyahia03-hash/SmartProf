@@ -385,11 +385,13 @@ def is_subject_locked(level_code, subject_row):
 
 def public_content(content):
     """Strips the answer and the pedagogical explanation out of what's sent to
-    the browser before it's answered — both are only ever revealed by
-    /api/session/<id>/answer, after the child has submitted a response.
-    A "récit à plusieurs questions" exercise nests its own answer/explanation
-    inside each sub_questions[i], so those need stripping too."""
-    hidden_keys = {"answer", "explanation"}
+    the browser before it's answered — revealed only by
+    GET /api/session/<id>/corrige, once every exercise in the session has an
+    answer. A "récit à plusieurs questions" exercise nests its own
+    answer/explanation inside each sub_questions[i], so those need
+    stripping too. model_answer is the grading_mode="open" equivalent
+    (expression écrite / récitation) — same rule, same hiding point."""
+    hidden_keys = {"answer", "explanation", "model_answer"}
     public = {k: v for k, v in content.items() if k not in hidden_keys}
     if "sub_questions" in public:
         public["sub_questions"] = [
@@ -649,6 +651,9 @@ def session_corrige(session_id):
             item["explanation"] = exercise.content.get("explanation")
         if not graded:
             item["model_answer"] = exercise.content.get("model_answer")
+        if exercise.exercise_format == "recitation":
+            item["text"] = exercise.content.get("text")
+            item["author"] = exercise.content.get("author")
 
         if graded:
             graded_total += 1

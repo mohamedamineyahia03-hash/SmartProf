@@ -120,6 +120,9 @@ jobs:
       - name: Seed library-service exercise bank (user-supplied import)
         run: python library-service/seed/seed_banque_1ere.py
 
+      - name: Seed library-service expression/récitation content
+        run: python library-service/seed/seed_expression_recitation.py
+
       - name: Validate library-service and Main App sync
         run: |
           python server/app.py &

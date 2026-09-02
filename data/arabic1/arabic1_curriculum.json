@@ -72,19 +72,24 @@
       }
     },
     {
-      "id": "taabir",
-      "name_fr": "Expression orale",
-      "name_ar": "التعبير الشفوي",
+      "id": "expression_orale_ecrite",
+      "category": "expression",
+      "name_fr": "Expression orale et écrite",
+      "name_ar": "التعبير الشفوي والكتابي",
       "skills": [
         "wasf_sura",
-        "tartib_kalimat"
+        "tartib_kalimat",
+        "kitaba_qasira"
       ],
       "exercise_formats": {
         "wasf_sura": [
-          "réponse_libre"
+          "reponse_libre"
         ],
         "tartib_kalimat": [
           "qcm"
+        ],
+        "kitaba_qasira": [
+          "reponse_libre"
         ]
       }
     },

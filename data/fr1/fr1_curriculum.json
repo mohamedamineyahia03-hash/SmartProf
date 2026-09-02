@@ -45,13 +45,25 @@
       }
     },
     {
-      "id": "expression_orale",
-      "name_fr": "Expression orale",
-      "name_ar": "التعبير الشفوي",
-      "skills": ["decrire_image", "raconter_histoire"],
+      "id": "expression_orale_ecrite",
+      "category": "expression",
+      "name_fr": "Expression orale et écrite",
+      "name_ar": "التعبير الشفوي والكتابي",
+      "skills": ["decrire_image", "raconter_histoire", "redaction_courte"],
       "exercise_formats": {
         "decrire_image": ["reponse_libre", "visuel"],
-        "raconter_histoire": ["reponse_libre", "recit"]
+        "raconter_histoire": ["reponse_libre", "recit"],
+        "redaction_courte": ["reponse_libre"]
+      }
+    },
+    {
+      "id": "recitation",
+      "category": "expression",
+      "name_fr": "Récitation",
+      "name_ar": "الإلقاء والحفظ",
+      "skills": ["poeme_court"],
+      "exercise_formats": {
+        "poeme_court": ["recitation"]
       }
     }
   ]
