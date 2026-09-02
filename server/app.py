@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timedelta, timezone
 
-from flask import Flask, Response, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from db import db
@@ -17,7 +17,6 @@ from models import (
 from academic_calendar import current_trimester
 from auth import authenticate, current_user, login_user, logout_user, register_user
 from diagnostic_engine import diagnose
-from pdf.render_session import render_session_pdf
 from session_engine import SESSION_SIZE, STARTING_DIFFICULTY, next_difficulty, pick_next_exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -479,45 +478,6 @@ def get_session(session_id):
             "answers": session_row.answers,
             "completed_at": session_row.completed_at.isoformat() if session_row.completed_at else None,
         }
-    )
-
-
-@app.get("/api/session/<int:session_id>/pdf")
-def session_pdf(session_id):
-    """Downloadable/printable worksheet version of a session. No payment gate
-    yet (Entitlement/payment isn't built) — this serves the PDF unconditionally
-    for now; the pay-per-download check is meant to land right here once that
-    exists, before render_session_pdf() is called."""
-    session_row = Session.query.get(session_id)
-    if session_row is None:
-        return jsonify({"error": "not_found"}), 404
-    if not session_row.exercise_ids:
-        return jsonify({"error": "no_content", "message": "Aucun exercice dans cette séance."}), 400
-
-    exercises = LibraryCacheExercise.query.filter(LibraryCacheExercise.id.in_(session_row.exercise_ids)).all()
-    by_id = {e.id: e for e in exercises}
-    ordered = [by_id[eid] for eid in session_row.exercise_ids if eid in by_id]
-
-    child_name = None
-    if session_row.child_profile_id:
-        child = ChildProfile.query.get(session_row.child_profile_id)
-        child_name = child.display_name if child else None
-
-    level_row = CurriculumLevel.query.filter_by(code=session_row.level_code).first()
-    subject_row = CurriculumSubject.query.filter_by(code=session_row.subject_code).first()
-
-    pdf_bytes = render_session_pdf(
-        session_row,
-        ordered,
-        child_name=child_name,
-        level_label=level_row.label_ar if level_row else session_row.level_code,
-        subject_label=subject_row.label_ar if subject_row else session_row.subject_code,
-    )
-
-    return Response(
-        pdf_bytes,
-        mimetype="application/pdf",
-        headers={"Content-Disposition": f"attachment; filename=smartprof-seance-{session_id}.pdf"},
     )
 
 

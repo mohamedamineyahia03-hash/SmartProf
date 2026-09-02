@@ -60,7 +60,7 @@ jobs:
 
       - name: Validate diagnostic engine
         run: |
-          python -m py_compile server/diagnostic_engine.py server/models.py server/app.py server/pdf/render_session.py
+          python -m py_compile server/diagnostic_engine.py server/models.py server/app.py
           python - <<'PY'
           import sys, json
           sys.path.insert(0,'server')
