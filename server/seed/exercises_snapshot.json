@@ -1,0 +1,4188 @@
+[
+ {
+  "library_exercise_id": 1,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 4,
+   "explanation": "أشر إلى كل تفاحة وعدّها مرة واحدة فقط: 1، 2، 3، 4. المجموع هو 4 تفاحات.",
+   "question": "عدّ التفاحات واكتب العدد.",
+   "visual": "🍎 🍎 🍎 🍎"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 2,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "5",
+   "choices": [
+    "4",
+    "5",
+    "6"
+   ],
+   "explanation": "ابدأ من 3 وتقدّم خطوتين: 4، 5. إذن 3 + 2 = 5.",
+   "question": "كم مجموع 3 + 2؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 3,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "🔺 مثلث",
+   "choices": [
+    "⬛ مربع",
+    "🔺 مثلث",
+    "⚪ دائرة"
+   ],
+   "explanation": "المثلث له بالضبط 3 أضلاع و3 رؤوس. أما المربع فله 4 أضلاع، والدائرة ليس لها أضلاع مستقيمة.",
+   "question": "أي شكل له 3 أضلاع؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 4,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "7",
+   "choices": [
+    "3",
+    "7",
+    "5"
+   ],
+   "explanation": "قارن الأعداد اثنين اثنين: 7 أكبر من 3 وأكبر من 5. إذن هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 5,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "resoudre",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 9,
+   "explanation": "ليلى ربحت كرات، إذن نجمع: 6 + 3 = 9. أصبح لديها الآن 9 كرات.",
+   "question": "لدى ليلى 6 كرات. ربحت 3 كرات إضافية. كم كرة أصبح لديها الآن؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 6,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "dessus_dessous",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "القط تحت",
+   "choices": [
+    "القط فوق",
+    "القط تحت",
+    "القط بجانب"
+   ],
+   "explanation": "انظر جيدًا إلى الصورة: الصندوق مرسوم في الأعلى والقط في الأسفل. إذن القط تحت الصندوق.",
+   "question": "أين يوجد القط بالنسبة للصندوق؟",
+   "visual": "📦<br>🐱"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 7,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الخط أ",
+   "choices": [
+    "الخط أ",
+    "الخط ب"
+   ],
+   "explanation": "لاحظ الخطين: الخط أ يحتوي على أجزاء أكثر من الخط ب، إذن هو الأطول.",
+   "question": "أي خط أطول؟",
+   "visual": "الخط أ : ▬▬▬▬▬▬<br>الخط ب : ▬▬▬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 8,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين سلة فواكه: 5 تفاحات و3 موزات وحبتا كمثرى.",
+   "sub_questions": [
+    {
+     "answer": 5,
+     "explanation": "تذكر القصة مباشرة أن أمين لديه 5 تفاحات.",
+     "question": "كم عدد التفاحات التي يملكها أمين؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نجمع كل الفواكه في السلة: 5 + 3 + 2 = 10.",
+     "question": "كم عدد الفواكه لديه في المجموع؟"
+    },
+    {
+     "answer": "تفاح أكثر",
+     "choices": [
+      "تفاح أكثر",
+      "موز أكثر",
+      "نفس العدد"
+     ],
+     "explanation": "5 تفاحات أكثر من 3 موزات. إذن لدى أمين تفاح أكثر.",
+     "question": "هل لديه تفاح أكثر أم موز أكثر؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 9,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "في مقصورة السمك بالقسم، يوجد 7 أسماك حمراء و5 أسماك زرقاء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+     "question": "كم عدد الأسماك الجملي في المقصورة؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح الأسماك التي أُعطيت: 12 − 2 = 10.",
+     "question": "أعطت المعلمة 2 سمكتين لقسم آخر. كم سمكة بقيت في المقصورة؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 أسماك على مقصورتين بالتساوي: 10 ÷ 2 = 5.",
+     "question": "قسّم التلاميذ الأسماك الباقية بالتساوي بين مقصورتين. كم سمكة ستكون في كل مقصورة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 10,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لحفل المدرسة، نفخت ياسمين 9 بالونات حمراء و7 بالونات صفراء.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع البالونات الحمراء والصفراء: 9 + 7 = 16.",
+     "question": "كم بالونًا نفخت ياسمين في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح البالونات التي انفجرت: 16 − 4 = 12.",
+     "question": "انفجرت 4 بالونات قبل بداية الحفل. كم بالونًا بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 بالونًا على جانبين بالتساوي: 12 ÷ 2 = 6.",
+     "question": "علّقت ياسمين البالونات الباقية بالتساوي على جانبي الباب. كم بالونًا سيكون في كل جانب؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 11,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "تحضّر الأم صينية فيها 8 قطع حلوى بالشوكولاطة و6 قطع بالفانيليا.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع النوعين: 8 + 6 = 14.",
+     "question": "كم قطعة حلوى في الصينية إجمالًا؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح القطع التي أُكلت: 14 − 2 = 12.",
+     "question": "أكل الأب قطعتين بعد رجوعه من العمل. كم قطعة بقيت؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 قطعة على الأختين بالتساوي: 12 ÷ 2 = 6.",
+     "question": "تقاسمت الأختان القطع الباقية بالتساوي. كم قطعة ستأخذ كل واحدة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 12,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى نور 9 ملصقات على شكل نجمة و5 ملصقات على شكل قلب.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع النجوم والقلوب: 9 + 5 = 14.",
+     "question": "كم ملصقًا لدى نور في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح الملصقات التي أُعطيت: 14 − 4 = 10.",
+     "question": "أعطت نور 4 ملصقات لصديقتها المفضلة. كم ملصقًا بقي لديها؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 ملصقات على كراسين بالتساوي: 10 ÷ 2 = 5.",
+     "question": "لصقت نور الملصقات الباقية بالتساوي على كراسين. كم ملصقًا سيكون على كل كراس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 13,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "على الشاطئ، جمع آدم 8 أصداف كبيرة و6 أصداف صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع الأصداف الكبيرة والصغيرة: 8 + 6 = 14.",
+     "question": "كم صدفة جمع آدم في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح الأصداف المفقودة: 14 − 2 = 12.",
+     "question": "فقد آدم صدفتين أثناء الجري على الرمل. كم صدفة بقيت لديه؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 صدفة على علبتين بالتساوي: 12 ÷ 2 = 6.",
+     "question": "رتّب آدم الأصداف الباقية بالتساوي في علبتين صغيرتين. كم صدفة ستكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 14,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "أثناء جني التمور، قطف الجد 9 تمرات ناضجة وقطف علي 7 تمرات أخرى.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع الكميتين: 9 + 7 = 16.",
+     "question": "كم تمرة قطفا في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح التمرات المُهداة: 16 − 4 = 12.",
+     "question": "أهديا 4 تمرات لجيرانهما. كم تمرة بقيت لديهما؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 تمرة على سلتين بالتساوي: 12 ÷ 2 = 6.",
+     "question": "قسّما التمرات الباقية بالتساوي في سلّتين. كم تمرة ستكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 15,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "في صندوق الألعاب، توجد 7 مكعبات حمراء و7 مكعبات زرقاء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المكعبات الحمراء والزرقاء: 7 + 7 = 14.",
+     "question": "كم مكعبًا في الصندوق إجمالًا؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح المكعبات التي رُتبت في مكان آخر: 14 − 6 = 8.",
+     "question": "رتّب الأخ الصغير 6 مكعبات في مكان آخر بالخطأ. كم مكعبًا بقي في الصندوق؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 مكعبات على برجين بالتساوي: 8 ÷ 2 = 4.",
+     "question": "قسّم الأطفال المكعبات الباقية بالتساوي لبناء برجين. كم مكعبًا سيكون في كل برج؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 16,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "في الحديقة، توجد 9 فراشات بيضاء و5 فراشات برتقالية.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع الفراشات البيضاء والبرتقالية: 9 + 5 = 14.",
+     "question": "كم فراشة في الحديقة إجمالًا؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح الفراشات التي طارت: 14 − 2 = 12.",
+     "question": "طارت فراشتان فوق الجدار. كم فراشة بقيت في الحديقة؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 فراشة على شجيرتين بالتساوي: 12 ÷ 2 = 6.",
+     "question": "استقرت الفراشات الباقية بالتساوي على شجيرتي ورد. كم فراشة ستكون على كل شجيرة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 17,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "في الحديقة، قطفت سارة 8 حبات فراولة وقطفت أمها 4 حبات أخرى.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع الكميتين: 8 + 4 = 12.",
+     "question": "كم حبة فراولة قطفتا في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح الحبات التي أُكلت: 12 − 4 = 8.",
+     "question": "أكلتا 4 حبات على الفور. كم حبة بقيت لديهما؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 حبات على سلتين بالتساوي: 8 ÷ 2 = 4.",
+     "question": "قسّمتا الحبات الباقية بالتساوي في سلتين صغيرتين. كم حبة ستكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 18,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لعيد الميلاد، اشترت الأم 9 شموع حمراء و9 شموع ذهبية.",
+   "sub_questions": [
+    {
+     "answer": 18,
+     "explanation": "نجمع الشموع الحمراء والذهبية: 9 + 9 = 18.",
+     "question": "كم شمعة اشترت الأم في المجموع؟"
+    },
+    {
+     "answer": 14,
+     "explanation": "نطرح الشموع المكسورة: 18 − 4 = 14.",
+     "question": "سقطت 4 شموع وانكسرت قبل الحفل. كم شمعة صالحة بقيت؟"
+    },
+    {
+     "answer": 7,
+     "explanation": "نقسم 14 شمعة على كعكتين بالتساوي: 14 ÷ 2 = 7.",
+     "question": "وضعت الأم الشموع الباقية بالتساوي على كعكتين. كم شمعة ستكون على كل كعكة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 19,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "7",
+   "choices": [
+    "6",
+    "7",
+    "8"
+   ],
+   "explanation": "نعدّ كل القطع: 5 قطع + قطعتان = 7 مليمات.",
+   "question": "كم مليمًا يوجد في يد ياسين إجمالًا؟",
+   "visual": "🪙🪙🪙🪙🪙 + 🪙🪙"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 20,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "addition_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نجمع القيمتين: 5 + 3 = 8 مليمات.",
+   "question": "لدى أمل قطعة من 5 مليمات وقطعة من 3 مليمات في جيبها.",
+   "visual": "🪙×5 + 🪙×3"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 21,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 14,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد الأربعة: 10 + 4 = 14.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و4 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 🔵 (4 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 22,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 19,
+   "explanation": "نرتب الآحاد تحت الآحاد والعشرات تحت العشرات: 3 + 6 = 9 آحاد، والعشرة الواحدة تبقى كما هي. إذن 13 + 6 = 19.",
+   "question": "ضع العملية عموديًا واحسب: 13 + 6"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 23,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 7 قِطَط بيضاء و5 قِطَط سوداء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+     "question": "كم عدد قِطَط في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من قِطَط لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 24,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 9 كتاكيت صفراء و7 كتاكيت بنية.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 9 + 7 = 16.",
+     "question": "كم عدد كتاكيت في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 16 − 4 = 12.",
+     "question": "بعد إهداء 4 من كتاكيت لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 25,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 8 بطّات بيضاء و6 بطّات صفراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 8 + 6 = 14.",
+     "question": "كم عدد بطّات في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من بطّات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 26,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 9 حلزونات كبيرة و5 حلزونات صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 9 + 5 = 14.",
+     "question": "كم عدد حلزونات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من حلزونات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 27,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 7 دعاسيق حمراء و7 دعاسيق صفراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 7 + 7 = 14.",
+     "question": "كم عدد دعاسيق في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 14 − 6 = 8.",
+     "question": "بعد إهداء 6 من دعاسيق لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 28,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أحمد 8 نحلات كبيرة و4 نحلات صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 8 + 4 = 12.",
+     "question": "كم عدد نحلات في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من نحلات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 29,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى علي 9 سلاحف كبيرة و9 سلاحف صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 18,
+     "explanation": "نجمع المجموعتين: 9 + 9 = 18.",
+     "question": "كم عدد سلاحف في المجموع؟"
+    },
+    {
+     "answer": 14,
+     "explanation": "نطرح ما أُهدي: 18 − 4 = 14.",
+     "question": "بعد إهداء 4 من سلاحف لصديق، كم بقي؟"
+    },
+    {
+     "answer": 7,
+     "explanation": "نقسم 14 على 2 بالتساوي: 14 ÷ 2 = 7.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 30,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى آية 6 ضفادع خضراء و8 ضفادع بنية.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 6 + 8 = 14.",
+     "question": "كم عدد ضفادع في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من ضفادع لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 31,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سارة 5 قنافذ كبيرة و7 قنافذ صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 5 + 7 = 12.",
+     "question": "كم عدد قنافذ في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من قنافذ لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 32,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 9 سناجب حمراء و4 سناجب رمادية.",
+   "sub_questions": [
+    {
+     "answer": 13,
+     "explanation": "نجمع المجموعتين: 9 + 4 = 13.",
+     "question": "كم عدد سناجب في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 13 − 3 = 10.",
+     "question": "بعد إهداء 3 من سناجب لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 33,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 6 موز أصفر و6 موز أخضر.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 6 + 6 = 12.",
+     "question": "كم عدد موز في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من موز لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 34,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 7 كمثرى صفراء و9 كمثرى خضراء.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 7 + 9 = 16.",
+     "question": "كم عدد كمثرى في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 16 − 6 = 10.",
+     "question": "بعد إهداء 6 من كمثرى لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 35,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 5 كرز أحمر و9 كرز أصفر.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 5 + 9 = 14.",
+     "question": "كم عدد كرز في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من كرز لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 36,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 4 طماطم كبيرة و8 طماطم صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 4 + 8 = 12.",
+     "question": "كم عدد طماطم في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من طماطم لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 37,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أحمد 9 جزر كبير و6 جزر صغير.",
+   "sub_questions": [
+    {
+     "answer": 15,
+     "explanation": "نجمع المجموعتين: 9 + 6 = 15.",
+     "question": "كم عدد جزر في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 15 − 3 = 12.",
+     "question": "بعد إهداء 3 من جزر لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 38,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى علي 7 زيتون أسود و5 زيتون أخضر.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+     "question": "كم عدد زيتون في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من زيتون لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 39,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى آية 9 تين أخضر و7 تين أرجواني.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 9 + 7 = 16.",
+     "question": "كم عدد تين في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 16 − 4 = 12.",
+     "question": "بعد إهداء 4 من تين لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 40,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سارة 8 ممحيات زرقاء و6 ممحيات حمراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 8 + 6 = 14.",
+     "question": "كم عدد ممحيات في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من ممحيات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 41,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 9 مساطر طويلة و5 مساطر قصيرة.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 9 + 5 = 14.",
+     "question": "كم عدد مساطر في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من مساطر لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 42,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 7 أقلام تلوين زرقاء و7 أقلام تلوين حمراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 7 + 7 = 14.",
+     "question": "كم عدد أقلام تلوين في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 14 − 6 = 8.",
+     "question": "بعد إهداء 6 من أقلام تلوين لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 43,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 8 مبريات صفراء و4 مبريات خضراء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 8 + 4 = 12.",
+     "question": "كم عدد مبريات في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من مبريات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 44,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 9 دمى كبيرة و9 دمى صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 18,
+     "explanation": "نجمع المجموعتين: 9 + 9 = 18.",
+     "question": "كم عدد دمى في المجموع؟"
+    },
+    {
+     "answer": 14,
+     "explanation": "نطرح ما أُهدي: 18 − 4 = 14.",
+     "question": "بعد إهداء 4 من دمى لصديق، كم بقي؟"
+    },
+    {
+     "answer": 7,
+     "explanation": "نقسم 14 على 2 بالتساوي: 14 ÷ 2 = 7.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 45,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 6 طائرات ورقية حمراء و8 طائرات ورقية زرقاء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 6 + 8 = 14.",
+     "question": "كم عدد طائرات ورقية في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من طائرات ورقية لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 46,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أحمد 5 دوامات حمراء و7 دوامات صفراء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 5 + 7 = 12.",
+     "question": "كم عدد دوامات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من دوامات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 47,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى علي 9 قطع أحجية زرقاء و4 قطع أحجية صفراء.",
+   "sub_questions": [
+    {
+     "answer": 13,
+     "explanation": "نجمع المجموعتين: 9 + 4 = 13.",
+     "question": "كم عدد قطع أحجية في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 13 − 3 = 10.",
+     "question": "بعد إهداء 3 من قطع أحجية لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 48,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى آية 6 دمى صغيرة حمراء و6 دمى صغيرة زرقاء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 6 + 6 = 12.",
+     "question": "كم عدد دمى صغيرة في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من دمى صغيرة لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 49,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سارة 7 حصيات بيضاء و9 حصيات رمادية.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 7 + 9 = 16.",
+     "question": "كم عدد حصيات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 16 − 6 = 10.",
+     "question": "بعد إهداء 6 من حصيات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 50,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 5 حبات بلوط كبيرة و9 حبات بلوط صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 5 + 9 = 14.",
+     "question": "كم عدد حبات بلوط في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من حبات بلوط لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 51,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 4 أكواز صنوبر كبيرة و8 أكواز صنوبر صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 4 + 8 = 12.",
+     "question": "كم عدد أكواز صنوبر في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من أكواز صنوبر لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 52,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 9 أوراق خريف صفراء و6 أوراق خريف برتقالية.",
+   "sub_questions": [
+    {
+     "answer": 15,
+     "explanation": "نجمع المجموعتين: 9 + 6 = 15.",
+     "question": "كم عدد أوراق خريف في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 15 − 3 = 12.",
+     "question": "بعد إهداء 3 من أوراق خريف لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 53,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 7 كعكات صغيرة بالشوكولاطة و5 كعكات صغيرة بالفانيليا.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+     "question": "كم عدد كعكات صغيرة في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من كعكات صغيرة لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 54,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 9 قطع مادلين بالعسل و7 قطع مادلين بالليمون.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 9 + 7 = 16.",
+     "question": "كم عدد قطع مادلين في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 16 − 4 = 12.",
+     "question": "بعد إهداء 4 من قطع مادلين لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 55,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أحمد 8 قطع كريب بالعسل و6 قطع كريب بالمربى.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 8 + 6 = 14.",
+     "question": "كم عدد قطع كريب في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من قطع كريب لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 56,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى علي 9 خرز زرقاء و5 خرز حمراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 9 + 5 = 14.",
+     "question": "كم عدد خرز في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من خرز لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 57,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى آية 7 أشرطة صفراء و7 أشرطة وردية.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 7 + 7 = 14.",
+     "question": "كم عدد أشرطة في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 14 − 6 = 8.",
+     "question": "بعد إهداء 6 من أشرطة لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 58,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سارة 8 جوارب زرقاء و4 جوارب بيضاء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 8 + 4 = 12.",
+     "question": "كم عدد جوارب في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من جوارب لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 59,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 9 قفازات حمراء و9 قفازات زرقاء.",
+   "sub_questions": [
+    {
+     "answer": 18,
+     "explanation": "نجمع المجموعتين: 9 + 9 = 18.",
+     "question": "كم عدد قفازات في المجموع؟"
+    },
+    {
+     "answer": 14,
+     "explanation": "نطرح ما أُهدي: 18 − 4 = 14.",
+     "question": "بعد إهداء 4 من قفازات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 7,
+     "explanation": "نقسم 14 على 2 بالتساوي: 14 ÷ 2 = 7.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 60,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 6 دِلاء شاطئ صفراء و8 دِلاء شاطئ حمراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 6 + 8 = 14.",
+     "question": "كم عدد دِلاء شاطئ في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من دِلاء شاطئ لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 61,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 5 نجوم بحر برتقالية و7 نجوم بحر حمراء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 5 + 7 = 12.",
+     "question": "كم عدد نجوم بحر في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من نجوم بحر لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 62,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 9 سلطعونات حمراء و4 سلطعونات برتقالية.",
+   "sub_questions": [
+    {
+     "answer": 13,
+     "explanation": "نجمع المجموعتين: 9 + 4 = 13.",
+     "question": "كم عدد سلطعونات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 13 − 3 = 10.",
+     "question": "بعد إهداء 3 من سلطعونات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 63,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 6 يعاسيب زرقاء و6 يعاسيب خضراء.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 6 + 6 = 12.",
+     "question": "كم عدد يعاسيب في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من يعاسيب لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 64,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أحمد 7 نملات سوداء و9 نملات حمراء.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 7 + 9 = 16.",
+     "question": "كم عدد نملات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 16 − 6 = 10.",
+     "question": "بعد إهداء 6 من نملات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 65,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى علي 5 جرادات خضراء و9 جرادات بنية.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 5 + 9 = 14.",
+     "question": "كم عدد جرادات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من جرادات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 66,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى آية 4 فطريات بيضاء و8 فطريات بنية.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 4 + 8 = 12.",
+     "question": "كم عدد فطريات في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 12 − 4 = 8.",
+     "question": "بعد إهداء 4 من فطريات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 67,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سارة 9 حبات جوز كبيرة و6 حبات جوز صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 15,
+     "explanation": "نجمع المجموعتين: 9 + 6 = 15.",
+     "question": "كم عدد حبات جوز في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 15 − 3 = 12.",
+     "question": "بعد إهداء 3 من حبات جوز لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 68,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى ياسين 7 حبات لوز كبيرة و5 حبات لوز صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 12,
+     "explanation": "نجمع المجموعتين: 7 + 5 = 12.",
+     "question": "كم عدد حبات لوز في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 12 − 2 = 10.",
+     "question": "بعد إهداء 2 من حبات لوز لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين علبتين، كم سيكون في كل علبة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 69,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى مريم 9 حبات فستق كبيرة و7 حبات فستق صغيرة.",
+   "sub_questions": [
+    {
+     "answer": 16,
+     "explanation": "نجمع المجموعتين: 9 + 7 = 16.",
+     "question": "كم عدد حبات فستق في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 16 − 4 = 12.",
+     "question": "بعد إهداء 4 من حبات فستق لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين سلتين، كم سيكون في كل سلة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 70,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى لينا 8 طباشير بيضاء و6 طباشير ملونة.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 8 + 6 = 14.",
+     "question": "كم عدد طباشير في المجموع؟"
+    },
+    {
+     "answer": 12,
+     "explanation": "نطرح ما أُهدي: 14 − 2 = 12.",
+     "question": "بعد إهداء 2 من طباشير لصديق، كم بقي؟"
+    },
+    {
+     "answer": 6,
+     "explanation": "نقسم 12 على 2 بالتساوي: 12 ÷ 2 = 6.",
+     "question": "بعد تقسيم الباقي بالتساوي بين كيسين، كم سيكون في كل كيس؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 71,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى سامي 9 شارات زرقاء و5 شارات حمراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 9 + 5 = 14.",
+     "question": "كم عدد شارات في المجموع؟"
+    },
+    {
+     "answer": 10,
+     "explanation": "نطرح ما أُهدي: 14 − 4 = 10.",
+     "question": "بعد إهداء 4 من شارات لصديق، كم بقي؟"
+    },
+    {
+     "answer": 5,
+     "explanation": "نقسم 10 على 2 بالتساوي: 10 ÷ 2 = 5.",
+     "question": "بعد تقسيم الباقي بالتساوي بين صديقين، كم سيكون في كل صديق؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 72,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "problemes",
+  "skill_code": "recit_multi_questions",
+  "exercise_format": "multi_questions",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "question": "لدى أمين 7 مشابك شعر وردية و7 مشابك شعر صفراء.",
+   "sub_questions": [
+    {
+     "answer": 14,
+     "explanation": "نجمع المجموعتين: 7 + 7 = 14.",
+     "question": "كم عدد مشابك شعر في المجموع؟"
+    },
+    {
+     "answer": 8,
+     "explanation": "نطرح ما أُهدي: 14 − 6 = 8.",
+     "question": "بعد إهداء 6 من مشابك شعر لصديق، كم بقي؟"
+    },
+    {
+     "answer": 4,
+     "explanation": "نقسم 8 على 2 بالتساوي: 8 ÷ 2 = 4.",
+     "question": "بعد تقسيم الباقي بالتساوي بين مجموعتين، كم سيكون في كل مجموعة؟"
+    }
+   ]
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 73,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": 3,
+   "explanation": "نعدّ واحدًا واحدًا: يوجد 3.",
+   "question": "كم عدد نجوم التي تراها؟",
+   "visual": "⭐⭐⭐"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 74,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 5,
+   "explanation": "نعدّ واحدًا واحدًا: يوجد 5.",
+   "question": "كم عدد بالونات التي تراها؟",
+   "visual": "🎈🎈🎈🎈🎈"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 75,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 7,
+   "explanation": "نعدّ واحدًا واحدًا: يوجد 7.",
+   "question": "كم عدد أسماك التي تراها؟",
+   "visual": "🐟🐟🐟🐟🐟🐟🐟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 76,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نعدّ واحدًا واحدًا: يوجد 8.",
+   "question": "كم عدد أزهار التي تراها؟",
+   "visual": "🌸🌸🌸🌸🌸🌸🌸🌸"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 77,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "numeration",
+  "skill_code": "denombrement",
+  "exercise_format": "comptage",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 9,
+   "explanation": "نعدّ واحدًا واحدًا: يوجد 9.",
+   "question": "كم عدد حلوى التي تراها؟",
+   "visual": "🍬🍬🍬🍬🍬🍬🍬🍬🍬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 78,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "5",
+   "choices": [
+    "4",
+    "5"
+   ],
+   "explanation": "نجمع: 2 + 3 = 5.",
+   "question": "كم مجموع 2 + 3؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 79,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "9",
+   "choices": [
+    "8",
+    "9"
+   ],
+   "explanation": "نجمع: 4 + 5 = 9.",
+   "question": "كم مجموع 4 + 5؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 80,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "6",
+   "choices": [
+    "5",
+    "6"
+   ],
+   "explanation": "نجمع: 3 + 3 = 6.",
+   "question": "كم مجموع 3 + 3؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 81,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "7",
+   "choices": [
+    "6",
+    "7"
+   ],
+   "explanation": "نجمع: 1 + 6 = 7.",
+   "question": "كم مجموع 1 + 6؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 82,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "8",
+   "choices": [
+    "7",
+    "8"
+   ],
+   "explanation": "نجمع: 4 + 4 = 8.",
+   "question": "كم مجموع 4 + 4؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 83,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "4",
+   "choices": [
+    "2",
+    "4",
+    "1"
+   ],
+   "explanation": "نقارن الأعداد: 4 هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 84,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "5",
+   "choices": [
+    "5",
+    "3",
+    "2"
+   ],
+   "explanation": "نقارن الأعداد: 5 هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 85,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "17",
+   "choices": [
+    "13",
+    "17",
+    "11"
+   ],
+   "explanation": "نقارن الأعداد: 17 هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 86,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "19",
+   "choices": [
+    "19",
+    "12",
+    "15"
+   ],
+   "explanation": "نقارن الأعداد: 19 هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 87,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "selection",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "18",
+   "choices": [
+    "14",
+    "18",
+    "10"
+   ],
+   "explanation": "نقارن الأعداد: 18 هو الأكبر بين الثلاثة.",
+   "question": "ما هو أكبر عدد؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 88,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الخط أ",
+   "choices": [
+    "الخط أ",
+    "الخط ب"
+   ],
+   "explanation": "الخط أ يحتوي على 7 أجزاء مقابل 4 للخط ب: إذن هو الأطول.",
+   "question": "أي خط أطول؟",
+   "visual": "الخط أ : ▬▬▬▬▬▬▬<br>الخط ب : ▬▬▬▬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 89,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الخط أ",
+   "choices": [
+    "الخط أ",
+    "الخط ب"
+   ],
+   "explanation": "الخط أ يحتوي على 5 أجزاء مقابل 3 للخط ب: إذن هو الأطول.",
+   "question": "أي خط أطول؟",
+   "visual": "الخط أ : ▬▬▬▬▬<br>الخط ب : ▬▬▬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 90,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الخط أ",
+   "choices": [
+    "الخط أ",
+    "الخط ب"
+   ],
+   "explanation": "الخط أ يحتوي على 8 أجزاء مقابل 5 للخط ب: إذن هو الأطول.",
+   "question": "أي خط أطول؟",
+   "visual": "الخط أ : ▬▬▬▬▬▬▬▬<br>الخط ب : ▬▬▬▬▬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 91,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الخط أ",
+   "choices": [
+    "الخط أ",
+    "الخط ب"
+   ],
+   "explanation": "الخط أ يحتوي على 6 أجزاء مقابل 4 للخط ب: إذن هو الأطول.",
+   "question": "أي خط أطول؟",
+   "visual": "الخط أ : ▬▬▬▬▬▬<br>الخط ب : ▬▬▬▬"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 92,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "7",
+   "choices": [
+    "6",
+    "7",
+    "8"
+   ],
+   "explanation": "نعدّ كل القطع: 4 + 3 = 7 مليمات.",
+   "question": "كم مليمًا يوجد في المجموع؟",
+   "visual": "🪙🪙🪙🪙 + 🪙🪙🪙"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 93,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "8",
+   "choices": [
+    "7",
+    "8",
+    "9"
+   ],
+   "explanation": "نعدّ كل القطع: 6 + 2 = 8 مليمات.",
+   "question": "كم مليمًا يوجد في المجموع؟",
+   "visual": "🪙🪙🪙🪙🪙🪙 + 🪙🪙"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 94,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "9",
+   "choices": [
+    "8",
+    "9",
+    "10"
+   ],
+   "explanation": "نعدّ كل القطع: 5 + 4 = 9 مليمات.",
+   "question": "كم مليمًا يوجد في المجموع؟",
+   "visual": "🪙🪙🪙🪙🪙 + 🪙🪙🪙🪙"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 95,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "6",
+   "choices": [
+    "5",
+    "6",
+    "7"
+   ],
+   "explanation": "نعدّ كل القطع: 3 + 3 = 6 مليمات.",
+   "question": "كم مليمًا يوجد في المجموع؟",
+   "visual": "🪙🪙🪙 + 🪙🪙🪙"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 96,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "addition_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نجمع القيمتين: 3 + 5 = 8 مليمات.",
+   "question": "لدى كريم قطعة من 3 مليمات وقطعة من 5 مليمات.",
+   "visual": "🪙×3 + 🪙×5"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 97,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "addition_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نجمع القيمتين: 2 + 6 = 8 مليمات.",
+   "question": "لدى كريم قطعة من 2 مليمات وقطعة من 6 مليمات.",
+   "visual": "🪙×2 + 🪙×6"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 98,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "addition_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نجمع القيمتين: 4 + 4 = 8 مليمات.",
+   "question": "لدى كريم قطعة من 4 مليمات وقطعة من 4 مليمات.",
+   "visual": "🪙×4 + 🪙×4"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 99,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "addition_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 8,
+   "explanation": "نجمع القيمتين: 1 + 7 = 8 مليمات.",
+   "question": "لدى كريم قطعة من 1 مليمات وقطعة من 7 مليمات.",
+   "visual": "🪙×1 + 🪙×7"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 100,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 12,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد: 10 + 2 = 12.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و2 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 (2 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 101,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 15,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد: 10 + 5 = 15.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و5 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 🔵 🔵 (5 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 102,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 17,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد: 10 + 7 = 17.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و7 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 🔵 🔵 🔵 🔵 (7 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 103,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 19,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد: 10 + 9 = 19.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و9 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 🔵 🔵 🔵 🔵 🔵 🔵 (9 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 104,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "dizaine_unites",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 13,
+   "explanation": "العشرة الواحدة تساوي 10. نضيف الآحاد: 10 + 3 = 13.",
+   "question": "ما هو العدد المكوَّن من عشرة واحدة و3 آحاد؟",
+   "visual": "📦 (عشرة واحدة = 10)<br>🔵 🔵 🔵 (3 آحاد)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 105,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "calcul",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 17,
+   "explanation": "نرتب الآحاد تحت الآحاد: 1 + 6 = 7 آحاد، والعشرة تبقى كما هي. إذن 11 + 6 = 17.",
+   "question": "ضع العملية عموديًا واحسب: 11 + 6"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 106,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "calcul",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 15,
+   "explanation": "نرتب الآحاد تحت الآحاد: 2 + 3 = 5 آحاد، والعشرة تبقى كما هي. إذن 12 + 3 = 15.",
+   "question": "ضع العملية عموديًا واحسب: 12 + 3"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 107,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "calcul",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 19,
+   "explanation": "نرتب الآحاد تحت الآحاد: 4 + 5 = 9 آحاد، والعشرة تبقى كما هي. إذن 14 + 5 = 19.",
+   "question": "ضع العملية عموديًا واحسب: 14 + 5"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 108,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "calcul",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 17,
+   "explanation": "نرتب الآحاد تحت الآحاد: 3 + 4 = 7 آحاد، والعشرة تبقى كما هي. إذن 13 + 4 = 17.",
+   "question": "ضع العملية عموديًا واحسب: 13 + 4"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 109,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "calcul",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": 18,
+   "explanation": "نرتب الآحاد تحت الآحاد: 5 + 3 = 8 آحاد، والعشرة تبقى كما هي. إذن 15 + 3 = 18.",
+   "question": "ضع العملية عموديًا واحسب: 15 + 3"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 110,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "4",
+   "choices": [
+    "3",
+    "4",
+    "5"
+   ],
+   "explanation": "المربع له 4 أضلاع متساوية.",
+   "question": "كم ضلعًا للمربع؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 111,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ],
+   "explanation": "المثلث له 3 أضلاع.",
+   "question": "كم ضلعًا للمثلث؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 112,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "selection",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "4",
+   "choices": [
+    "3",
+    "4",
+    "6"
+   ],
+   "explanation": "المستطيل له 4 أضلاع.",
+   "question": "كم ضلعًا للمستطيل؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 113,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "selection",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "⚪ Cercle",
+   "choices": [
+    "⬛ Carré",
+    "🔺 Triangle",
+    "⚪ Cercle"
+   ],
+   "explanation": "الدائرة هي الشكل الوحيد بدون أضلاع مستقيمة.",
+   "question": "أي شكل ليس له أضلاع مستقيمة؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 114,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "espace_geometrie",
+  "skill_code": "dessus_dessous",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "الطائر فوق",
+   "choices": [
+    "الطائر فوق",
+    "الطائر تحت"
+   ],
+   "explanation": "الطائر مرسوم فوق الشجرة.",
+   "question": "أين الطائر بالنسبة للشجرة؟",
+   "visual": "🐦<br>🌳"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 115,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "espace_geometrie",
+  "skill_code": "gauche_droite",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "على اليسار",
+   "choices": [
+    "على اليسار",
+    "على اليمين"
+   ],
+   "explanation": "النجمة مرسومة قبل الدائرة الحمراء، إذن على اليسار.",
+   "question": "هل النجمة على يسار أم يمين الدائرة الحمراء؟",
+   "visual": "⭐ 🔴"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 116,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "espace_geometrie",
+  "skill_code": "haut_bas",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "في الأعلى",
+   "choices": [
+    "في الأعلى",
+    "في الأسفل"
+   ],
+   "explanation": "الغيمة مرسومة فوق المنزل.",
+   "question": "هل الغيمة في أعلى أم أسفل المنزل؟",
+   "visual": "☁️<br>🏠"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 117,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "espace_geometrie",
+  "skill_code": "dessus_dessous",
+  "exercise_format": "selection",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "فوق",
+   "choices": [
+    "فوق",
+    "تحت"
+   ],
+   "explanation": "النحلة مرسومة فوق الزهرة.",
+   "question": "هل النحلة فوق أم تحت الزهرة؟",
+   "visual": "🐝<br>🌼"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 118,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "composition",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 2,
+   "explanation": "نبحث عن العدد الذي يُضاف إلى 3 ليعطي 5: 3 + 2 = 5.",
+   "question": "5 هو 3 زائد كم؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 119,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "composition",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 3,
+   "explanation": "نبحث عن العدد الذي يُضاف إلى 1 ليعطي 4: 1 + 3 = 4.",
+   "question": "4 هو 1 زائد كم؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 120,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "composition",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 1,
+   "explanation": "نبحث عن العدد الذي يُضاف إلى 4 ليعطي 5: 4 + 1 = 5.",
+   "question": "5 هو 4 زائد كم؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 121,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "decomposition",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 3,
+   "explanation": "يتفكك 4 إلى 1 و3، لأن 1 + 3 = 4.",
+   "question": "فكّك العدد 4: 4 = 1 + كم؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 122,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "decomposition",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": 3,
+   "explanation": "يتفكك 5 إلى 2 و3، لأن 2 + 3 = 5.",
+   "question": "فكّك العدد 5: 5 = 2 + كم؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 123,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "espace_geometrie",
+  "skill_code": "positions",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "فَوْقَ الطَّاوِلَةِ",
+   "choices": [
+    "فَوْقَ الطَّاوِلَةِ",
+    "تَحْتَ الطَّاوِلَةِ",
+    "بِجَانِبِ الطَّاوِلَةِ"
+   ],
+   "explanation": "نلاحظ موقع الشيء في الصورة بدقة: الإجابة الصحيحة هي فَوْقَ الطَّاوِلَةِ.",
+   "question": "أَيْنَ تَقَعُ الكُرَةُ بالنسبةِ لِلطَّاوِلَةِ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 124,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "pre_numeric",
+  "skill_code": "classement",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "المَجْمُوعَةُ حَمْرَاءُ",
+   "choices": [
+    "المَجْمُوعَةُ حَمْرَاءُ",
+    "المَجْمُوعَةُ خَضْرَاءُ"
+   ],
+   "explanation": "نلاحظ الخاصية المشتركة بين العناصر (اللون أو الشكل) لنختار المَجْمُوعَةُ حَمْرَاءُ.",
+   "question": "اخْتَرْ الأَشْكَالَ التِّي لَهَا نَفْسُ اللَّوْنِ."
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 125,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T1",
+  "domain_code": "numeration",
+  "skill_code": "ordre_nombres",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": ">",
+   "choices": [
+    ">",
+    "<",
+    "="
+   ],
+   "explanation": "نقارن العددين 4 و2: العلامة الصحيحة هي >.",
+   "question": "قَارِنْ بِاسْتِعْمَالِ الرَّمْزِ: 4 ... 2"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 126,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "calcul",
+  "skill_code": "addition",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "9",
+   "choices": [
+    "8",
+    "9",
+    "7"
+   ],
+   "explanation": "نجمع العددين: 5 + 4 = 9.",
+   "question": "احْسِبْ المَجْمُوعَ التَّالِي: 5 + 4 = ..."
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 127,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "reconnaissance_monnaie",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "6",
+   "explanation": "نجمع قيمة القطع: 5 + 1 = 6 مليمًا.",
+   "question": "كَمْ مِلِيمًا لَدَى أَحْمَدَ ؟ (5 مِلِيمَات + 1 مِلِيم)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 128,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T2",
+  "domain_code": "mesure",
+  "skill_code": "comparaison_longueurs",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الشَّرِيطُ الأَصْفَرُ",
+   "choices": [
+    "الشَّرِيطُ الأَصْفَرُ",
+    "الشَّرِيطُ الأَزْرَقُ"
+   ],
+   "explanation": "نقارن طولي العنصرين في الصورة مباشرة: الإجابة هي الشَّرِيطُ الأَصْفَرُ.",
+   "question": "أَيُّ الشَّرِيطَيْنِ هُوَ الأَقْصَرُ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 129,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "numeration",
+  "skill_code": "lecture_nombre",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "15",
+   "choices": [
+    "15",
+    "51",
+    "10"
+   ],
+   "explanation": "نحسب عدد العشرات وعدد الآحاد لنحصل على العدد 15.",
+   "question": "مَا هُوَ العَدَدُ الذِّي يُمَثِّلُ 1 عَشَرَة وَ 5 آحَادٍ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 130,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "calcul",
+  "skill_code": "addition_verticale",
+  "exercise_format": "saisie_nombre",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "16",
+   "explanation": "نرتب الآحاد تحت الآحاد والعشرات تحت العشرات، ثم نجمع: 14 + 2 = 16.",
+   "question": "أَنْجِزْ العَمَلِيَّةَ: 14 + 2 = ..."
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 131,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "espace_geometrie",
+  "skill_code": "formes",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "دَائِرَةٌ",
+   "choices": [
+    "مُرَبَّعٌ",
+    "دَائِرَةٌ",
+    "مُثَلَّثٌ"
+   ],
+   "explanation": "نلاحظ شكل الرسم وعدد أضلاعه لنتعرف عليه: هو دَائِرَةٌ.",
+   "question": "مَا هُوَ اسْمُ هَذَا الشَّكْلِ الدَّائِرِيِّ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 132,
+  "level_code": "1",
+  "subject_code": "math",
+  "trimester": "T3",
+  "domain_code": "mesure",
+  "skill_code": "utilisation_dinar",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "لَا",
+   "choices": [
+    "نَعَمْ",
+    "لَا"
+   ],
+   "explanation": "نقارن ثمن الشيء بقيمة القطعة أو الورقة النقدية المذكورة، فتكون الإجابة: لَا.",
+   "question": "ثَمَنُ اللُّعْبَةِ 5 دَنَانِير. هَلْ تَكْفِي قِطْعَةٌ مِنْ فِئَةِ 2 دِينَارٍ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 133,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "huruf",
+  "skill_code": "tamyiz_huruf",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "مَ",
+   "choices": [
+    "مَ",
+    "بَ",
+    "دَ"
+   ],
+   "explanation": "نستمع إلى صوت أول حرف في الكلمة وننطقه بمفرده: هو مَ.",
+   "question": "مَا هُوَ الحَرْفُ الأَوَّلُ فِي كَلِمَةِ (مَدْرَسَةٌ) ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 134,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "qiraa",
+  "skill_code": "qiraat_kalimat",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "كَلْبٌ",
+   "choices": [
+    "قِطٌّ",
+    "كَلْبٌ",
+    "عُصْفُورٌ"
+   ],
+   "explanation": "نلاحظ الصورة جيدًا ونختار الكلمة التي تصفها: كَلْبٌ.",
+   "question": "اخْتَرْ الكَلِمَةَ المُنَاسِبَةَ لِصُورَةِ الكَلْبِ:"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 135,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "kitaba",
+  "skill_code": "imla_kalima",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "بـ",
+   "choices": [
+    "بـ",
+    "تـ",
+    "مـ"
+   ],
+   "explanation": "ننطق الكلمة كاملة لنسمع الحرف الناقص: هو بـ.",
+   "question": "أَكْمِلْ الكَلِمَةَ بِالحَرْفِ المُنَاسِبِ: ...ـقَـرَةٌ"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 136,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T2",
+  "domain_code": "huruf",
+  "skill_code": "tanwin",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "كِتَابٌ",
+   "choices": [
+    "كِتَابًا",
+    "كِتَابٌ",
+    "كِتَابٍ"
+   ],
+   "explanation": "ننظر إلى الحركة الأخيرة المكررة في آخر الكلمة (تنوين): الكلمة الصحيحة هي كِتَابٌ.",
+   "question": "أَيُّ الكَلِمَاتِ التَّالِيَةِ تَنْتَهِي بِتَنْوِينِ ضَمٍّ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 137,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T2",
+  "domain_code": "taabir",
+  "skill_code": "tartib_kalimat",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "ذَهَبَ التِّلْمِيذُ إِلَى المَدْرَسَةِ",
+   "choices": [
+    "ذَهَبَ التِّلْمِيذُ إِلَى المَدْرَسَةِ",
+    "إِلَى المَدْرَسَةِ التِّلْمِيذُ ذَهَبَ"
+   ],
+   "explanation": "نبحث عن الترتيب الذي يعطي معنى مفيدًا وصحيحًا: ذَهَبَ التِّلْمِيذُ إِلَى المَدْرَسَةِ.",
+   "question": "رَتِّبْ لِتُكَوِّنَ جُمْلَةً: التِّلْمِيذُ - إِلَى - ذَهَبَ - المَدْرَسَةِ"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 138,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T2",
+  "domain_code": "qiraa",
+  "skill_code": "qiraat_maqate",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "3",
+   "choices": [
+    "2",
+    "3",
+    "4"
+   ],
+   "explanation": "نقطّع الكلمة مقطعًا مقطعًا بالتصفيق مثلًا، فنجد 3 مقاطع.",
+   "question": "كَمْ عَدَدُ المَقَاطِعِ الصَّوْتِيَّةِ فِي كَلِمَةِ (وَلَدٌ) ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 139,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T3",
+  "domain_code": "kitaba",
+  "skill_code": "damir_munasib",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "أَنَا",
+   "choices": [
+    "أَنَا",
+    "أَنْتَ",
+    "هُوَ"
+   ],
+   "explanation": "ننظر إلى الفعل والفاعل لنختار الضمير المناسب: هو أَنَا.",
+   "question": "أَكْمِلْ الفَرَاغَ بِالضَّمِيرِ المُنَاسِبِ: ...... أَكْتُبُ دَرْسِي."
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 140,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T3",
+  "domain_code": "fahm",
+  "skill_code": "fahm_jumla",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "فِي السَّمَاءِ",
+   "choices": [
+    "فِي السَّمَاءِ",
+    "عَلَى الأَرْضِ"
+   ],
+   "explanation": "نعود إلى الجملة ونبحث فيها عن الإجابة مباشرة: فِي السَّمَاءِ.",
+   "question": "طَارَ العُصْفُورُ فِي السَّمَاءِ. أَيْنَ طَارَ العُصْفُورُ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 141,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T3",
+  "domain_code": "huruf",
+  "skill_code": "lam_shamsiya_qamariya",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "لَامٍ شَمْسِيَّةٍ",
+   "choices": [
+    "لَامٍ شَمْسِيَّةٍ",
+    "لَامٍ قَمَرِيَّةٍ"
+   ],
+   "explanation": "ننطق الكلمة: إذا اختفى صوت اللام ونُطق الحرف الذي يليه مشددًا، فهي لَامٍ شَمْسِيَّةٍ.",
+   "question": "كَلِمَةُ (الشَّمْسُ) تَحْتَوِي عَلَى :"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 142,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T1",
+  "domain_code": "corps_humain",
+  "skill_code": "les_sens",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الأُذُنُ",
+   "choices": [
+    "الأُذُنُ",
+    "العَيْنُ",
+    "اللِّسَانُ"
+   ],
+   "explanation": "نفكر في العضو الذي يقوم بهذا العمل في جسمنا: هو الأُذُنُ.",
+   "question": "بِأَيِّ عُضْوٍ أَسْتَمِعُ إِلَى أَنَاشِيدَ جَمِيلَةٍ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 143,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T1",
+  "domain_code": "etres_vivants",
+  "skill_code": "animaux_domestiques",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "الخَرُوفُ",
+   "choices": [
+    "الأَسَدُ",
+    "الخَرُوفُ",
+    "الذِّئْبُ"
+   ],
+   "explanation": "الحيوان الأليف هو الذي يعيش قرب الإنسان ويرعاه: هو الخَرُوفُ.",
+   "question": "أَيُّ الحَيَوَانَاتِ التَّالِيَةِ هُوَ حَيَوَانٌ أَلِيفٌ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 144,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T1",
+  "domain_code": "saisons",
+  "skill_code": "moments_journee",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "اللَّيْلِ",
+   "choices": [
+    "الصَّبَاحِ",
+    "اللَّيْلِ",
+    "الظُّهْرِ"
+   ],
+   "explanation": "نلاحظ العلامات الموجودة (الشمس، القمر، النجوم) لنحدد الفترة: هي اللَّيْلِ.",
+   "question": "تَظْهَرُ النُّجُومُ وَالقَمَرُ فِي السَّمَاءِ فِي :"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 145,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T2",
+  "domain_code": "etres_vivants",
+  "skill_code": "parties_plante",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "الجُذُورُ",
+   "choices": [
+    "الجُذُورُ",
+    "الأَوْرَاقُ",
+    "الأَزْهَارُ"
+   ],
+   "explanation": "كل جزء من النبتة له دور خاص؛ الجزء المسؤول هنا هو الجُذُورُ.",
+   "question": "مَا هُوَ الجُزْءُ الذِّي يَمْتَصُّ المَاءَ مِنَ التُّرْبَةِ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 146,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T2",
+  "domain_code": "corps_humain",
+  "skill_code": "alimentation_saine",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "نَبَاتِيٍّ",
+   "choices": [
+    "نَبَاتِيٍّ",
+    "حَيَوَانِيٌّ"
+   ],
+   "explanation": "نفكر من أين يأتي هذا الغذاء: مصدره نَبَاتِيٍّ.",
+   "question": "التُّفَّاحُ وَالمَوْزُ هِيَ أَغْذِيَةٌ مِنْ مَصْدَرٍ :"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 147,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T2",
+  "domain_code": "etres_vivants",
+  "skill_code": "couverture_corporelle",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "الرِّيشُ",
+   "choices": [
+    "الرِّيشُ",
+    "الصُّوفُ",
+    "الشَّعْرُ"
+   ],
+   "explanation": "نلاحظ جسم الحيوان: يغطيه الرِّيشُ.",
+   "question": "مَاذَا يُغَطِّي جِسْمَ الحَمَامَةِ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 148,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T3",
+  "domain_code": "eau",
+  "skill_code": "etats_eau",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "سَائِلَةٍ",
+   "choices": [
+    "صَلْبَةٍ",
+    "سَائِلَةٍ"
+   ],
+   "explanation": "نلاحظ شكل الجسم: هل يحافظ على شكله (صلب) أم يأخذ شكل إنائه (سائل)؟ هنا هو سَائِلَةٍ.",
+   "question": "الـمَاءُ وَالحَلِيبُ هِيَ أَجْسَامٌ فِي حَالَةٍ :"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 149,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T3",
+  "domain_code": "saisons",
+  "skill_code": "reconnaissance_saisons",
+  "exercise_format": "qcm",
+  "difficulty": "maitrise",
+  "language": "ar",
+  "content": {
+   "answer": "الشِّتَاءِ",
+   "choices": [
+    "الشِّتَاءِ",
+    "الصَّيْفِ",
+    "الرَّبِيعِ"
+   ],
+   "explanation": "نربط الوصف بما يميز كل فصل من الفصول الأربعة: الإجابة هي الشِّتَاءِ.",
+   "question": "نَرْتَدِي المَلَابِسَ الصُّوفِيَّةَ الثَّقِيلَةَ فِي فَصْلِ :"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 150,
+  "level_code": "1",
+  "subject_code": "science",
+  "trimester": "T3",
+  "domain_code": "etres_vivants",
+  "skill_code": "reproduction_croissance",
+  "exercise_format": "qcm",
+  "difficulty": "decouverte",
+  "language": "ar",
+  "content": {
+   "answer": "البَقَرَةُ",
+   "choices": [
+    "الدَّجَاجَةُ",
+    "البَقَرَةُ",
+    "العُصْفُورُ"
+   ],
+   "explanation": "نفكر في طريقة تكاثر كل حيوان: يلد صغاره مباشرة أم يضع بيضًا؟ الإجابة هي البَقَرَةُ.",
+   "question": "أَيُّ الحَيَوَانَاتِ التَّالِيَةِ يَلِدُ وَلَا بِيضُ ؟"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 151,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "wasf_sura",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "mode": "orale",
+   "model_answer": "مثال: أرى بيتًا بجانب شجرة كبيرة، والسماء بها غيوم.",
+   "question": "صِفْ ما تراه في هذا المشهد بجملة واحدة على الأقل.",
+   "visual": "🏠🌳☁"
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 152,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "wasf_sura",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "mode": "orale",
+   "model_answer": "مثال: أرى قطة وعصفورًا بالقرب من زهرة.",
+   "question": "صِفْ ما تراه في هذا المشهد بجملة واحدة على الأقل.",
+   "visual": "🐱🐦🌸"
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 153,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "tartib_kalimat",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "أذهب إلى المدرسة",
+   "choices": [
+    "أذهب إلى المدرسة",
+    "المدرسة أذهب إلى",
+    "إلى أذهب المدرسة"
+   ],
+   "explanation": "الترتيب الصحيح للجملة يبدأ بالفعل ثم شبه الجملة: أذهب إلى المدرسة.",
+   "question": "رتّب الكلمات لتكوين جملة صحيحة: (المدرسة - إلى - أذهب)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 154,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "tartib_kalimat",
+  "exercise_format": "qcm",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "answer": "القطة جميلة كبيرة",
+   "choices": [
+    "القطة جميلة كبيرة",
+    "كبيرة جميلة القطة",
+    "جميلة كبيرة القطة"
+   ],
+   "explanation": "الجملة تبدأ بالمبتدأ (القطة) ثم الصفات: القطة جميلة كبيرة.",
+   "question": "رتّب الكلمات لتكوين جملة صحيحة: (كبيرة - القطة - جميلة)"
+  },
+  "grading_mode": "auto",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 155,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "kitaba_qasira",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "mode": "ecrite",
+   "model_answer": "مثال: ذهبت إلى المدرسة صباحًا. تعلمت حروفًا جديدة مع معلمتي.",
+   "question": "اكتب جملتين عن يومك في المدرسة."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 156,
+  "level_code": "1",
+  "subject_code": "ar",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "kitaba_qasira",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "ar",
+  "content": {
+   "mode": "ecrite",
+   "model_answer": "مثال: أبي يعمل كل يوم. أمي تطبخ طعامًا لذيذًا.",
+   "question": "اكتب جملتين تصف فيهما أفراد عائلتك."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 157,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "decrire_image",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "mode": "orale",
+   "model_answer": "Exemple : Je vois une maison à côté d'un grand arbre, et le ciel a des nuages.",
+   "question": "Décris ce que tu vois sur cette image en une phrase au moins.",
+   "visual": "🏠🌳☁"
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 158,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "decrire_image",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "mode": "orale",
+   "model_answer": "Exemple : Je vois un chat et un oiseau près d'une fleur.",
+   "question": "Décris ce que tu vois sur cette image en une phrase au moins.",
+   "visual": "🐱🐦🌸"
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 159,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "raconter_histoire",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "mode": "orale",
+   "model_answer": "Exemple : Je me réveille tôt. Je prends mon petit-déjeuner. Puis je pars à l'école avec mon cartable.",
+   "question": "Raconte en 2 ou 3 phrases ce qui se passe un matin d'école."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 160,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "redaction_courte",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "mode": "ecrite",
+   "model_answer": "Exemple : Je suis allé(e) à l'école ce matin. J'ai appris les lettres avec ma maîtresse.",
+   "question": "Écris deux phrases sur ta journée à l'école."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 161,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "expression_orale_ecrite",
+  "skill_code": "redaction_courte",
+  "exercise_format": "reponse_libre",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "mode": "ecrite",
+   "model_answer": "Exemple : Mon papa travaille tous les jours. Ma maman prépare de bons repas.",
+   "question": "Écris deux phrases pour décrire ta famille."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 162,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "recitation",
+  "skill_code": "poeme_court",
+  "exercise_format": "recitation",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "author": "Comptine traditionnelle",
+   "question": "Écoute puis récite ce poème à voix haute.",
+   "text": "Une souris verte\nQui courait dans l'herbe,\nJe l'attrape par la queue,\nJe la montre à ces messieurs.\nCes messieurs me disent :\nTrempez-la dans l'huile,\nTrempez-la dans l'eau,\nÇa fera un escargot\nTout chaud."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 163,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "recitation",
+  "skill_code": "poeme_court",
+  "exercise_format": "recitation",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "author": "Comptine traditionnelle",
+   "question": "Écoute puis récite ce poème à voix haute.",
+   "text": "Ainsi font, font, font\nLes petites marionnettes,\nAinsi font, font, font\nTrois petits tours et puis s'en vont."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ },
+ {
+  "library_exercise_id": 164,
+  "level_code": "1",
+  "subject_code": "fr",
+  "trimester": "T1",
+  "domain_code": "recitation",
+  "skill_code": "poeme_court",
+  "exercise_format": "recitation",
+  "difficulty": "en_cours",
+  "language": "fr",
+  "content": {
+   "author": "Comptine traditionnelle",
+   "question": "Écoute puis récite ce poème à voix haute.",
+   "text": "Frère Jacques, Frère Jacques,\nDormez-vous ? Dormez-vous ?\nSonnez les matines, sonnez les matines,\nDing ding dong, ding ding dong."
+  },
+  "grading_mode": "open",
+  "license": "SmartProf"
+ }
+]
