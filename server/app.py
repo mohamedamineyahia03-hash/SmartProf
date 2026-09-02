@@ -47,7 +47,19 @@ def health():
 
 @app.get("/api/subjects")
 def subjects():
+    """Accepts an optional ?child_id= so the frontend can show "essai gratuit"
+    instead of a hard lock on a paid subject this child hasn't tried yet —
+    see start_session() for where that free look is actually granted/spent."""
     rows = CurriculumSubject.query.order_by(CurriculumSubject.id).all()
+
+    child_id = request.args.get("child_id", type=int)
+    tried_subjects = set()
+    if child_id is not None:
+        tried_subjects = {
+            row.subject_code
+            for row in Session.query.filter_by(child_profile_id=child_id).with_entities(Session.subject_code).distinct()
+        }
+
     return jsonify(
         [
             {
@@ -55,6 +67,7 @@ def subjects():
                 "name": s.label_fr,
                 "name_ar": s.label_ar,
                 "free_levels": s.free_levels,
+                "trial_available": child_id is not None and s.code not in tried_subjects,
             }
             for s in rows
         ]
@@ -448,12 +461,21 @@ def start_session():
         return jsonify({"error": "invalid_subject"}), 400
 
     if is_subject_locked(level_code, subject_row):
-        return jsonify(
-            {
-                "error": "subject_locked",
-                "message": "Cette matière nécessite un déblocage.",
-            }
-        ), 403
+        # One free look per child per paid subject (any level, any section) —
+        # a diagnostic trial before asking a parent to pay, not a loophole:
+        # anonymous play (no child) never gets it, and it's spent the moment
+        # this child has any session logged for the subject, checked here by
+        # the same query /api/subjects uses to advertise "essai gratuit".
+        trial_available = child is not None and (
+            Session.query.filter_by(child_profile_id=child.id, subject_code=subject_code).first() is None
+        )
+        if not trial_available:
+            return jsonify(
+                {
+                    "error": "subject_locked",
+                    "message": "Cette matière nécessite un déblocage.",
+                }
+            ), 403
 
     domain_row = CurriculumDomain.query.filter_by(
         level_id=level_row.id, subject_id=subject_row.id, code=domain_code

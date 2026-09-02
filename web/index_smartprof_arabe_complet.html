@@ -84,6 +84,7 @@
   @keyframes popIn{0%{transform:scale(.3) translateY(20px);opacity:0;}100%{transform:scale(1) translateY(0);opacity:1;}}
   .hero h1{position:relative;z-index:1;font-size:var(--title-size);line-height:1.06;margin:6px 0 0;transition:font-size .5s ease;}
   .hero h1.pop{animation:titlePop .55s ease .1s both;}
+  .hero-tagline{position:relative;z-index:1;font-family:'Inter',sans-serif;font-weight:600;font-size:.95rem;color:var(--muted);margin:10px 0 0;}
   @keyframes titlePop{0%{transform:translateY(14px);opacity:0;}100%{transform:translateY(0);opacity:1;}}
 
   .m-body{animation:bob 3.2s ease-in-out infinite;transform-origin:center bottom;}
@@ -112,6 +113,9 @@
   .subject-card{position:relative;background:var(--card);border-radius:var(--radius);padding:20px 14px;text-align:center;border:2px solid transparent;box-shadow:0 4px 18px rgba(27,35,64,.06);transition:all .35s ease;}
   .subject-card:hover{border-color:var(--accent);transform:translateY(-4px);}
   .subject-card.locked{opacity:.75;}
+  .subject-card.trial{border-color:var(--accent-2);}
+  .trial-note{display:block;font-size:.7rem;font-weight:700;color:var(--accent);background:var(--paper-soft);border-radius:999px;padding:2px 10px;margin:-4px 0 8px;}
+  .subject-card.trial .start-btn{background:linear-gradient(135deg, var(--accent), var(--accent-2));}
   .subject-card .icon-wrap{width:72px;height:72px;margin:0 auto 8px;filter:drop-shadow(0 6px 8px rgba(27,35,64,.15)) drop-shadow(0 0 12px var(--glow));transition:filter 1s ease;}
   .subject-card .icon-wrap svg{width:100%;height:100%;overflow:visible;}
   .subject-card .name{font-weight:600;font-size:.95rem;display:block;margin-bottom:10px;}
@@ -275,6 +279,7 @@
       <div class="aura" id="aura"></div>
       <div class="mascot-stage" id="mascotStage"></div>
       <h1 id="heroTitle">Choisis ton année et pars à l'aventure</h1>
+      <p class="hero-tagline" id="heroTagline"></p>
     </section>
 
     <div class="level-path" id="levelPath"></div>
@@ -737,6 +742,7 @@ let SUBJECTS = [
 
 const TEXT = {
   heroTitle:{fr:"Choisis ton année et pars à l'aventure", ar:"اختر سنتك وانطلق في المغامرة"},
+  heroTagline:{fr:"Apprentissage personnalisé, suivi pour toute la fratrie, en trois langues.", ar:"تعلّم مُخصّص لطفلك، متابعة لكل إخوته، بثلاث لغات."},
   downloadTitle:{fr:"Emporte SmartProf partout", ar:"خذ سمارت بروف معك أينما ذهبت"},
   downloadNote:{fr:"L'application mobile arrive bientôt — en attendant, continue sur le site.", ar:"التطبيق قادم قريبًا — في الانتظار، تابع على الموقع."},
   downloadBtn:{fr:"Télécharger l'application", ar:"تحميل التطبيق"},
@@ -744,6 +750,8 @@ const TEXT = {
   startLabel:{fr:"Commencer ▶", ar:"ابدأ ◀"},
   unlockLabel:{fr:"🔒 À débloquer", ar:"🔒 غير مفعّلة"},
   lockedMessage:{fr:"Cette matière est disponible avec un déblocage payant (bientôt disponible).", ar:"هذه المادة متاحة عبر تفعيل مدفوع (قريبًا)."},
+  trialLabel:{fr:"🎁 Essai gratuit", ar:"🎁 جرّب مجانًا"},
+  trialNote:{fr:"1 séance offerte", ar:"حصة واحدة مجانية"},
   noContentMessage:{fr:"Pas encore d'exercices disponibles pour ce choix, reviens bientôt !", ar:"لا توجد تمارين متاحة بعد لهذا الاختيار، عد قريبًا!"},
   genericError:{fr:"Une erreur est survenue, réessaie.", ar:"حدث خطأ، حاول مجددًا."},
   backHome:{fr:"Retour à l'accueil", ar:"العودة للرئيسية"},
@@ -911,6 +919,8 @@ function render(){
   h1.textContent = TEXT.heroTitle[currentLang];
   h1.classList.add('pop');
 
+  document.getElementById('heroTagline').textContent = TEXT.heroTagline[currentLang];
+
   document.getElementById('logoBadge').innerHTML = svgLogo(lvl.accent, lvl.accent2);
 
   /* Chemin des niveaux */
@@ -941,15 +951,18 @@ function render(){
   subjectsEl.innerHTML = '';
   SUBJECTS.forEach(s => {
     const locked = isSubjectLocked(s, currentLevel);
+    const trial = locked && s.trialAvailable;
     const card = document.createElement('div');
-    card.className = 'subject-card' + (locked ? ' locked' : '');
+    card.className = 'subject-card' + (locked && !trial ? ' locked' : '') + (trial ? ' trial' : '');
+    const btnLabel = trial ? TEXT.trialLabel[currentLang] : (locked ? TEXT.unlockLabel[currentLang] : TEXT.startLabel[currentLang]);
     card.innerHTML = `
       <div class="icon-wrap">${SUBJECT_ICONS[s.id] ? SUBJECT_ICONS[s.id](lvl.accent, lvl.accent2) : ''}</div>
       <span class="name">${s.name[currentLang]}</span>
-      <button type="button" class="start-btn">${locked ? TEXT.unlockLabel[currentLang] : TEXT.startLabel[currentLang]}</button>
+      ${trial ? `<span class="trial-note">${TEXT.trialNote[currentLang]}</span>` : ''}
+      <button type="button" class="start-btn">${btnLabel}</button>
     `;
     card.querySelector('.start-btn').addEventListener('click', () => {
-      if(locked){ showLockedToast(TEXT.lockedMessage[currentLang]); }
+      if(locked && !trial){ showLockedToast(TEXT.lockedMessage[currentLang]); }
       else { openSectionTree(s.id); }
     });
     subjectsEl.appendChild(card);
@@ -1581,13 +1594,15 @@ function backToHome(){
 
 async function loadSubjects(){
   try {
-    const res = await fetch('/api/subjects');
+    const url = activeChild ? `/api/subjects?child_id=${activeChild.id}` : '/api/subjects';
+    const res = await fetch(url);
     if(!res.ok) throw new Error('bad status');
     const data = await res.json();
     SUBJECTS = data.map(s => ({
       id: s.id,
       name: {fr: s.name, ar: s.name_ar},
-      freeLevels: s.free_levels
+      freeLevels: s.free_levels,
+      trialAvailable: !!s.trial_available
     }));
   } catch(e){
     console.warn('Impossible de charger /api/subjects, utilisation des valeurs par défaut.', e);
@@ -1616,13 +1631,13 @@ function setActiveChild(child){
   try { sessionStorage.setItem('smartprof_active_child', JSON.stringify(child)); } catch(e){}
   currentLevel = Number(child.level_code);
   closeParentView();
-  render();
+  loadSubjects(); // re-fetch so "essai gratuit" reflects this child, not the previous one
 }
 
 function clearActiveChild(silent){
   activeChild = null;
   try { sessionStorage.removeItem('smartprof_active_child'); } catch(e){}
-  if(!silent) render();
+  if(!silent) loadSubjects();
 }
 
 /* ---------- Espace parent ---------- */
