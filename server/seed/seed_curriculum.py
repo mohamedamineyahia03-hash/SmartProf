@@ -5,10 +5,23 @@ exists for level 1 of Math, Arabic, Science, Français, and Anglais. All five
 subjects also have a domain-only skeleton for levels 2-6 (each domain
 doubles as its own single skill — no finer breakdown authored yet). Level 6
 is the last year of Tunisian primary school and ends with the Concours
-National de la 6ème: Math, Science, and Français dedicate their T3 skeleton
-to revision + a "Concours blanc" (mock exam) track instead of new material.
-Anglais gets a revision-only T3 at level 6 (its place in the actual concours
-exam isn't confirmed, so no "Concours blanc" label is claimed for it).
+National de la 6ème: Math, Science, Arabe, and Français dedicate their T3
+skeleton to revision + a "Concours blanc" (mock exam) track instead of new
+material. Anglais gets a revision-only T3 at level 6 (its place in the
+actual concours exam isn't confirmed, so no "Concours blanc" label is
+claimed for it).
+
+The levels 2-6 skeleton domain names for Math/Science/Arabe/Français/Anglais
+(minus the T3 revision convention above) come from the official trimester
+breakdown supplied by the user (programme_officiel_tunisie_2e_6e_complet.xlsx,
+2026-09-02): one program summary per (level, subject), NOT differentiated
+per trimester in the source — the same text is repeated for T1/T2/T3 — so
+the domain lists below are intentionally identical across all three
+trimesters for a given level/subject, rather than inventing a progression
+the source doesn't state. Anglais/Français levels not covered by that
+source (Anglais 2-4, Français 2) keep their earlier hand-authored skeleton,
+since SmartProf offers them as an early paid enrichment ahead of where the
+official programme introduces them (see SUBJECTS free_levels below).
 """
 
 import json
@@ -52,28 +65,28 @@ SUBJECTS = [
 
 MATH_SKELETON = {
     "2": {
-        "T1": ["Nombres", "Addition", "Soustraction", "Multiplication", "Problèmes"],
-        "T2": ["Nombres", "Multiplication", "Division", "Mesures", "Problèmes"],
-        "T3": ["Calcul", "Géométrie", "Mesures", "Problèmes"],
+        "T1": ["Nombres jusqu'à 99", "Additions et soustractions simples", "Géométrie de base"],
+        "T2": ["Nombres jusqu'à 99", "Additions et soustractions simples", "Géométrie de base"],
+        "T3": ["Nombres jusqu'à 99", "Additions et soustractions simples", "Géométrie de base"],
     },
     "3": {
-        "T1": ["Nombres", "Calcul", "Multiplication", "Division", "Problèmes"],
-        "T2": ["Fractions", "Mesures", "Géométrie", "Problèmes"],
-        "T3": ["Calcul", "Géométrie", "Mesures", "Problèmes"],
+        "T1": ["Nombres jusqu'à 999", "Technique de l'addition posée", "Technique de la soustraction posée"],
+        "T2": ["Nombres jusqu'à 999", "Technique de l'addition posée", "Technique de la soustraction posée"],
+        "T3": ["Nombres jusqu'à 999", "Technique de l'addition posée", "Technique de la soustraction posée"],
     },
     "4": {
-        "T1": ["Nombres", "Calcul", "Fractions", "Problèmes"],
-        "T2": ["Fractions", "Mesures", "Géométrie", "Problèmes"],
-        "T3": ["Calcul", "Géométrie", "Mesures", "Problèmes"],
+        "T1": ["Introduction à la multiplication", "Grands nombres", "Mesures de longueur et masses"],
+        "T2": ["Introduction à la multiplication", "Grands nombres", "Mesures de longueur et masses"],
+        "T3": ["Introduction à la multiplication", "Grands nombres", "Mesures de longueur et masses"],
     },
     "5": {
-        "T1": ["Nombres", "Calcul", "Fractions", "Problèmes"],
-        "T2": ["Fractions", "Décimaux", "Mesures", "Géométrie", "Problèmes"],
-        "T3": ["Calcul", "Géométrie", "Mesures", "Problèmes"],
+        "T1": ["Division", "Nombres décimaux", "Périmètres et aires", "Proportionnalité"],
+        "T2": ["Division", "Nombres décimaux", "Périmètres et aires", "Proportionnalité"],
+        "T3": ["Division", "Nombres décimaux", "Périmètres et aires", "Proportionnalité"],
     },
     "6": {
-        "T1": ["Nombres", "Calcul", "Fractions", "Problèmes"],
-        "T2": ["Fractions", "Décimaux", "Mesures", "Géométrie", "Problèmes"],
+        "T1": ["Fractions", "Pourcentages", "Géométrie avancée (cercle, triangles)", "Situations-problèmes globales"],
+        "T2": ["Fractions", "Pourcentages", "Géométrie avancée (cercle, triangles)", "Situations-problèmes globales"],
         "T3": ["Révision générale", "Concours blanc"],
     },
 }
@@ -100,28 +113,28 @@ ARABIC1_TRIMESTERS = {
 
 SCIENCE_SKELETON = {
     "2": {
-        "T1": ["Le corps humain", "Les animaux"],
-        "T2": ["Les plantes", "L'alimentation"],
-        "T3": ["L'eau", "Les saisons"],
+        "T1": ["Le corps", "Les sens", "Les animaux et plantes de l'environnement proche"],
+        "T2": ["Le corps", "Les sens", "Les animaux et plantes de l'environnement proche"],
+        "T3": ["Le corps", "Les sens", "Les animaux et plantes de l'environnement proche"],
     },
     "3": {
-        "T1": ["Les organes des sens", "La respiration"],
-        "T2": ["Les plantes et leur croissance", "L'alimentation et la santé"],
-        "T3": ["Les états de la matière", "L'environnement"],
+        "T1": ["L'eau", "L'air", "Classification du vivant", "Hygiène de vie"],
+        "T2": ["L'eau", "L'air", "Classification du vivant", "Hygiène de vie"],
+        "T3": ["L'eau", "L'air", "Classification du vivant", "Hygiène de vie"],
     },
     "4": {
-        "T1": ["Le corps humain", "Les animaux et leur milieu"],
-        "T2": ["Les plantes: reproduction", "Les matériaux"],
-        "T3": ["L'électricité simple", "Le ciel et la Terre"],
+        "T1": ["Les états de la matière", "Le système digestif", "Écosystèmes"],
+        "T2": ["Les états de la matière", "Le système digestif", "Écosystèmes"],
+        "T3": ["Les états de la matière", "Le système digestif", "Écosystèmes"],
     },
     "5": {
-        "T1": ["Le corps humain: circulation", "Écosystèmes"],
-        "T2": ["Les changements d'état de la matière", "Les forces et mouvements"],
-        "T3": ["L'énergie", "Protection de l'environnement"],
+        "T1": ["La respiration", "La circulation sanguine", "L'électricité de base", "L'environnement"],
+        "T2": ["La respiration", "La circulation sanguine", "L'électricité de base", "L'environnement"],
+        "T3": ["La respiration", "La circulation sanguine", "L'électricité de base", "L'environnement"],
     },
     "6": {
-        "T1": ["Le corps humain: révision", "Écosystèmes: révision"],
-        "T2": ["L'énergie et l'électricité", "La Terre et l'univers"],
+        "T1": ["Reproduction", "Écosystèmes", "Énergie"],
+        "T2": ["Reproduction", "Écosystèmes", "Énergie"],
         "T3": ["Révision générale", "Concours blanc"],
     },
 }
@@ -134,6 +147,40 @@ SCIENCE1_TRIMESTERS = {
     "T3": ["eau", "saisons"],
 }
 
+# Levels 2-6 (level 1 has full-detail curriculum instead — see ARABIC1_TRIMESTERS
+# above). Previously missing entirely; added from the official trimester
+# breakdown (2026-09-02, see module docstring).
+ARABIC_SKELETON = {
+    "2": {
+        "T1": ["Lecture", "Écriture", "Structures de base", "Expression orale"],
+        "T2": ["Lecture", "Écriture", "Structures de base", "Expression orale"],
+        "T3": ["Lecture", "Écriture", "Structures de base", "Expression orale"],
+    },
+    "3": {
+        "T1": ["Étude de texte", "Enrichissement du vocabulaire", "Grammaire de base"],
+        "T2": ["Étude de texte", "Enrichissement du vocabulaire", "Grammaire de base"],
+        "T3": ["Étude de texte", "Enrichissement du vocabulaire", "Grammaire de base"],
+    },
+    "4": {
+        "T1": ["Production écrite guidée", "Conjugaison (passé/présent)", "Grammaire approfondie"],
+        "T2": ["Production écrite guidée", "Conjugaison (passé/présent)", "Grammaire approfondie"],
+        "T3": ["Production écrite guidée", "Conjugaison (passé/présent)", "Grammaire approfondie"],
+    },
+    "5": {
+        "T1": ["Expression écrite complexe", "Analyse grammaticale", "Orthographe grammaticale"],
+        "T2": ["Expression écrite complexe", "Analyse grammaticale", "Orthographe grammaticale"],
+        "T3": ["Expression écrite complexe", "Analyse grammaticale", "Orthographe grammaticale"],
+    },
+    "6": {
+        "T1": ["Synthèse", "Analyse littéraire et dissertation", "Préparation au concours (C6)"],
+        "T2": ["Synthèse", "Analyse littéraire et dissertation", "Préparation au concours (C6)"],
+        "T3": ["Révision générale", "Concours blanc"],
+    },
+}
+
+# Level 2 isn't in the official breakdown (Français starts at level 3 there)
+# but stays hand-authored — SmartProf sells Français as an early paid
+# enrichment at levels 1-2 ahead of where the programme itself introduces it.
 FR_SKELETON = {
     "2": {
         "T1": ["Lecture", "Écriture", "Vocabulaire"],
@@ -141,27 +188,30 @@ FR_SKELETON = {
         "T3": ["Conjugaison", "Expression écrite"],
     },
     "3": {
-        "T1": ["Lecture et compréhension", "Grammaire"],
-        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
-        "T3": ["Production d'écrits", "Expression orale"],
+        "T1": ["Découverte de la langue", "Graphie-phonie", "Lexique thématique", "Premiers dialogues"],
+        "T2": ["Découverte de la langue", "Graphie-phonie", "Lexique thématique", "Premiers dialogues"],
+        "T3": ["Découverte de la langue", "Graphie-phonie", "Lexique thématique", "Premiers dialogues"],
     },
     "4": {
-        "T1": ["Lecture et compréhension", "Grammaire"],
-        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
-        "T3": ["Production d'écrits", "Expression orale"],
+        "T1": ["Lecture suivie", "Grammaire (nom, verbe, déterminants)", "Production de phrases"],
+        "T2": ["Lecture suivie", "Grammaire (nom, verbe, déterminants)", "Production de phrases"],
+        "T3": ["Lecture suivie", "Grammaire (nom, verbe, déterminants)", "Production de phrases"],
     },
     "5": {
-        "T1": ["Lecture et compréhension", "Grammaire"],
-        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
-        "T3": ["Production d'écrits", "Expression orale"],
+        "T1": ["Textes narratifs", "Conjugaison (présent, futur, imparfait)", "Vocabulaire contextuel"],
+        "T2": ["Textes narratifs", "Conjugaison (présent, futur, imparfait)", "Vocabulaire contextuel"],
+        "T3": ["Textes narratifs", "Conjugaison (présent, futur, imparfait)", "Vocabulaire contextuel"],
     },
     "6": {
-        "T1": ["Lecture et compréhension", "Grammaire"],
-        "T2": ["Conjugaison", "Orthographe", "Vocabulaire"],
+        "T1": ["Compréhension de textes élaborés", "Grammaire experte", "Production écrite structurée"],
+        "T2": ["Compréhension de textes élaborés", "Grammaire experte", "Production écrite structurée"],
         "T3": ["Révision générale", "Concours blanc"],
     },
 }
 
+# Levels 2-4 aren't in the official breakdown (Anglais starts at level 5
+# there) but stay hand-authored, same reasoning as Français level 2 above —
+# an early paid enrichment product, not a claim about the school programme.
 EN_SKELETON = {
     "2": {
         "T1": ["Vocabulary", "Grammar basics"],
@@ -179,13 +229,13 @@ EN_SKELETON = {
         "T3": ["Writing", "Grammar"],
     },
     "5": {
-        "T1": ["Vocabulary", "Grammar"],
-        "T2": ["Reading comprehension", "Listening & speaking"],
-        "T3": ["Writing", "Grammar"],
+        "T1": ["Initiation", "Salutations et alphabet", "Couleurs et nombres", "Objets de la classe", "Verbes d'action"],
+        "T2": ["Initiation", "Salutations et alphabet", "Couleurs et nombres", "Objets de la classe", "Verbes d'action"],
+        "T3": ["Initiation", "Salutations et alphabet", "Couleurs et nombres", "Objets de la classe", "Verbes d'action"],
     },
     "6": {
-        "T1": ["Vocabulary", "Grammar"],
-        "T2": ["Reading comprehension", "Listening & speaking"],
+        "T1": ["Expression de soi", "Loisirs et famille", "Temps simples (grammar tenses)", "Dialogues de la vie quotidienne"],
+        "T2": ["Expression de soi", "Loisirs et famille", "Temps simples (grammar tenses)", "Dialogues de la vie quotidienne"],
         "T3": ["Révision générale"],
     },
 }
@@ -347,6 +397,7 @@ def main():
         seed_domain_curriculum(levels, subjects, "1", "math", MATH1_CURRICULUM_PATH, MATH1_TRIMESTERS)
         seed_skeleton_curriculum(levels, subjects, "math", MATH_SKELETON)
         seed_domain_curriculum(levels, subjects, "1", "ar", ARABIC1_CURRICULUM_PATH, ARABIC1_TRIMESTERS)
+        seed_skeleton_curriculum(levels, subjects, "ar", ARABIC_SKELETON)
         seed_domain_curriculum(levels, subjects, "1", "science", SCIENCE1_CURRICULUM_PATH, SCIENCE1_TRIMESTERS)
         seed_skeleton_curriculum(levels, subjects, "science", SCIENCE_SKELETON)
         seed_domain_curriculum(levels, subjects, "1", "fr", FR1_CURRICULUM_PATH, FR1_TRIMESTERS)
