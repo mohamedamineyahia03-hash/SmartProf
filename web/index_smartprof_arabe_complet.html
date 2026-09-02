@@ -128,6 +128,8 @@
   .session-progress{font-weight:600;color:var(--muted);margin-bottom:14px;font-size:.85rem;}
   .session-question{font-size:1.25rem;font-weight:700;margin-bottom:22px;}
   .session-visual{font-size:2.6rem;text-align:center;margin:-6px 0 22px;letter-spacing:.15em;}
+  .visual-icon{display:inline-block;width:44px;height:44px;vertical-align:middle;margin:2px;filter:drop-shadow(0 3px 5px rgba(27,35,64,.15));}
+  .visual-icon svg{width:100%;height:100%;overflow:visible;}
   .choice-list{display:grid;gap:12px;margin-bottom:20px;}
   .choice-btn{padding:16px;border-radius:14px;border:2px solid #e5e7eb;background:#fff;font-family:'Inter',sans-serif;font-size:1.15rem;font-weight:600;color:var(--ink);cursor:pointer;text-align:center;transition:all .2s ease;}
   .choice-btn:hover{border-color:var(--accent);}
@@ -525,6 +527,154 @@ function iconArabic(a,a2){
 }
 const SUBJECT_ICONS = {math:iconMath, fr:iconFrench, science:iconScience, en:iconEnglish, ar:iconArabic};
 
+/* ---- Icônes "visuel" d'exercice ----
+   Les exercices encodent leur "visual" (denombrement, positions, comparaisons...)
+   comme du texte truffé d'emojis (voir VISUAL_INSTRUCTION côté génération). Plutôt
+   que d'afficher l'emoji brut du système, on le remplace par une petite icône SVG
+   dans le même style cartoon que la mascotte/les icônes de matière — cohérence
+   visuelle, sans dépendre d'une police emoji particulière sur l'appareil de
+   l'élève. La table ne couvre que les emojis réellement utilisés par le contenu
+   existant ; tout emoji non répertorié reste affiché tel quel (dégradation
+   propre, jamais une case vide). */
+function iconCoinVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <circle cx="50" cy="48" r="34" fill="#FFD60A" stroke="${INK}" stroke-width="4"/>
+    <circle cx="50" cy="48" r="23" fill="none" stroke="${INK}" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <text x="50" y="57" font-family="'Baloo 2', sans-serif" font-size="22" font-weight="800" fill="${INK}" text-anchor="middle">د</text>
+    ${shine(37,34,7,4,-20)}</svg>`;
+}
+function iconCircleVisual(fill, strokeColor){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <circle cx="50" cy="48" r="30" fill="${fill}" stroke="${strokeColor || INK}" stroke-width="4"/>
+    ${shine(39,36,6,3.5,-20)}</svg>`;
+}
+function iconTriangleVisual(fill){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <path d="M50 16 L82 76 L18 76 Z" fill="${fill}" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    ${shine(45,58,6,3,-10)}</svg>`;
+}
+function iconCandyVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <path d="M30 42 L14 32 L18 50 L14 68 L30 58 Z" fill="#FF6FA5" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M70 42 L86 32 L82 50 L86 68 L70 58 Z" fill="#FF6FA5" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    <ellipse cx="50" cy="50" rx="20" ry="15" fill="#FF6FA5" stroke="${INK}" stroke-width="3.5" transform="rotate(-12 50 50)"/>
+    ${shine(43,44,5,3,-20)}</svg>`;
+}
+function iconBlossomVisual(fill){
+  const petals = [0,72,144,216,288].map(rot =>
+    `<ellipse cx="50" cy="32" rx="10" ry="16" fill="${fill}" stroke="${INK}" stroke-width="2.5" transform="rotate(${rot} 50 50)"/>`
+  ).join('');
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}${petals}
+    <circle cx="50" cy="50" r="9" fill="#FFD60A" stroke="${INK}" stroke-width="2.5"/></svg>`;
+}
+function iconBoxVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,24,4)}
+    <path d="M20 36 L50 20 L80 36 L50 52 Z" fill="#F2C88F" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M20 36 L20 74 L50 90 L50 52 Z" fill="#E8B978" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M80 36 L80 74 L50 90 L50 52 Z" fill="#D9A55F" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    ${shine(30,44,5,3,-15)}</svg>`;
+}
+function iconFishVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <path d="M68 40 L88 26 L80 50 L88 74 L68 60 Z" fill="#3AB0FF" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M18 50 Q38 22 68 40 Q88 50 68 60 Q38 78 18 50 Z" fill="#3AB0FF" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
+    <circle cx="33" cy="45" r="3" fill="${INK}"/>
+    ${shine(31,41,5,3,-15)}</svg>`;
+}
+function iconBalloonVisual(){
+  return `<svg viewBox="0 0 100 100">
+    <ellipse cx="50" cy="40" rx="24" ry="28" fill="#FF3D77" stroke="${INK}" stroke-width="4"/>
+    <path d="M50 68 L44 62" fill="none" stroke="${INK}" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50 68 L46 76 L54 80 L48 88" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linecap="round"/>
+    ${shine(39,28,6,4,-20)}</svg>`;
+}
+function iconAppleVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}
+    <path d="M50 34 C30 30 20 46 22 60 C24 76 38 84 50 78 C62 84 76 76 78 60 C80 46 70 30 50 34 Z" fill="#FF3D3D" stroke="${INK}" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M50 34 C50 24 56 20 60 18" fill="none" stroke="#5C3A21" stroke-width="3" stroke-linecap="round"/>
+    <path d="M52 22 Q62 16 68 24" fill="#4CAF50" stroke="${INK}" stroke-width="2"/>
+    ${shine(37,50,6,4,-20)}</svg>`;
+}
+function iconCatFaceVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,22,4)}
+    <path d="M28 30 L36 46 L20 46 Z" fill="#F5A85B" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M72 30 L80 46 L64 46 Z" fill="#F5A85B" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="50" cy="54" r="28" fill="#F5A85B" stroke="${INK}" stroke-width="4"/>
+    <circle cx="40" cy="50" r="4" fill="${INK}"/><circle cx="60" cy="50" r="4" fill="${INK}"/>
+    <path d="M46 62 Q50 66 54 62" stroke="${INK}" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    ${shine(38,44,5,3,-20)}</svg>`;
+}
+function iconBirdVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}
+    <circle cx="46" cy="50" r="26" fill="#3AB0FF" stroke="${INK}" stroke-width="3.5"/>
+    <circle cx="66" cy="40" r="12" fill="#3AB0FF" stroke="${INK}" stroke-width="3"/>
+    <path d="M76 40 L88 36 L76 46 Z" fill="#FFD60A" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/>
+    <circle cx="70" cy="38" r="2.5" fill="${INK}"/>
+    <path d="M34 56 Q46 70 58 56" fill="#FFD60A" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/></svg>`;
+}
+function iconTreeVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,90,22,4)}
+    <rect x="44" y="60" width="12" height="26" rx="4" fill="#8B5A2B" stroke="${INK}" stroke-width="3"/>
+    <circle cx="50" cy="42" r="28" fill="#4CAF50" stroke="${INK}" stroke-width="4"/>
+    ${shine(39,32,6,4,-20)}</svg>`;
+}
+function iconCloudVisual(){
+  return `<svg viewBox="0 0 100 100">
+    <ellipse cx="40" cy="54" rx="20" ry="16" fill="#fff" stroke="${INK}" stroke-width="3.5"/>
+    <ellipse cx="62" cy="48" rx="22" ry="18" fill="#fff" stroke="${INK}" stroke-width="3.5"/>
+    <ellipse cx="52" cy="60" rx="26" ry="14" fill="#fff" stroke="${INK}" stroke-width="3.5"/>
+    ${shine(35,46,5,3,-15)}</svg>`;
+}
+function iconHouseVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,90,24,4)}
+    <rect x="26" y="50" width="48" height="36" rx="4" fill="#FFE3A3" stroke="${INK}" stroke-width="4"/>
+    <path d="M18 52 L50 22 L82 52" fill="#FF3D77" stroke="${INK}" stroke-width="4" stroke-linejoin="round"/>
+    <rect x="44" y="64" width="14" height="22" rx="2" fill="#8B5A2B" stroke="${INK}" stroke-width="2.5"/>
+    ${shine(34,58,5,3,-15)}</svg>`;
+}
+function iconBeeVisual(){
+  return `<svg viewBox="0 0 100 100">${shadowEllipse(50,88,20,4)}
+    <ellipse cx="46" cy="34" rx="14" ry="12" fill="#fff" stroke="${INK}" stroke-width="2" opacity=".85"/>
+    <ellipse cx="54" cy="30" rx="14" ry="12" fill="#fff" stroke="${INK}" stroke-width="2" opacity=".85"/>
+    <ellipse cx="50" cy="52" rx="22" ry="18" fill="#FFD60A" stroke="${INK}" stroke-width="3.5"/>
+    <path d="M32 44 L68 44 M30 52 L70 52 M32 60 L68 60" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="42" cy="40" r="2.4" fill="${INK}"/><circle cx="58" cy="40" r="2.4" fill="${INK}"/></svg>`;
+}
+
+const VISUAL_ICON_MAP = {
+  '🪙': iconCoinVisual,
+  '🔵': () => iconCircleVisual('#3AB0FF'),
+  '🔴': () => iconCircleVisual('#FF3D3D'),
+  '⚪': () => iconCircleVisual('#F3F4F6', '#9CA3AF'),
+  '🔺': () => iconTriangleVisual('#FF3D3D'),
+  '🍬': iconCandyVisual,
+  '🌸': () => iconBlossomVisual('#FF8FAE'),
+  '🌼': () => iconBlossomVisual('#FFD60A'),
+  '📦': iconBoxVisual,
+  '🐟': iconFishVisual,
+  '🎈': iconBalloonVisual,
+  '🍎': iconAppleVisual,
+  '🐱': iconCatFaceVisual,
+  '🐦': iconBirdVisual,
+  '🌳': iconTreeVisual,
+  '☁': iconCloudVisual,
+  '🏠': iconHouseVisual,
+  '🐝': iconBeeVisual
+};
+
+// Remplace chaque emoji connu de content.visual par son icône SVG cartoon ;
+// un emoji non répertorié (ou tout autre caractère, "<br>" inclus) reste
+// affiché tel quel.
+function renderVisual(text){
+  if(!text) return '';
+  let out = '';
+  for(const ch of text){
+    const iconFn = VISUAL_ICON_MAP[ch];
+    out += iconFn ? `<span class="visual-icon">${iconFn()}</span>` : ch;
+  }
+  return out;
+}
+
 /* ---------- Données (bilingues) ---------- */
 const LEVELS = [
   {id:1, name:{fr:"1ère année", ar:"السنة الأولى"}, accent:"#FF1B6B", accent2:"#FFD60A", glow:"rgba(255,27,107,.55)",
@@ -921,7 +1071,7 @@ function renderSessionQuestion(){
     ? `<div class="choice-list" id="choiceList">${content.choices.map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${c}</button>`).join('')}</div>`
     : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
 
-  const visualArea = content.visual ? `<div class="session-visual">${content.visual}</div>` : '';
+  const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
 
   view.innerHTML = `
     <div class="session-card">
