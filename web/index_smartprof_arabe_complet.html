@@ -13,6 +13,9 @@
 <meta property="og:locale" content="fr_FR">
 <meta property="og:locale:alternate" content="ar_TN">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#1B2340">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -266,6 +269,19 @@
   @media (prefers-reduced-motion: reduce){
     .bg-deco .spark svg,.m-body,.m-blink,.m-sparkle,.m-float,.m-glow,.m-flame,.m-wag,.icon-anim,.aura,.mascot-stage.pop,.hero h1.pop{animation:none !important;}
   }
+
+  /* ---------- Passe desktop ---------- */
+  /* Jusqu'ici tout empilait verticalement dans une colonne centrée à 920px,
+     même sur un écran large — correct sur mobile, mais ça n'utilisait rien
+     de l'espace en plus sur ordinateur. À partir de 900px : mascotte/niveau
+     d'un côté, matières à essayer vraiment de l'autre, côte à côte plutôt
+     qu'empilées — même contenu, composition qui change avec la largeur. */
+  @media (min-width: 900px){
+    .wrap{max-width:1180px;}
+    #homeView{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:start;}
+    .subjects{grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));}
+    .session-card{max-width:760px;margin-left:auto;margin-right:auto;}
+  }
 </style>
 </head>
 <body>
@@ -286,6 +302,7 @@
   </header>
 
   <div id="homeView">
+   <div class="home-left">
     <section class="hero">
       <div class="burst" id="burst"></div>
       <div class="aura" id="aura"></div>
@@ -301,7 +318,9 @@
       <h2 id="levelTitle"></h2>
       <p id="levelDesc"></p>
     </div>
+   </div>
 
+   <div class="home-right">
     <div class="subjects" id="subjects"></div>
 
     <div class="download">
@@ -313,6 +332,7 @@
       </button>
       <div class="download-note" id="downloadStatus"></div>
     </div>
+   </div>
   </div>
 
   <div class="session-view" id="sessionView"></div>
@@ -759,6 +779,7 @@ const TEXT = {
   downloadNote:{fr:"L'application mobile arrive bientôt — en attendant, continue sur le site.", ar:"التطبيق قادم قريبًا — في الانتظار، تابع على الموقع."},
   downloadBtn:{fr:"Télécharger l'application", ar:"تحميل التطبيق"},
   downloadStatus:{fr:"L'application est en cours de préparation. Reviens bientôt !", ar:"التطبيق قيد التحضير. عد قريبًا!"},
+  downloadInstalled:{fr:"Installée ! Retrouve SmartProf sur ton écran d'accueil.", ar:"تم التثبيت! ستجد سمارت بروف على شاشتك الرئيسية."},
   startLabel:{fr:"Commencer ▶", ar:"ابدأ ◀"},
   unlockLabel:{fr:"🔒 À débloquer", ar:"🔒 غير مفعّلة"},
   lockedMessage:{fr:"Cette matière est disponible avec un déblocage payant (bientôt disponible).", ar:"هذه المادة متاحة عبر تفعيل مدفوع (قريبًا)."},
@@ -1023,9 +1044,36 @@ function render(){
   document.body.style.fontFamily = currentLang === 'ar' ? "'Baloo 2', sans-serif" : "'Inter', sans-serif";
 }
 
-document.getElementById('downloadBtn').addEventListener('click', () => {
+// "Télécharger l'application" est un vrai bouton d'installation PWA quand le
+// navigateur le permet (Chrome/Edge/Android...) — le message "bientôt
+// disponible" ne reste qu'un repli pour les navigateurs qui ne proposent
+// jamais l'installation (Safari iOS notamment), pas la réponse par défaut.
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+  if (deferredInstallPrompt) {
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    promptEvent.prompt();
+    try {
+      const choice = await promptEvent.userChoice;
+      document.getElementById('downloadStatus').textContent =
+        choice.outcome === 'accepted' ? TEXT.downloadInstalled[currentLang] : '';
+    } catch(e){ /* choix non disponible sur ce navigateur — rien à afficher */ }
+    return;
+  }
   document.getElementById('downloadStatus').textContent = TEXT.downloadStatus[currentLang];
 });
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => { /* pas bloquant sans support */ });
+  });
+}
 
 /* ---------- Séance d'exercices ---------- */
 

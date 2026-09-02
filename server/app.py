@@ -49,6 +49,26 @@ def index():
     return send_from_directory(BASE_DIR.replace("server", "web"), "index_smartprof_arabe_complet.html")
 
 
+@app.get("/manifest.json")
+def pwa_manifest():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "manifest.json")
+
+
+@app.get("/sw.js")
+def service_worker():
+    # Servi depuis la racine (pas /app/sw.js) exprès : la portée par défaut
+    # d'un service worker est son propre dossier, donc /sw.js est le seul
+    # emplacement qui couvre à la fois / (vitrine) et /app (appli).
+    return send_from_directory(
+        BASE_DIR.replace("server", "web"), "sw.js", mimetype="application/javascript"
+    )
+
+
+@app.get("/icons/<path:filename>")
+def pwa_icons(filename):
+    return send_from_directory(os.path.join(BASE_DIR.replace("server", "web"), "icons"), filename)
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok", "app": "SmartProf"}
