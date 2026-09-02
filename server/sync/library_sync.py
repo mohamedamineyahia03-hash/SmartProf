@@ -51,6 +51,7 @@ def sync_once(limit=500):
             row.difficulty = item["difficulty"]
             row.language = item["language"]
             row.content = item["content"]
+            row.grading_mode = item.get("grading_mode", "auto")
             row.license = item["license"]
 
         db.session.commit()

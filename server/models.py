@@ -34,6 +34,11 @@ class CurriculumDomain(db.Model):
     name_fr = db.Column(db.String(128), nullable=False)
     name_ar = db.Column(db.String(128), nullable=False)
     sort_order = db.Column(db.Integer, nullable=False, default=0)
+    # "programme" = a normal trimester-gated section (the section tree groups
+    # it under T1/T2/T3, see CurriculumDomainTrimester). "expression" = an
+    # independent section shown outside the trimester tabs (Expression orale
+    # et écrite, Récitation) — no trimester rows are created for it.
+    category = db.Column(db.String(16), nullable=False, default="programme")
 
     level = db.relationship("CurriculumLevel")
     subject = db.relationship("CurriculumSubject")
@@ -166,14 +171,24 @@ class LibraryCacheExercise(db.Model):
     # library-service for LANGUAGE_BY_SUBJECT).
     language = db.Column(db.String(2), nullable=False)
     content = db.Column(db.JSON, nullable=False)
+    # "auto" = exact-match graded against content["answer"] (or each
+    # sub_questions[i]["answer"]), the historical default. "open" = no
+    # canonical answer — expression écrite / récitation content — the
+    # child's response is recorded but never scored; content["model_answer"]
+    # is shown afterward as a self-check reference only.
+    grading_mode = db.Column(db.String(8), nullable=False, default="auto")
     license = db.Column(db.String(32), nullable=False, default="SmartProf")
     synced_at = db.Column(db.DateTime, server_default=db.func.now(), onupdate=db.func.now())
 
 
 class Session(db.Model):
-    """A session of up to SESSION_SIZE exercises, built one exercise at a time as
-    the child answers — see server/session_engine.py. child_profile_id is nullable
-    for now — accounts don't exist yet (Phase 4), so sessions are anonymous until
+    """An exam-style session: a fixed, varied batch of exercises drawn from one
+    curriculum section (domain) and built all at once — see
+    server/session_engine.build_exam_session(). The child answers every
+    question with no immediate feedback; the corrigé (score + full answer
+    key) is only available once every exercise has an answer, via
+    GET /api/session/<id>/corrige. child_profile_id is nullable for now —
+    accounts don't exist yet (Phase 4), so sessions are anonymous until
     then."""
 
     __tablename__ = "session"
@@ -183,8 +198,8 @@ class Session(db.Model):
     level_code = db.Column(db.String(1), nullable=False)
     subject_code = db.Column(db.String(16), nullable=False)
     trimester = db.Column(db.String(2), nullable=False)
-    exercise_ids = db.Column(db.JSON, nullable=False)  # ordered list of library_cache_exercise ids, grows as answered
+    domain_code = db.Column(db.String(64), nullable=False)  # the section this session was started from
+    exercise_ids = db.Column(db.JSON, nullable=False)  # the full batch, fixed at session creation
     answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct, skill}}
-    current_difficulty = db.Column(db.String(16), nullable=False, default="en_cours")
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     completed_at = db.Column(db.DateTime, nullable=True)

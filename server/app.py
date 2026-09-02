@@ -14,10 +14,9 @@ from models import (
     LibraryCacheExercise,
     Session,
 )
-from academic_calendar import current_trimester
 from auth import authenticate, current_user, login_user, logout_user, register_user
 from diagnostic_engine import diagnose
-from session_engine import SESSION_SIZE, STARTING_DIFFICULTY, next_difficulty, pick_next_exercise
+from session_engine import build_exam_session
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FREE_CHILD_SLOTS = 2
@@ -69,22 +68,32 @@ def levels():
 
 @app.get("/api/skills")
 def skills():
-    """Curriculum domains/skills for every level x subject, keyed the same way the
-    legacy SKILLS_MATRIX was, but sourced from the DB and at skill granularity."""
+    """The section tree for every level x subject, consumed by the frontend to
+    render the arborescence: "programme" sections grouped under the
+    trimester tab they belong to, plus "expression" sections (Expression
+    orale et écrite, Récitation) listed separately since they sit outside
+    the trimester tabs entirely. Clicking a section starts an exam session
+    scoped to its domain code (POST /api/session/start)."""
     result = {}
-    domains = (
-        CurriculumDomain.query.order_by(CurriculumDomain.sort_order)
-        .all()
-    )
+    domains = CurriculumDomain.query.order_by(CurriculumDomain.sort_order).all()
     for domain in domains:
         level_code = domain.level.code
         subject_code = domain.subject.code
-        trimesters = [t.trimester for t in domain.trimesters] or ["T1"]
-        skill_codes = [sk.code for sk in domain.skills]
-        result.setdefault(level_code, {}).setdefault(subject_code, {})
-        for trimester in trimesters:
-            result[level_code][subject_code].setdefault(trimester, [])
-            result[level_code][subject_code][trimester].extend(skill_codes)
+        section = {
+            "code": domain.code,
+            "name_fr": domain.name_fr,
+            "name_ar": domain.name_ar,
+            "skill_count": len(domain.skills),
+        }
+        subject_tree = result.setdefault(level_code, {}).setdefault(
+            subject_code, {"programme": {}, "expression": []}
+        )
+        if domain.category == "expression":
+            subject_tree["expression"].append(section)
+        else:
+            trimesters = [t.trimester for t in domain.trimesters] or ["T1"]
+            for trimester in trimesters:
+                subject_tree["programme"].setdefault(trimester, []).append(section)
     return jsonify(result)
 
 
@@ -256,9 +265,12 @@ def _skill_label(skill_code, lang):
 
 
 def _session_score(session_row):
-    answers = session_row.answers or {}
-    correct = sum(1 for a in answers.values() if a.get("correct"))
-    return correct, len(answers)
+    # "correct" is None for grading_mode="open" answers (expression écrite /
+    # récitation) — they're recorded but never scored, so they're excluded
+    # from both the numerator and the denominator here.
+    graded = [a for a in (session_row.answers or {}).values() if a.get("correct") is not None]
+    correct = sum(1 for a in graded if a.get("correct"))
+    return correct, len(graded)
 
 
 @app.get("/api/children/<int:child_id>/report")
@@ -295,7 +307,7 @@ def child_report(child_id):
     for s in sessions:
         for answer in (s.answers or {}).values():
             skill = answer.get("skill")
-            if not skill:
+            if not skill or answer.get("correct") is None:  # None = ungraded (grading_mode="open")
                 continue
             stats = skill_stats.setdefault(skill, {"correct": 0, "total": 0})
             stats["total"] += 1
@@ -391,6 +403,7 @@ def start_session():
     data = request.get_json(silent=True) or {}
     level_code = str(data.get("level", ""))
     subject_code = data.get("subject", "")
+    domain_code = data.get("domain", "")
     child_id = data.get("child_id")
 
     # child_id is optional (anonymous play still works), but when present it
@@ -409,7 +422,8 @@ def start_session():
         if child is None:
             return jsonify({"error": "invalid_child", "message": "Enfant introuvable."}), 400
 
-    if not CurriculumLevel.query.filter_by(code=level_code).first():
+    level_row = CurriculumLevel.query.filter_by(code=level_code).first()
+    if level_row is None:
         return jsonify({"error": "invalid_level"}), 400
 
     subject_row = CurriculumSubject.query.filter_by(code=subject_code).first()
@@ -424,13 +438,25 @@ def start_session():
             }
         ), 403
 
-    trimester = current_trimester()
-    exercise = pick_next_exercise(level_code, subject_code, trimester, STARTING_DIFFICULTY)
-    if exercise is None:
+    domain_row = CurriculumDomain.query.filter_by(
+        level_id=level_row.id, subject_id=subject_row.id, code=domain_code
+    ).first()
+    if domain_row is None:
+        return jsonify({"error": "invalid_domain"}), 400
+
+    # "programme" domains can span several trimesters — the frontend sends
+    # which tab it was browsing under; "expression" domains have none, so
+    # this stays empty. Purely descriptive: exercise selection below is
+    # scoped by domain_code alone, not by trimester.
+    domain_trimesters = [t.trimester for t in domain_row.trimesters]
+    trimester = data.get("trimester") or (domain_trimesters[0] if domain_trimesters else "")
+
+    exercises = build_exam_session(level_code, subject_code, domain_code)
+    if not exercises:
         return jsonify(
             {
                 "error": "no_content",
-                "message": "Aucun exercice n'est encore disponible pour ce choix.",
+                "message": "Aucun exercice n'est encore disponible pour cette section.",
             }
         ), 404
 
@@ -439,9 +465,9 @@ def start_session():
         level_code=level_code,
         subject_code=subject_code,
         trimester=trimester,
-        exercise_ids=[exercise.id],
+        domain_code=domain_code,
+        exercise_ids=[e.id for e in exercises],
         answers={},
-        current_difficulty=STARTING_DIFFICULTY,
     )
     db.session.add(session_row)
     db.session.commit()
@@ -449,9 +475,10 @@ def start_session():
     return jsonify(
         {
             "session_id": session_row.id,
+            "domain": domain_code,
             "trimester": trimester,
-            "total_target": SESSION_SIZE,
-            "exercise": public_exercise_payload(exercise),
+            "total": len(exercises),
+            "exercises": [public_exercise_payload(e) for e in exercises],
         }
     )
 
@@ -506,65 +533,115 @@ def answer_session(session_id):
     def normalize(value):
         return str(value).strip().lower()
 
-    sub_questions = exercise.content.get("sub_questions")
+    # grading_mode="open" (expression écrite / récitation): recorded but
+    # never scored — "correct" stays None, which _session_score/child_report
+    # both know to exclude from the score fraction.
     sub_results = None
-    if sub_questions is not None:
-        # "Récit à plusieurs questions" (problemes/recit_multi_questions): one
-        # narrative, several sub-questions graded together as a single
-        # exercise slot — correct only if every sub-answer is correct, same
-        # binary signal the difficulty staircase expects from a normal exercise.
-        given_list = given if isinstance(given, list) else []
-        sub_results = []
-        for i, sub in enumerate(sub_questions):
-            given_i = given_list[i] if i < len(given_list) else None
-            sub_correct = given_i is not None and normalize(given_i) == normalize(sub.get("answer"))
-            sub_results.append(
-                {
-                    "correct": sub_correct,
-                    "correct_answer": sub.get("answer"),
-                    "explanation": sub.get("explanation"),
-                }
-            )
-        is_correct = all(r["correct"] for r in sub_results)
+    if exercise.grading_mode == "open":
+        is_correct = None
     else:
-        is_correct = normalize(given) == normalize(exercise.content.get("answer"))
+        sub_questions = exercise.content.get("sub_questions")
+        if sub_questions is not None:
+            # "Récit à plusieurs questions" (problemes/recit_multi_questions):
+            # one narrative, several sub-questions graded together as a
+            # single exercise slot — correct only if every sub-answer is.
+            given_list = given if isinstance(given, list) else []
+            sub_results = []
+            for i, sub in enumerate(sub_questions):
+                given_i = given_list[i] if i < len(given_list) else None
+                sub_correct = given_i is not None and normalize(given_i) == normalize(sub.get("answer"))
+                sub_results.append(
+                    {
+                        "correct": sub_correct,
+                        "correct_answer": sub.get("answer"),
+                        "explanation": sub.get("explanation"),
+                    }
+                )
+            is_correct = all(r["correct"] for r in sub_results)
+        else:
+            is_correct = normalize(given) == normalize(exercise.content.get("answer"))
+
+    answer_entry = {"given": given, "correct": is_correct, "skill": exercise.skill_code}
+    if sub_results is not None:
+        answer_entry["sub_results"] = sub_results
 
     answers = dict(session_row.answers or {})
-    answers[str(exercise_id)] = {"given": given, "correct": is_correct, "skill": exercise.skill_code}
+    answers[str(exercise_id)] = answer_entry
     session_row.answers = answers
-    session_row.current_difficulty = next_difficulty(session_row.current_difficulty, is_correct)
 
-    next_exercise = None
-    if len(answers) < SESSION_SIZE:
-        weak_skills = {a["skill"] for a in answers.values() if not a["correct"]}
-        next_exercise = pick_next_exercise(
-            session_row.level_code,
-            session_row.subject_code,
-            session_row.trimester,
-            session_row.current_difficulty,
-            excluded_ids=session_row.exercise_ids,
-            weak_skill_codes=weak_skills,
-        )
-        if next_exercise is not None:
-            session_row.exercise_ids = session_row.exercise_ids + [next_exercise.id]
-
-    if next_exercise is None:
+    # Session-examen : pas de corrigé immédiat (voir GET .../corrige) — on se
+    # contente d'enregistrer la réponse et de savoir si tout est répondu.
+    if len(answers) >= len(session_row.exercise_ids):
         session_row.completed_at = datetime.now(timezone.utc)
 
     db.session.commit()
 
-    payload = {
-        "correct": is_correct,
-        "correct_answer": exercise.content.get("answer"),
-        "explanation": exercise.content.get("explanation"),
-        "completed": session_row.completed_at is not None,
-        "score": sum(1 for a in answers.values() if a["correct"]),
-        "total": len(answers),
-        "next_exercise": public_exercise_payload(next_exercise),
-    }
-    if sub_results is not None:
-        payload["sub_results"] = sub_results
-    return jsonify(payload)
+    return jsonify(
+        {
+            "stored": True,
+            "answered_count": len(answers),
+            "total": len(session_row.exercise_ids),
+            "completed": session_row.completed_at is not None,
+        }
+    )
+
+
+@app.get("/api/session/<int:session_id>/corrige")
+def session_corrige(session_id):
+    """Full answer key + score, available only once every exercise in the
+    session has an answer — session-examen shows no per-question feedback
+    (see answer_session above), so this is the only place correctness is
+    ever revealed to the child."""
+    session_row = Session.query.get(session_id)
+    if session_row is None:
+        return jsonify({"error": "not_found"}), 404
+    if session_row.completed_at is None:
+        return jsonify(
+            {"error": "session_not_completed", "message": "Termine d'abord toutes les questions."}
+        ), 400
+
+    exercises = LibraryCacheExercise.query.filter(LibraryCacheExercise.id.in_(session_row.exercise_ids)).all()
+    by_id = {e.id: e for e in exercises}
+    ordered = [by_id[eid] for eid in session_row.exercise_ids if eid in by_id]
+
+    items = []
+    score = 0
+    graded_total = 0
+    for exercise in ordered:
+        answer_entry = (session_row.answers or {}).get(str(exercise.id), {})
+        is_correct = answer_entry.get("correct")
+        graded = is_correct is not None
+
+        item = {
+            "exercise_id": exercise.id,
+            "question": exercise.content.get("question"),
+            "given": answer_entry.get("given"),
+            "graded": graded,
+            "correct": is_correct,
+        }
+        if exercise.content.get("sub_questions") is not None:
+            item["sub_results"] = answer_entry.get("sub_results", [])
+        else:
+            item["correct_answer"] = exercise.content.get("answer")
+            item["explanation"] = exercise.content.get("explanation")
+        if not graded:
+            item["model_answer"] = exercise.content.get("model_answer")
+
+        if graded:
+            graded_total += 1
+            if is_correct:
+                score += 1
+        items.append(item)
+
+    return jsonify(
+        {
+            "session_id": session_row.id,
+            "score": score,
+            "graded_total": graded_total,
+            "total": len(ordered),
+            "items": items,
+        }
+    )
 
 
 if __name__ == "__main__":

@@ -43,6 +43,7 @@ def serialize_exercise(exercise):
         "difficulty": exercise.difficulty,
         "language": exercise.language,
         "content": exercise.content,
+        "grading_mode": exercise.grading_mode,
         "license": exercise.license,
         "status": exercise.status,
         "source_id": exercise.source_id,

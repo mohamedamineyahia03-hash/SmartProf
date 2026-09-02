@@ -316,6 +316,7 @@ def seed_domain_curriculum(levels, subjects, level_code, subject_code, curriculu
             domain_trimesters.setdefault(domain_code, []).append(trimester)
 
     for sort_order, domain_data in enumerate(curriculum["domains"]):
+        category = domain_data.get("category", "programme")
         domain = CurriculumDomain(
             level_id=level.id,
             subject_id=subject.id,
@@ -323,12 +324,17 @@ def seed_domain_curriculum(levels, subjects, level_code, subject_code, curriculu
             name_fr=domain_data["name_fr"],
             name_ar=domain_data["name_ar"],
             sort_order=sort_order,
+            category=category,
         )
         db.session.add(domain)
         db.session.flush()
 
-        for trimester in domain_trimesters.get(domain_data["id"], ["T1"]):
-            db.session.add(CurriculumDomainTrimester(domain_id=domain.id, trimester=trimester))
+        # "expression" sections (Expression orale et écrite, Récitation) are
+        # independent of the trimester tree — no CurriculumDomainTrimester
+        # rows at all, not even a default one.
+        if category == "programme":
+            for trimester in domain_trimesters.get(domain_data["id"], ["T1"]):
+                db.session.add(CurriculumDomainTrimester(domain_id=domain.id, trimester=trimester))
 
         for skill_order, skill_code in enumerate(domain_data["skills"]):
             # No authored display label exists per-skill yet, only the code itself.

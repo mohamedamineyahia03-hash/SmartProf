@@ -5,6 +5,10 @@ human review in publish.py is the other half)."""
 import re
 
 REQUIRED_KEYS = {"question", "answer"}
+# "open" grading_mode (expression écrite / récitation): no canonical answer to
+# check, so only "question" is required — content["model_answer"] is allowed
+# but optional, shown to the child as a self-check reference, never graded.
+REQUIRED_KEYS_OPEN = {"question"}
 MAX_SOURCE_OVERLAP = 0.6  # share of the question's words also found in the source
 
 
@@ -28,6 +32,8 @@ def validate(exercise, source):
     if not str(content.get("question", "")).strip():
         issues.append("content has an empty question")
 
+    required_keys = REQUIRED_KEYS_OPEN if exercise.grading_mode == "open" else REQUIRED_KEYS
+
     sub_questions = content.get("sub_questions")
     if sub_questions is not None:
         # "récit à plusieurs questions" (multi_questions format): no
@@ -36,13 +42,13 @@ def validate(exercise, source):
             issues.append("content sub_questions must be a list of at least 2 items")
         else:
             for i, sub in enumerate(sub_questions):
-                missing = REQUIRED_KEYS - sub.keys()
+                missing = required_keys - sub.keys()
                 if missing:
                     issues.append(f"content sub_questions[{i}] missing keys: {sorted(missing)}")
                 if not str(sub.get("question", "")).strip():
                     issues.append(f"content sub_questions[{i}] has an empty question")
     else:
-        missing = REQUIRED_KEYS - content.keys()
+        missing = required_keys - content.keys()
         if missing:
             issues.append(f"content missing keys: {sorted(missing)}")
 

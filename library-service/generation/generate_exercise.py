@@ -179,7 +179,9 @@ def _parse_json_response(raw_text):
     return json.loads(cleaned)
 
 
-def generate_exercise(source, level_code, subject_code, domain, skill, exercise_format, difficulty="en_cours"):
+def generate_exercise(
+    source, level_code, subject_code, domain, skill, exercise_format, difficulty="en_cours", grading_mode="auto"
+):
     """Returns (GenerationRun, Exercise) — the Exercise is a 'draft' pending
     validate()/publish(), never published by this function itself."""
     api_key = os.environ.get("ANTHROPIC_API_KEY")
@@ -265,6 +267,7 @@ def generate_exercise(source, level_code, subject_code, domain, skill, exercise_
         difficulty=difficulty,
         language=language,
         content=parsed["content"],
+        grading_mode=grading_mode,
         license="SmartProf",
         review_status="pending_human_review",
         status="draft",

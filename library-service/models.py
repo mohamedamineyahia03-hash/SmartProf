@@ -112,6 +112,12 @@ class Exercise(db.Model):
     language = db.Column(db.Enum(*CONTENT_LANGUAGES, name="content_language"), nullable=False)
     content = db.Column(db.JSON, nullable=False)
 
+    # "auto" = exact-match graded (content["answer"] or per sub_question) —
+    # the default for every regular curriculum exercise. "open" = no
+    # canonical answer (expression écrite / récitation) — validate.py relaxes
+    # REQUIRED_KEYS accordingly and the Main App never scores these.
+    grading_mode = db.Column(db.Enum("auto", "open", name="grading_mode"), nullable=False, default="auto")
+
     license = db.Column(db.String(32), nullable=False, default="SmartProf")
 
     review_status = db.Column(
