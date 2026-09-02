@@ -14,24 +14,38 @@ version à jour, avec les mêmes comptes/sessions que sur le web.
   fond séparés, exigés par Android 8+), écran de démarrage
 - Icônes/splash générés dans `android/` pour toutes les densités d'écran
 
-## Ce qu'il reste à faire sur votre machine
+## Build de test — fait et vérifié
 
-Rien ici ne peut compiler un vrai `.apk` sans deux outils qui ne sont pas
-installés sur cette machine :
+L'outillage a fini par être installé (voir plus bas les vrais pièges
+rencontrés) et un premier `.apk` de debug a réellement été compilé :
 
-1. **Java (JDK 17)** — nécessaire pour Gradle, le système de build Android.
-2. **Android SDK** — soit via [Android Studio](https://developer.android.com/studio)
-   (le plus simple : l'IDE installe le SDK automatiquement), soit juste les
-   [command-line tools](https://developer.android.com/studio#command-tools)
-   si vous préférez tout faire en ligne de commande (plus léger, ~1 Go au
-   lieu de ~5-8 Go pour Android Studio complet).
+```
+mobile/android/app/build/outputs/apk/debug/app-debug.apk   (5,4 Mo)
+```
 
-Je n'ai pas lancé cette installation moi-même : c'est plusieurs Go de
-téléchargement et une modification durable de votre machine — mieux vaut que
-vous choisissiez vous-même l'emplacement et la méthode (Android Studio ou
-CLI seule).
+Il n'est **pas encore utile tel quel** : `capacitor.config.json` pointe vers
+`https://app.smartprof.tn`, un nom de domaine qui n'existe pas encore (rien
+n'est déployé) — l'app s'ouvrirait sur une erreur réseau. Utile uniquement
+pour prouver que la chaîne de compilation fonctionne de bout en bout.
 
-### Une fois Java + le SDK installés
+Outillage installé localement (`C:\Users\NITRO\dev-tools\`), pas dans le
+dépôt :
+- **JDK 21** (Eclipse Temurin) — **pas JDK 17**. Le premier essai avec 17 a
+  échoué (`error: invalid source release: 21`) : ce projet Capacitor exige
+  Java 21 pour compiler, une contrainte qui n'est pas documentée nulle part
+  dans les fichiers Capacitor eux-mêmes, seulement découverte à l'exécution.
+- **Android SDK command-line tools**, `platform-tools`, `platforms;android-36`,
+  `build-tools;36.0.0` (`build-tools;35.0.0` aussi installé automatiquement
+  par Gradle en cours de route).
+- **Piège rencontré et résolu** : `sdkmanager` échouait au tout début
+  (`Failed to download any source lists!`) — un antivirus (Avast, "Web/Mail
+  Shield") intercepte le HTTPS pour scanner le trafic avec son propre
+  certificat, que Java ne connaît pas par défaut (contrairement à Windows).
+  Corrigé en importons ce certificat dans le magasin de confiance de
+  **chaque** JDK installé (`keytool -importcert ... -keystore
+  <JAVA_HOME>\lib\security\cacerts`) — à refaire si un JDK est réinstallé.
+
+### Pour recompiler après un changement (nouvelle machine ou après avoir mis à jour l'app)
 
 ```bash
 cd mobile
@@ -41,7 +55,8 @@ npx cap sync android
 Puis soit :
 - **Ouvrir dans Android Studio** (`npx cap open android`) et cliquer sur
   Build → Build Bundle(s)/APK(s) → Build APK(s) — le plus simple.
-- **Ou en ligne de commande**, depuis `mobile/android/` :
+- **Ou en ligne de commande**, depuis `mobile/android/` (avec `JAVA_HOME`
+  pointant vers un JDK 21, et le SDK Android sur le `PATH`) :
   ```bash
   ./gradlew assembleDebug     # test rapide, non signé
   ./gradlew bundleRelease     # version publiable, à signer ensuite
