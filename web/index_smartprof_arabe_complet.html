@@ -151,6 +151,29 @@
   .session-summary{text-align:center;}
   .session-summary .score-big{font-size:3rem;font-weight:800;font-family:'Baloo 2',sans-serif;margin:10px 0;}
 
+  .tree-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .tree-tab{padding:10px 18px;border-radius:999px;border:2px solid transparent;background:var(--paper-soft);color:var(--ink);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s ease;}
+  .tree-tab.active{background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff;}
+  .section-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;margin-bottom:8px;}
+  .section-card{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-radius:16px;border:2px solid transparent;background:var(--card);box-shadow:0 3px 12px rgba(27,35,64,.07);cursor:pointer;text-align:start;font-family:inherit;transition:all .2s ease;}
+  .section-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+  .section-card .section-name{font-weight:700;font-size:.98rem;}
+  .section-card .section-count{flex:none;background:var(--paper-soft);color:var(--muted);font-weight:700;font-size:.75rem;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .expression-block{margin-top:22px;padding-top:20px;border-top:1px solid #eef0f4;}
+  .expression-title{font-weight:700;font-size:.9rem;color:var(--muted);margin-bottom:12px;}
+  .section-card.expression{background:var(--paper-soft);}
+
+  .corrige-list{text-align:start;margin:22px 0;}
+  .corrige-item{padding:16px 0;border-bottom:1px solid #eef0f4;}
+  .corrige-item:last-child{border-bottom:none;}
+  .corrige-q{font-weight:700;font-size:.98rem;}
+  .corrige-badge{display:inline-block;margin-inline-end:8px;}
+  .corrige-badge.open{opacity:.85;}
+  .corrige-answer{margin-top:6px;font-weight:600;font-size:.9rem;color:#991B1B;}
+  .corrige-answer.model{color:var(--muted);}
+  .corrige-explain{margin-top:4px;font-size:.88rem;line-height:1.5;color:var(--muted);}
+  .corrige-subitem{margin-top:10px;padding-inline-start:6px;}
+
   .locked-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:14px 22px;border-radius:999px;font-weight:600;font-size:.85rem;box-shadow:0 8px 24px rgba(0,0,0,.2);z-index:50;opacity:0;pointer-events:none;transition:opacity .3s ease;max-width:90vw;text-align:center;}
   .locked-toast.show{opacity:1;}
 
@@ -557,7 +580,14 @@ const TEXT = {
   finish:{fr:"Terminer", ar:"إنهاء"},
   correctFeedback:{fr:"✅ Bonne réponse !", ar:"✅ إجابة صحيحة!"},
   answerPlaceholder:{fr:"Ta réponse...", ar:"إجابتك..."},
-  summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"}
+  summaryTitle:{fr:"Séance terminée !", ar:"انتهت الحصة!"},
+  expressionTitle:{fr:"Expression orale et écrite", ar:"التعبير الشفوي والكتابي"},
+  emptyResultsNote:{fr:"Cette section n'a pas encore de résultat noté.", ar:"لا توجد نتيجة مُقيَّمة بعد لهذا القسم."}
+};
+
+const TRIMESTER_LABELS = {
+  fr: {T1:"Trimestre 1", T2:"Trimestre 2", T3:"Trimestre 3"},
+  ar: {T1:"الفصل الأول", T2:"الفصل الثاني", T3:"الفصل الثالث"}
 };
 
 function exerciseProgressText(i, total){
@@ -565,6 +595,9 @@ function exerciseProgressText(i, total){
 }
 function incorrectFeedbackText(correctAnswer){
   return currentLang === 'ar' ? `❌ الإجابة الصحيحة: ${correctAnswer}` : `❌ La bonne réponse était : ${correctAnswer}`;
+}
+function skillCountText(n){
+  return currentLang === 'ar' ? `${n} مهارات` : `${n} compétences`;
 }
 function isSubjectLocked(subject, level){
   return !subject.freeLevels.includes(String(level));
@@ -576,6 +609,7 @@ let currentLevel = 1;
 // permanence ; ne pas réintroduire de bouton pour le changer.
 const currentLang = 'ar';
 let currentSession = null;
+let currentTree = null; // {subjectId, tree, trimester} — the section-tree screen's state
 let lockedToastTimer = null;
 let currentUser = null; // {id, email, children, free_child_slots} or null
 let activeChild = null; // {id, display_name, level_code} or null — scoped to THIS tab/device only
@@ -706,7 +740,7 @@ function render(){
     `;
     card.querySelector('.start-btn').addEventListener('click', () => {
       if(locked){ showLockedToast(TEXT.lockedMessage[currentLang]); }
-      else { startSession(s.id); }
+      else { openSectionTree(s.id); }
     });
     subjectsEl.appendChild(card);
   });
@@ -763,13 +797,89 @@ function showLockedToast(message){
   lockedToastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
 }
 
-async function startSession(subjectId){
+// L'ouverture d'une matière ne lance plus directement une session : elle
+// affiche d'abord l'arborescence des sections (par trimestre, plus les
+// sections indépendantes comme Expression orale et écrite) — cliquer une
+// section démarre la session-examen correspondante (startExamSession).
+async function openSectionTree(subjectId){
+  let data;
+  try {
+    const res = await fetch('/api/skills');
+    data = await res.json();
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+    return;
+  }
+
+  const tree = ((data[String(currentLevel)] || {})[subjectId]) || {programme:{}, expression:[]};
+  const firstTrimester = ['T1','T2','T3'].find(t => (tree.programme[t] || []).length) || 'T1';
+  currentTree = {subjectId, tree, trimester: firstTrimester};
+
+  document.getElementById('homeView').style.display = 'none';
+  document.getElementById('sessionView').classList.add('active');
+  renderSectionTree();
+}
+
+function renderSectionTree(){
+  const view = document.getElementById('sessionView');
+  const {subjectId, tree, trimester} = currentTree;
+  const subject = SUBJECTS.find(s => s.id === subjectId);
+
+  const tabsHtml = ['T1','T2','T3'].map(t => `
+    <button type="button" class="tree-tab ${t === trimester ? 'active' : ''}" data-trimester="${t}">${TRIMESTER_LABELS[currentLang][t]}</button>
+  `).join('');
+
+  const sections = tree.programme[trimester] || [];
+  const sectionsHtml = sections.length
+    ? sections.map(sec => `
+      <button type="button" class="section-card" data-domain="${sec.code}" data-trimester="${trimester}">
+        <span class="section-name">${currentLang === 'ar' ? sec.name_ar : sec.name_fr}</span>
+        <span class="section-count">${skillCountText(sec.skill_count)}</span>
+      </button>`).join('')
+    : `<p class="muted-note">${TEXT.noContentMessage[currentLang]}</p>`;
+
+  const expressionHtml = tree.expression.length ? `
+    <div class="expression-block">
+      <div class="expression-title">${TEXT.expressionTitle[currentLang]}</div>
+      <div class="section-list">
+        ${tree.expression.map(sec => `
+          <button type="button" class="section-card expression" data-domain="${sec.code}" data-trimester="">
+            <span class="section-name">${currentLang === 'ar' ? sec.name_ar : sec.name_fr}</span>
+          </button>`).join('')}
+      </div>
+    </div>` : '';
+
+  view.innerHTML = `
+    <div class="session-card tree-card">
+      <div class="session-progress">${subject ? subject.name[currentLang] : ''}</div>
+      <div class="tree-tabs">${tabsHtml}</div>
+      <div class="section-list">${sectionsHtml}</div>
+      ${expressionHtml}
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="treeBackBtn">${TEXT.backHome[currentLang]}</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('treeBackBtn').addEventListener('click', backToHome);
+  view.querySelectorAll('.tree-tab').forEach(btn => {
+    btn.addEventListener('click', () => { currentTree.trimester = btn.dataset.trimester; renderSectionTree(); });
+  });
+  view.querySelectorAll('.section-card').forEach(btn => {
+    btn.addEventListener('click', () => startExamSession(subjectId, btn.dataset.domain, btn.dataset.trimester));
+  });
+}
+
+async function startExamSession(subjectId, domainCode, trimester){
   let res, data;
   try {
     res = await fetch('/api/session/start', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({level: currentLevel, subject: subjectId, child_id: activeChild ? activeChild.id : undefined})
+      body: JSON.stringify({
+        level: currentLevel, subject: subjectId, domain: domainCode, trimester,
+        child_id: activeChild ? activeChild.id : undefined
+      })
     });
     data = await res.json();
   } catch(e){
@@ -781,15 +891,7 @@ async function startSession(subjectId){
   if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
   if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
 
-  currentSession = {
-    sessionId: data.session_id,
-    exercise: data.exercise,
-    answeredCount: 0,
-    score: 0,
-    totalTarget: data.total_target
-  };
-  document.getElementById('homeView').style.display = 'none';
-  document.getElementById('sessionView').classList.add('active');
+  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0};
   renderSessionQuestion();
 }
 
@@ -801,13 +903,17 @@ function dirFor(language){
   return language === 'ar' ? 'rtl' : 'ltr';
 }
 
+// Session-examen : pas de corrigé immédiat après chaque question (voir
+// GET .../corrige) — "Valider" enregistre la réponse et passe directement
+// à la question suivante, comme dans un vrai examen sur papier.
 function renderSessionQuestion(){
   const view = document.getElementById('sessionView');
-  const ex = currentSession.exercise;
+  const ex = currentSession.exercises[currentSession.index];
   const content = ex.content;
+  const isLast = currentSession.index === currentSession.exercises.length - 1;
 
   if(content.sub_questions){
-    renderMultiQuestionExercise(view, ex, content);
+    renderMultiQuestionExercise(view, ex, content, isLast);
     return;
   }
 
@@ -819,16 +925,15 @@ function renderSessionQuestion(){
 
   view.innerHTML = `
     <div class="session-card">
-      <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
         <div class="session-question">${content.question}</div>
         ${visualArea}
         ${answerArea}
-        <div id="feedbackArea"></div>
       </div>
       <div class="session-actions">
         <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
-        <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.validate[currentLang]}</button>
       </div>
     </div>
   `;
@@ -865,7 +970,7 @@ function renderSessionQuestion(){
   }
 }
 
-function renderMultiQuestionExercise(view, ex, content){
+function renderMultiQuestionExercise(view, ex, content, isLast){
   const subs = content.sub_questions;
 
   const blocksHtml = subs.map((sq, i) => {
@@ -876,20 +981,19 @@ function renderMultiQuestionExercise(view, ex, content){
       <div class="sub-question-block" id="subq-${i}">
         <div class="sub-question-label">${i + 1}. ${sq.question}</div>
         ${answerArea}
-        <div class="sub-question-feedback" id="subFeedback-${i}"></div>
       </div>`;
   }).join('');
 
   view.innerHTML = `
     <div class="session-card">
-      <div class="session-progress">${exerciseProgressText(currentSession.answeredCount + 1, currentSession.totalTarget)}</div>
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
         <div class="recit-context">${content.question}</div>
         ${blocksHtml}
       </div>
       <div class="session-actions">
         <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
-        <button type="button" class="btn-primary" id="validateBtn">${TEXT.validate[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.validate[currentLang]}</button>
       </div>
     </div>
   `;
@@ -921,19 +1025,8 @@ function renderMultiQuestionExercise(view, ex, content){
   });
 }
 
-function feedbackBannerHtml(data, language){
-  // The "bonne réponse"/"correct answer" wrapper phrase stays in the fixed
-  // Arabic interface; only the answer value and explanation are in the
-  // exercise's own language (dir-wrapped so LTR French/English embeds
-  // correctly inside the surrounding RTL interface).
-  const header = data.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(data.correct_answer);
-  const explanationHtml = data.explanation
-    ? `<p class="feedback-explain" dir="${dirFor(language)}">${data.explanation}</p>` : '';
-  return `<div class="feedback-banner ${data.correct ? 'correct' : 'incorrect'}">${header}${explanationHtml}</div>`;
-}
-
 async function submitAnswer(answer){
-  const ex = currentSession.exercise;
+  const ex = currentSession.exercises[currentSession.index];
   let res, data;
   try {
     res = await fetch(`/api/session/${currentSession.sessionId}/answer`, {
@@ -946,8 +1039,7 @@ async function submitAnswer(answer){
     // Network failure: re-enable so the child can retry instead of being
     // stuck on a permanently-disabled question.
     document.querySelectorAll('.choice-btn').forEach(b => b.disabled = false);
-    const input = document.getElementById('answerInput');
-    if(input) input.disabled = false;
+    document.querySelectorAll('.answer-input').forEach(inp => inp.disabled = false);
     const btn = document.getElementById('validateBtn');
     if(btn) btn.disabled = false;
     showLockedToast(TEXT.genericError[currentLang]);
@@ -956,48 +1048,70 @@ async function submitAnswer(answer){
 
   if(!res.ok){
     // The session/exercise no longer matches what the server has (e.g. the
-    // server was restarted mid-session) - never render this as a wrong
-    // answer, since data.correct is undefined here, not false.
+    // server was restarted mid-session).
     showLockedToast(TEXT.genericError[currentLang]);
     backToHome();
     return;
   }
 
-  currentSession.answeredCount = data.total;
-  currentSession.score = data.score;
-  if(data.sub_results){
-    data.sub_results.forEach((r, i) => {
-      const el = document.getElementById(`subFeedback-${i}`);
-      if(el) el.innerHTML = feedbackBannerHtml(r, ex.language);
-    });
+  if(data.completed){
+    renderSessionSummary();
   } else {
-    const feedbackArea = document.getElementById('feedbackArea');
-    if(feedbackArea) feedbackArea.innerHTML = feedbackBannerHtml(data, ex.language);
+    currentSession.index += 1;
+    renderSessionQuestion();
   }
-
-  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
-  const input = document.getElementById('answerInput');
-  if(input) input.disabled = true;
-
-  // Swap in a listener-free clone so this doesn't stack on top of the
-  // "Valider" click handler still attached to the original button.
-  const oldBtn = document.getElementById('validateBtn');
-  const validateBtn = oldBtn.cloneNode(true);
-  oldBtn.replaceWith(validateBtn);
-  validateBtn.textContent = data.completed ? TEXT.finish[currentLang] : TEXT.next[currentLang];
-  validateBtn.disabled = false;
-  validateBtn.addEventListener('click', () => {
-    if(data.completed){ renderSessionSummary(); }
-    else { currentSession.exercise = data.next_exercise; renderSessionQuestion(); }
-  });
 }
 
-function renderSessionSummary(){
+function corrigeItemHtml(item, i){
+  const questionLine = `<div class="corrige-q">${i + 1}. ${item.question || ''}</div>`;
+
+  if(item.sub_results && item.sub_results.length){
+    const subsHtml = item.sub_results.map(r => `
+      <div class="corrige-subitem">
+        <span class="corrige-badge">${r.correct ? '✅' : '❌'}</span>
+        ${!r.correct ? `<span>${incorrectFeedbackText(r.correct_answer)}</span>` : ''}
+        ${r.explanation ? `<div class="corrige-explain">${r.explanation}</div>` : ''}
+      </div>`).join('');
+    return `<div class="corrige-item">${questionLine}${subsHtml}</div>`;
+  }
+
+  if(!item.graded){
+    return `<div class="corrige-item">${questionLine}
+      <span class="corrige-badge open">✍️</span>
+      ${item.model_answer ? `<div class="corrige-answer model">${item.model_answer}</div>` : ''}
+    </div>`;
+  }
+
+  return `<div class="corrige-item">${questionLine}
+    <span class="corrige-badge">${item.correct ? '✅' : '❌'}</span>
+    ${!item.correct ? `<div class="corrige-answer">${incorrectFeedbackText(item.correct_answer)}</div>` : ''}
+    ${item.explanation ? `<div class="corrige-explain">${item.explanation}</div>` : ''}
+  </div>`;
+}
+
+async function renderSessionSummary(){
   const view = document.getElementById('sessionView');
+  view.innerHTML = `<div class="session-card session-summary"><p class="muted-note">${REPORT_TEXT.loading[currentLang]}</p></div>`;
+
+  let data;
+  try {
+    const res = await fetch(`/api/session/${currentSession.sessionId}/corrige`);
+    data = await res.json();
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+    backToHome();
+    return;
+  }
+
+  const scoreHtml = data.graded_total > 0
+    ? `<div class="score-big">${data.score} / ${data.graded_total}</div>`
+    : `<p class="muted-note">${TEXT.emptyResultsNote[currentLang]}</p>`;
+
   view.innerHTML = `
     <div class="session-card session-summary">
       <div class="session-question">${TEXT.summaryTitle[currentLang]}</div>
-      <div class="score-big">${currentSession.score} / ${currentSession.answeredCount}</div>
+      ${scoreHtml}
+      <div class="corrige-list">${data.items.map(corrigeItemHtml).join('')}</div>
       <div class="session-actions" style="justify-content:center;">
         <button type="button" class="btn-primary" id="finishBackBtn">${TEXT.backHome[currentLang]}</button>
       </div>
@@ -1008,6 +1122,7 @@ function renderSessionSummary(){
 
 function backToHome(){
   currentSession = null;
+  currentTree = null;
   document.getElementById('sessionView').classList.remove('active');
   document.getElementById('sessionView').innerHTML = '';
   document.getElementById('homeView').style.display = '';
