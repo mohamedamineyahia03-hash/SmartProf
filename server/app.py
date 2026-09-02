@@ -14,6 +14,7 @@ from models import (
     LibraryCacheExercise,
     Session,
 )
+from academic_calendar import TRIMESTER_DATES, current_trimester, is_trimester_unlocked
 from auth import authenticate, current_user, login_user, logout_user, register_user
 from diagnostic_engine import diagnose
 from session_engine import build_exam_session
@@ -73,8 +74,14 @@ def skills():
     trimester tab they belong to, plus "expression" sections (Expression
     orale et écrite, Récitation) listed separately since they sit outside
     the trimester tabs entirely. Clicking a section starts an exam session
-    scoped to its domain code (POST /api/session/start)."""
-    result = {}
+    scoped to its domain code (POST /api/session/start).
+
+    Trimesters unlock progressively with the school calendar (see
+    academic_calendar.is_trimester_unlocked) — identical for every level,
+    since all levels follow the same Ministry calendar. current_trimester
+    and trimester_starts let the frontend grey out T2/T3 before they open
+    and explain when they will, without hardcoding the dates client-side."""
+    tree = {}
     domains = CurriculumDomain.query.order_by(CurriculumDomain.sort_order).all()
     for domain in domains:
         level_code = domain.level.code
@@ -85,7 +92,7 @@ def skills():
             "name_ar": domain.name_ar,
             "skill_count": len(domain.skills),
         }
-        subject_tree = result.setdefault(level_code, {}).setdefault(
+        subject_tree = tree.setdefault(level_code, {}).setdefault(
             subject_code, {"programme": {}, "expression": []}
         )
         if domain.category == "expression":
@@ -94,7 +101,14 @@ def skills():
             trimesters = [t.trimester for t in domain.trimesters] or ["T1"]
             for trimester in trimesters:
                 subject_tree["programme"].setdefault(trimester, []).append(section)
-    return jsonify(result)
+
+    return jsonify(
+        {
+            "levels": tree,
+            "current_trimester": current_trimester(),
+            "trimester_starts": {t: start.isoformat() for t, (start, _end) in TRIMESTER_DATES.items()},
+        }
+    )
 
 
 @app.get("/api/v1/curriculum-schema")
@@ -446,10 +460,19 @@ def start_session():
 
     # "programme" domains can span several trimesters — the frontend sends
     # which tab it was browsing under; "expression" domains have none, so
-    # this stays empty. Purely descriptive: exercise selection below is
-    # scoped by domain_code alone, not by trimester.
+    # this stays empty. Exercise selection below is scoped by domain_code
+    # alone, not by trimester — trimester here is purely descriptive except
+    # for the unlock check right after.
     domain_trimesters = [t.trimester for t in domain_row.trimesters]
     trimester = data.get("trimester") or (domain_trimesters[0] if domain_trimesters else "")
+
+    if domain_row.category != "expression" and not is_trimester_unlocked(trimester):
+        return jsonify(
+            {
+                "error": "trimester_locked",
+                "message": "Ce trimestre n'est pas encore débloqué.",
+            }
+        ), 403
 
     exercises = build_exam_session(level_code, subject_code, domain_code)
     if not exercises:

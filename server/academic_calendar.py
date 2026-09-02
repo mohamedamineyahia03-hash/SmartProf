@@ -18,6 +18,8 @@ TRIMESTER_DATES = {
     "T3": (date(2027, 3, 29), date(2027, 6, 30)),
 }
 
+TRIMESTER_ORDER = ["T1", "T2", "T3"]
+
 
 def current_trimester(on_date=None):
     """Returns 'T1'/'T2'/'T3' for the given date (defaults to today). During a
@@ -42,3 +44,14 @@ def current_trimester(on_date=None):
             return trimester_before if gap_before <= gap_after else trimester_after
 
     return ordered[-1][0]
+
+
+def is_trimester_unlocked(trimester, on_date=None):
+    """A trimester section unlocks once the calendar reaches it — progressive
+    release, so a section tree never lets a child jump ahead to material not
+    yet taught in class. Once unlocked it stays unlocked (past trimesters
+    remain available for revision). Anything outside T1/T2/T3 (e.g. an
+    "expression" section, which has no trimester) is never gated."""
+    if trimester not in TRIMESTER_ORDER:
+        return True
+    return TRIMESTER_ORDER.index(trimester) <= TRIMESTER_ORDER.index(current_trimester(on_date))

@@ -156,6 +156,8 @@
   .tree-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
   .tree-tab{padding:10px 18px;border-radius:999px;border:2px solid transparent;background:var(--paper-soft);color:var(--ink);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s ease;}
   .tree-tab.active{background:linear-gradient(135deg, var(--accent), var(--accent-2));color:#fff;}
+  .tree-tab.locked{background:transparent;border-color:#e5e7eb;color:var(--muted);opacity:.75;cursor:not-allowed;}
+  .tree-tab.locked:hover{border-color:#e5e7eb;}
   .section-list{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:12px;margin-bottom:8px;}
   .section-card{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 18px;border-radius:16px;border:2px solid transparent;background:var(--card);box-shadow:0 3px 12px rgba(27,35,64,.07);cursor:pointer;text-align:start;font-family:inherit;transition:all .2s ease;}
   .section-card:hover{border-color:var(--accent);transform:translateY(-2px);}
@@ -739,6 +741,24 @@ const TRIMESTER_LABELS = {
   fr: {T1:"Trimestre 1", T2:"Trimestre 2", T3:"Trimestre 3"},
   ar: {T1:"الفصل الأول", T2:"الفصل الثاني", T3:"الفصل الثالث"}
 };
+const TRIMESTER_ORDER = ['T1', 'T2', 'T3'];
+
+// Un trimestre se débloque progressivement avec le calendrier scolaire —
+// identique pour tous les niveaux (voir server/academic_calendar.py). Une
+// fois débloqué il le reste (révision des trimestres passés toujours
+// possible) ; currentTree.currentTrimester vient de GET /api/skills.
+function isTrimesterLocked(trimester){
+  return TRIMESTER_ORDER.indexOf(trimester) > TRIMESTER_ORDER.indexOf(currentTree.currentTrimester);
+}
+function formatUnlockDate(iso){
+  if(!iso) return '';
+  return new Date(iso).toLocaleDateString(currentLang === 'ar' ? 'ar-TN' : 'fr-FR');
+}
+function trimesterLockedMessage(dateStr){
+  return currentLang === 'ar'
+    ? `🔒 يُفتح هذا الفصل بداية من ${dateStr}`
+    : `🔒 Ce trimestre s'ouvre à partir du ${dateStr}`;
+}
 
 function exerciseProgressText(i, total){
   return currentLang === 'ar' ? `تمرين ${i} من ${total}` : `Exercice ${i} / ${total}`;
@@ -961,9 +981,12 @@ async function openSectionTree(subjectId){
     return;
   }
 
-  const tree = ((data[String(currentLevel)] || {})[subjectId]) || {programme:{}, expression:[]};
-  const firstTrimester = ['T1','T2','T3'].find(t => (tree.programme[t] || []).length) || 'T1';
-  currentTree = {subjectId, tree, trimester: firstTrimester};
+  const tree = ((data.levels[String(currentLevel)] || {})[subjectId]) || {programme:{}, expression:[]};
+  const currentTrimester = data.current_trimester || 'T1';
+  currentTree = {subjectId, tree, currentTrimester, trimesterStarts: data.trimester_starts || {}};
+
+  const defaultTrimester = TRIMESTER_ORDER.find(t => !isTrimesterLocked(t) && (tree.programme[t] || []).length) || currentTrimester;
+  currentTree.trimester = defaultTrimester;
 
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('sessionView').classList.add('active');
@@ -975,9 +998,12 @@ function renderSectionTree(){
   const {subjectId, tree, trimester} = currentTree;
   const subject = SUBJECTS.find(s => s.id === subjectId);
 
-  const tabsHtml = ['T1','T2','T3'].map(t => `
-    <button type="button" class="tree-tab ${t === trimester ? 'active' : ''}" data-trimester="${t}">${TRIMESTER_LABELS[currentLang][t]}</button>
-  `).join('');
+  const tabsHtml = TRIMESTER_ORDER.map(t => {
+    const locked = isTrimesterLocked(t);
+    return `<button type="button" class="tree-tab ${t === trimester ? 'active' : ''} ${locked ? 'locked' : ''}" data-trimester="${t}" data-locked="${locked}">
+      ${locked ? '🔒 ' : ''}${TRIMESTER_LABELS[currentLang][t]}
+    </button>`;
+  }).join('');
 
   const sections = tree.programme[trimester] || [];
   const sectionsHtml = sections.length
@@ -1013,7 +1039,15 @@ function renderSectionTree(){
 
   document.getElementById('treeBackBtn').addEventListener('click', backToHome);
   view.querySelectorAll('.tree-tab').forEach(btn => {
-    btn.addEventListener('click', () => { currentTree.trimester = btn.dataset.trimester; renderSectionTree(); });
+    btn.addEventListener('click', () => {
+      if(btn.dataset.locked === 'true'){
+        const t = btn.dataset.trimester;
+        showLockedToast(trimesterLockedMessage(formatUnlockDate(currentTree.trimesterStarts[t])));
+        return;
+      }
+      currentTree.trimester = btn.dataset.trimester;
+      renderSectionTree();
+    });
   });
   view.querySelectorAll('.section-card').forEach(btn => {
     btn.addEventListener('click', () => startExamSession(subjectId, btn.dataset.domain, btn.dataset.trimester));
