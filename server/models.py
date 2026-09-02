@@ -210,3 +210,14 @@ class Session(db.Model):
     answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct, skill}}
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     completed_at = db.Column(db.DateTime, nullable=True)
+    # Anti-abuse for the free-trial-per-subject mechanic: a new child profile
+    # (or a whole new account) is free to create, so without this a parent
+    # could keep re-triggering "essai gratuit" on the same subject forever.
+    # is_trial marks the session that actually consumed a free look; client_ip
+    # (best-effort, see app._client_ip) lets later trial checks recognize the
+    # same device trying again under a different child/account. Not a
+    # fraud-proof fingerprint — shared NATs/VPNs/carrier IPs can collide, and
+    # mobile IPs can rotate — just a reasonable first line of defense.
+    client_ip = db.Column(db.String(45), nullable=True)
+    user_agent = db.Column(db.String(255), nullable=True)
+    is_trial = db.Column(db.Boolean, nullable=False, default=False)

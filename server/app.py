@@ -36,6 +36,15 @@ db.init_app(app)
 
 
 @app.get("/")
+def vitrine():
+    """Public showcase page — mission, full programme structure, services,
+    content-originality/licence statement. Never exposes actual exercise
+    content (only structure via the already-public /api/subjects and
+    /api/skills), on purpose: convince first, unlock via /app after."""
+    return send_from_directory(BASE_DIR.replace("server", "web"), "vitrine.html")
+
+
+@app.get("/app")
 def index():
     return send_from_directory(BASE_DIR.replace("server", "web"), "index_smartprof_arabe_complet.html")
 
@@ -60,6 +69,7 @@ def subjects():
             for row in Session.query.filter_by(child_profile_id=child_id).with_entities(Session.subject_code).distinct()
         }
 
+    client_ip = _client_ip()
     return jsonify(
         [
             {
@@ -67,7 +77,11 @@ def subjects():
                 "name": s.label_fr,
                 "name_ar": s.label_ar,
                 "free_levels": s.free_levels,
-                "trial_available": child_id is not None and s.code not in tried_subjects,
+                "trial_available": (
+                    child_id is not None
+                    and s.code not in tried_subjects
+                    and not _ip_already_used_trial(client_ip, s.code)
+                ),
             }
             for s in rows
         ]
@@ -389,6 +403,23 @@ def child_report(child_id):
     )
 
 
+def _client_ip():
+    """Best-effort client IP — prefers X-Forwarded-For's first hop for once
+    this sits behind a reverse proxy/load balancer, falls back to the direct
+    socket address otherwise. Used only to slow down casual free-trial abuse
+    (see Session.client_ip); not a fraud-proof device fingerprint."""
+    forwarded = request.headers.get("X-Forwarded-For", "")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.remote_addr or "unknown"
+
+
+def _ip_already_used_trial(client_ip, subject_code):
+    return client_ip != "unknown" and (
+        Session.query.filter_by(subject_code=subject_code, client_ip=client_ip, is_trial=True).first() is not None
+    )
+
+
 def is_subject_locked(level_code, subject_row):
     """A subject requires an unlock at any level not listed in its free_levels
     (e.g. Fr/En at levels 1-2, En also at level 3). No account/entitlement
@@ -464,11 +495,16 @@ def start_session():
     if is_subject_locked(level_code, subject_row):
         # One free look per child per paid subject (any level, any section) —
         # a diagnostic trial before asking a parent to pay, not a loophole:
-        # anonymous play (no child) never gets it, and it's spent the moment
-        # this child has any session logged for the subject, checked here by
-        # the same query /api/subjects uses to advertise "essai gratuit".
-        trial_available = child is not None and (
-            Session.query.filter_by(child_profile_id=child.id, subject_code=subject_code).first() is None
+        # anonymous play (no child) never gets it, it's spent the moment this
+        # child has any session logged for the subject (same query
+        # /api/subjects uses to advertise "essai gratuit"), and it's also
+        # denied if this same device/IP has already spent a trial on this
+        # subject under a different child or account — see _client_ip.
+        client_ip = _client_ip()
+        trial_available = (
+            child is not None
+            and Session.query.filter_by(child_profile_id=child.id, subject_code=subject_code).first() is None
+            and not _ip_already_used_trial(client_ip, subject_code)
         )
         if not trial_available:
             return jsonify(
@@ -517,6 +553,9 @@ def start_session():
         domain_code=domain_code,
         exercise_ids=[e.id for e in exercises],
         answers={},
+        client_ip=_client_ip(),
+        user_agent=(request.headers.get("User-Agent") or "")[:255],
+        is_trial=is_subject_locked(level_code, subject_row),
     )
     db.session.add(session_row)
     db.session.commit()

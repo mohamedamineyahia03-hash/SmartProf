@@ -2058,8 +2058,23 @@ document.getElementById('parentToggleBtn').addEventListener('click', openParentV
 document.getElementById('activeChildBadge').addEventListener('click', () => clearActiveChild());
 
 captureReferralCode();
-restoreSession();
+restoreSession().then(checkAutoRegister);
 loadSubjects();
+
+// Arrive depuis la page vitrine (bouton "Essayer gratuitement" -> /app?register=1) :
+// ouvre directement l'inscription au lieu de laisser l'utilisateur rechercher
+// le bouton "Espace parent" lui-même — la vitrine a déjà fait la conviction,
+// il ne doit rester qu'un clic entre elle et le formulaire.
+function checkAutoRegister(){
+  if(currentUser) return; // déjà connecté, rien à faire
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if(params.get('register') !== '1') return;
+    openParentView();
+    const registerTab = document.getElementById('registerTabBtn');
+    if(registerTab) registerTab.click();
+  } catch(e){ /* param absent ou navigateur ancien — pas bloquant */ }
+}
 
 // Parrainage : premier lien cliqué gagne (on ne remplace jamais un code déjà
 // mémorisé par une visite ultérieure sans ?ref=), mémorisé jusqu'à
