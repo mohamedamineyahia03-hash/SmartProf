@@ -20,7 +20,13 @@ import os
 from db import db
 from models import Exercise, GenerationRun
 
-MODEL_NAME = "claude-opus-5"
+# Sonnet 5 by default — 2.5x cheaper than Opus 5 for a structured-generation
+# task like this one, adequate quality per the project's cost-conscious
+# pattern elsewhere (reportlab over WeasyPrint, Web Speech API over paid
+# cloud TTS). Override with GENERATION_MODEL=claude-opus-5 for a
+# higher-quality first pass on a new level/subject/domain combo before its
+# human-reviewed sample batch, without touching this file.
+MODEL_NAME = os.environ.get("GENERATION_MODEL", "claude-sonnet-5")
 PROMPT_TEMPLATE_VERSION = "v3"
 
 # The one place that decides which language an exercise's content is

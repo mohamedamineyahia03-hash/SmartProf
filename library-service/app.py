@@ -1,6 +1,7 @@
 import os
 from functools import wraps
 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -9,6 +10,7 @@ from generation.publish import approve, reject
 from models import Exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 API_KEY = os.environ.get("LIBRARY_SERVICE_API_KEY", "dev-local-key")
 
 app = Flask(__name__)

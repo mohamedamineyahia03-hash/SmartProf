@@ -3,3 +3,5 @@ __pycache__/
 .smartprof-sync.log
 *.db
 node_modules/
+.env
+*.env
