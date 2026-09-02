@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SmartProf</string>
+    <string name="title_activity_main">SmartProf</string>
+    <string name="package_name">com.smartprof.app</string>
+    <string name="custom_url_scheme">com.smartprof.app</string>
+</resources>

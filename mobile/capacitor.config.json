@@ -1,0 +1,10 @@
+{
+  "appId": "com.smartprof.app",
+  "appName": "SmartProf",
+  "webDir": "www",
+  "server": {
+    "url": "https://app.smartprof.tn",
+    "androidScheme": "https",
+    "cleartext": false
+  }
+}

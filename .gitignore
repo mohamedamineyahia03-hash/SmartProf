@@ -5,3 +5,14 @@ __pycache__/
 node_modules/
 .env
 *.env
+
+# mobile/ (Capacitor Android wrapper) — generated build output and anything
+# that could contain a signing secret or a machine-specific SDK path.
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/**/*.apk
+mobile/android/**/*.aab
+*.keystore
+*.jks
