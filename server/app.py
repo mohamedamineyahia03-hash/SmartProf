@@ -69,6 +69,11 @@ def index():
     return send_from_directory(BASE_DIR.replace("server", "web"), "index_smartprof_arabe_complet.html")
 
 
+@app.get("/confidentialite")
+def privacy_policy():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "confidentialite.html")
+
+
 @app.get("/manifest.json")
 def pwa_manifest():
     return send_from_directory(BASE_DIR.replace("server", "web"), "manifest.json")
