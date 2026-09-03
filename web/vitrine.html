@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SmartProf Tunisie — Soutien scolaire &amp; exercices primaire</title>
-<meta name="description" content="Exercices corrigés et soutien scolaire pour le primaire tunisien, de la 1ère à la 6ème année, en arabe, français et anglais. Programme officiel, suivi parent détaillé, essai gratuit sans engagement.">
+<title>SmartProf تونس — دعم مدرسي وتمارين للمرحلة الابتدائية</title>
+<meta name="description" content="تمارين مصحّحة ودعم مدرسي للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، بالعربية والفرنسية والإنجليزية. البرنامج الرسمي، متابعة مفصّلة للولي، تجربة مجانية بدون التزام.">
 <link rel="canonical" href="https://app.smartprof.tn/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="SmartProf">
 <meta property="og:url" content="https://app.smartprof.tn/">
-<meta property="og:title" content="SmartProf Tunisie — Soutien scolaire &amp; exercices primaire">
-<meta property="og:description" content="Exercices corrigés et soutien scolaire pour le primaire tunisien, de la 1ère à la 6ème année, en arabe, français et anglais. Programme officiel, suivi parent détaillé.">
-<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="SmartProf تونس — دعم مدرسي وتمارين للمرحلة الابتدائية">
+<meta property="og:description" content="تمارين مصحّحة ودعم مدرسي للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، بالعربية والفرنسية والإنجليزية.">
+<meta property="og:locale" content="ar_TN">
+<meta property="og:locale:alternate" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SmartProf Tunisie — Soutien scolaire &amp; exercices primaire">
-<meta name="twitter:description" content="Exercices corrigés et soutien scolaire pour le primaire tunisien, de la 1ère à la 6ème année, en arabe, français et anglais.">
+<meta name="twitter:title" content="SmartProf تونس — دعم مدرسي وتمارين للمرحلة الابتدائية">
+<meta name="twitter:description" content="تمارين مصحّحة ودعم مدرسي للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة.">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "EducationalOrganization",
   "name": "SmartProf",
-  "alternateName": "SmartProf Tunisie",
+  "alternateName": "SmartProf تونس",
   "url": "https://app.smartprof.tn/",
-  "description": "Plateforme de soutien scolaire et d'exercices corrigés pour le primaire tunisien, de la 1ère à la 6ème année, en arabe, français et anglais.",
+  "description": "منصة دعم مدرسي وتمارين مصحّحة للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، بالعربية والفرنسية والإنجليزية.",
   "areaServed": {
     "@type": "Country",
     "name": "Tunisie"
@@ -51,21 +52,25 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Inter', sans-serif;
+    font-family:'Baloo 2','Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
-    line-height:1.55;
+    line-height:1.6;
   }
+  html[dir="ltr"] body{font-family:'Inter','Baloo 2',sans-serif;}
   h1,h2,h3{font-family:'Baloo 2', sans-serif;letter-spacing:-.01em;margin:0;}
+  html[dir="rtl"] h1, html[dir="rtl"] h2, html[dir="rtl"] h3, html[dir="rtl"] .brand, html[dir="rtl"] .btn, html[dir="rtl"] .level-tab{letter-spacing:0;}
   a{color:inherit;}
   img,svg{max-width:100%;}
   .container{max-width:1180px;margin:0 auto;padding:0 28px;}
   section{padding:88px 0;}
   .eyebrow{font-size:.76rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 12px;}
+  html[dir="rtl"] .eyebrow{letter-spacing:0;}
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:1rem;padding:15px 30px;border-radius:999px;border:none;cursor:pointer;text-decoration:none;transition:transform .15s ease, box-shadow .15s ease;}
   .btn:hover{transform:translateY(-2px);}
   .btn-primary{background:var(--accent);color:#fff;box-shadow:0 14px 30px rgba(255,61,119,.35);}
   .btn-secondary{background:var(--card);color:var(--ink);border:1.5px solid var(--line);}
   .btn-block{width:100%;}
+  .btn-lang{background:var(--paper-soft);color:var(--ink);border:1.5px solid var(--line);font-family:'Baloo 2',sans-serif;font-weight:700;font-size:.8rem;padding:8px 16px;border-radius:999px;cursor:pointer;}
 
   /* ---------- nav ---------- */
   header.topnav{position:sticky;top:0;z-index:40;background:rgba(255,253,249,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
@@ -77,13 +82,13 @@
   .nav-links a:hover{opacity:1;}
   .nav-cta{display:flex;align-items:center;gap:14px;}
   .nav-cta .btn{padding:11px 22px;font-size:.88rem;}
-  @media (max-width:820px){ .nav-links{display:none;} }
+  @media (max-width:900px){ .nav-links{display:none;} }
 
   /* ---------- hero ---------- */
   .hero{padding:72px 0 60px;}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;}
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
-  .hero h1{font-size:clamp(2.1rem,4.4vw,3.15rem);line-height:1.08;text-wrap:balance;margin-bottom:20px;}
+  .hero h1{font-size:clamp(2.1rem,4.4vw,3.15rem);line-height:1.2;text-wrap:balance;margin-bottom:20px;}
   .hero h1 em{font-style:normal;color:var(--accent);}
   .hero-sub{font-size:1.08rem;color:var(--muted);max-width:520px;margin-bottom:30px;}
   .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:28px;}
@@ -94,11 +99,11 @@
   .hero-visual{position:relative;height:440px;}
   .collage-item{position:absolute;background:var(--card);border-radius:26px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;border:1px solid var(--line);}
   .collage-item svg{width:52%;height:52%;}
-  .c1{width:150px;height:150px;top:0;left:30px;transform:rotate(-7deg);background:#FFF0F5;}
-  .c2{width:130px;height:130px;top:40px;right:10px;transform:rotate(6deg);background:#FFF7E0;}
-  .c3{width:160px;height:160px;bottom:60px;left:0;transform:rotate(4deg);background:#EAF6FF;}
-  .c4{width:140px;height:140px;bottom:0;right:40px;transform:rotate(-5deg);background:#EFFCF3;}
-  .c5{width:120px;height:120px;top:180px;left:150px;transform:rotate(-3deg);background:#FBEFFF;z-index:2;}
+  .c1{width:150px;height:150px;top:0;inset-inline-start:30px;transform:rotate(-7deg);background:#FFF0F5;}
+  .c2{width:130px;height:130px;top:40px;inset-inline-end:10px;transform:rotate(6deg);background:#FFF7E0;}
+  .c3{width:160px;height:160px;bottom:60px;inset-inline-start:0;transform:rotate(4deg);background:#EAF6FF;}
+  .c4{width:140px;height:140px;bottom:0;inset-inline-end:40px;transform:rotate(-5deg);background:#EFFCF3;}
+  .c5{width:120px;height:120px;top:180px;inset-inline-start:150px;transform:rotate(-3deg);background:#FBEFFF;z-index:2;}
 
   /* ---------- mission ---------- */
   .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:36px;}
@@ -130,7 +135,7 @@
   .subj-card .subj-ico{width:34px;height:34px;border-radius:10px;background:var(--paper-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .subj-card .subj-ico svg{width:19px;height:19px;}
   .subj-card h3{font-size:.98rem;}
-  .subj-lock{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:999px;margin-left:auto;white-space:nowrap;}
+  .subj-lock{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:999px;margin-inline-start:auto;white-space:nowrap;}
   .subj-lock.free{background:#E3F9EC;color:#0E9F6E;}
   .subj-lock.paid{background:#FFF0DA;color:#B4790E;}
   .chapitre-list{list-style:none;margin:0;padding:0;font-size:.82rem;color:var(--muted);}
@@ -175,11 +180,11 @@
   .faq-item summary::-webkit-details-marker{display:none;}
   .faq-item summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0;transition:transform .15s ease;}
   .faq-item[open] summary::after{transform:rotate(45deg);}
-  .faq-item p{margin:0;padding:0 24px 22px;color:var(--muted);line-height:1.65;}
+  .faq-item p{margin:0;padding:0 24px 22px;color:var(--muted);line-height:1.7;}
 
   footer{padding:44px 0;border-top:1px solid var(--line);}
   .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:.82rem;color:var(--muted);}
-  .legal-note{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);font-size:.72rem;color:var(--muted);opacity:.8;line-height:1.6;}
+  .legal-note{margin-top:18px;padding-top:18px;border-top:1px solid var(--line);font-size:.72rem;color:var(--muted);opacity:.8;line-height:1.7;}
 </style>
 </head>
 <body>
@@ -188,14 +193,15 @@
   <div class="container nav-row">
     <div class="brand"><span class="dot"></span>SmartProf</div>
     <ul class="nav-links">
-      <li><a href="#programme">Programme</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#engagement">Notre engagement</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#programme" data-fr="Programme" data-ar="البرنامج">البرنامج</a></li>
+      <li><a href="#services" data-fr="Services" data-ar="الخدمات">الخدمات</a></li>
+      <li><a href="#engagement" data-fr="Notre engagement" data-ar="التزامنا">التزامنا</a></li>
+      <li><a href="#faq" data-fr="FAQ" data-ar="الأسئلة الشائعة">الأسئلة الشائعة</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="/app" class="btn btn-secondary">Se connecter</a>
-      <a href="/app?register=1" class="btn btn-primary">Essayer gratuitement</a>
+      <button type="button" class="btn-lang" id="langToggle">Français</button>
+      <a href="/app" class="btn btn-secondary" data-fr="Se connecter" data-ar="تسجيل الدخول">تسجيل الدخول</a>
+      <a href="/app?register=1" class="btn btn-primary" data-fr="Essayer gratuitement" data-ar="جرّب مجانًا">جرّب مجانًا</a>
     </div>
   </div>
 </header>
@@ -203,17 +209,17 @@
 <section class="hero">
   <div class="container hero-grid">
     <div>
-      <p class="eyebrow">Apprentissage personnalisé — primaire tunisien</p>
-      <h1>Un accompagnement scolaire qui s'adapte à <em>chaque</em> enfant, pas l'inverse.</h1>
-      <p class="hero-sub">Programme officiel tunisien, de la 1ère à la 6ème année, en arabe, français et anglais. Chaque séance s'ajuste au niveau réel de l'enfant — et un parent voit exactement où il en est.</p>
+      <p class="eyebrow" data-fr="Apprentissage personnalisé — primaire tunisien" data-ar="تعلّم شخصي — للمرحلة الابتدائية في تونس">تعلّم شخصي — للمرحلة الابتدائية في تونس</p>
+      <h1 data-fr-html="Un accompagnement scolaire qui s'adapte à <em>chaque</em> enfant, pas l'inverse." data-ar-html="مرافقة مدرسية تتأقلم مع <em>كل</em> طفل، لا العكس.">مرافقة مدرسية تتأقلم مع <em>كل</em> طفل، لا العكس.</h1>
+      <p class="hero-sub" data-fr="Programme officiel tunisien, de la 1ère à la 6ème année, en arabe, français et anglais. Chaque séance s'ajuste au niveau réel de l'enfant — et un parent voit exactement où il en est." data-ar="البرنامج الرسمي التونسي، من السنة الأولى إلى السادسة، بالعربية والفرنسية والإنجليزية. كل حصة تتكيّف مع المستوى الحقيقي للطفل — والولي يرى بالضبط أين وصل.">البرنامج الرسمي التونسي، من السنة الأولى إلى السادسة، بالعربية والفرنسية والإنجليزية. كل حصة تتكيّف مع المستوى الحقيقي للطفل — والولي يرى بالضبط أين وصل.</p>
       <div class="hero-ctas">
-        <a href="/app?register=1" class="btn btn-primary">Essayer gratuitement</a>
-        <a href="#programme" class="btn btn-secondary">Voir le programme complet</a>
+        <a href="/app?register=1" class="btn btn-primary" data-fr="Essayer gratuitement" data-ar="جرّب مجانًا">جرّب مجانًا</a>
+        <a href="#programme" class="btn btn-secondary" data-fr="Voir le programme complet" data-ar="شاهد البرنامج كاملاً">شاهد البرنامج كاملاً</a>
       </div>
       <div class="trust-badges">
-        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Essai gratuit, sans carte bancaire</span>
-        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Contenu 100% original, jamais copié</span>
-        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Calendrier scolaire tunisien réel</span>
+        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-fr="Essai gratuit, sans carte bancaire" data-ar="تجربة مجانية، بدون بطاقة بنكية">تجربة مجانية، بدون بطاقة بنكية</span></span>
+        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-fr="Contenu 100% original, jamais copié" data-ar="محتوى أصلي 100%، غير منسوخ أبدًا">محتوى أصلي 100%، غير منسوخ أبدًا</span></span>
+        <span><svg class="ico" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#0E9F6E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-fr="Calendrier scolaire tunisien réel" data-ar="تقويم دراسي تونسي حقيقي">تقويم دراسي تونسي حقيقي</span></span>
       </div>
     </div>
     <div class="hero-visual">
@@ -228,23 +234,23 @@
 
 <section id="mission">
   <div class="container">
-    <p class="eyebrow">Notre objectif</p>
-    <p class="mission-lede">Donner à chaque enfant un accompagnement scolaire aussi personnalisé qu'un vrai suivi individuel — sans que ça dépende de la disponibilité ou du prix d'un professeur particulier, et sans jamais perdre le parent hors du circuit.</p>
+    <p class="eyebrow" data-fr="Notre objectif" data-ar="هدفنا">هدفنا</p>
+    <p class="mission-lede" data-fr="Donner à chaque enfant un accompagnement scolaire aussi personnalisé qu'un vrai suivi individuel — sans que ça dépende de la disponibilité ou du prix d'un professeur particulier, et sans jamais perdre le parent hors du circuit." data-ar="نمنح كل طفل مرافقة مدرسية شخصية بقدر متابعة فردية حقيقية — دون أن يتوقف ذلك على توفر أستاذ خصوصي أو تكلفته، ودون أن يغيب الولي أبدًا عن الصورة.">نمنح كل طفل مرافقة مدرسية شخصية بقدر متابعة فردية حقيقية — دون أن يتوقف ذلك على توفر أستاذ خصوصي أو تكلفته، ودون أن يغيب الولي أبدًا عن الصورة.</p>
     <div class="pillars">
       <div class="pillar">
         <div class="pico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8l7-5 7 5M5 8v10l7 4 7-4V8" stroke="#FF3D77" stroke-width="1.8" stroke-linejoin="round"/></svg></div>
-        <h3>Fidèle au programme officiel</h3>
-        <p>Découpé par trimestre, exactement comme en classe — pas un programme générique importé d'ailleurs.</p>
+        <h3 data-fr="Fidèle au programme officiel" data-ar="وفيّ للبرنامج الرسمي">وفيّ للبرنامج الرسمي</h3>
+        <p data-fr="Découpé par trimestre, exactement comme en classe — pas un programme générique importé d'ailleurs." data-ar="مقسّم حسب الثلاثي، تمامًا كما في القسم — ليس برنامجًا عامًا مستوردًا من مكان آخر.">مقسّم حسب الثلاثي، تمامًا كما في القسم — ليس برنامجًا عامًا مستوردًا من مكان آخر.</p>
       </div>
       <div class="pillar">
         <div class="pico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="#FF3D77" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <h3>Trilingue, sans mélange</h3>
-        <p>Arabe, français, anglais — chaque matière est enseignée dans sa propre langue, jamais traduite à moitié.</p>
+        <h3 data-fr="Trilingue, sans mélange" data-ar="ثلاثي اللغة، دون خلط">ثلاثي اللغة، دون خلط</h3>
+        <p data-fr="Arabe, français, anglais — chaque matière est enseignée dans sa propre langue, jamais traduite à moitié." data-ar="عربية، فرنسية، إنجليزية — كل مادة تُدرَّس بلغتها الخاصة، لا تُترجم أبدًا نصف ترجمة.">عربية، فرنسية، إنجليزية — كل مادة تُدرَّس بلغتها الخاصة، لا تُترجم أبدًا نصف ترجمة.</p>
       </div>
       <div class="pillar">
         <div class="pico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="#FF3D77" stroke-width="1.8"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" stroke="#FF3D77" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <h3>Le parent voit tout</h3>
-        <p>Score, points forts, points à renforcer — visible à tout moment, jamais caché derrière l'écran de l'enfant.</p>
+        <h3 data-fr="Le parent voit tout" data-ar="الولي يرى كل شيء">الولي يرى كل شيء</h3>
+        <p data-fr="Score, points forts, points à renforcer — visible à tout moment, jamais caché derrière l'écran de l'enfant." data-ar="النتيجة، نقاط القوة، النقاط التي تحتاج تعزيزًا — مرئية في أي وقت، لا تُخفى أبدًا خلف شاشة الطفل.">النتيجة، نقاط القوة، النقاط التي تحتاج تعزيزًا — مرئية في أي وقت، لا تُخفى أبدًا خلف شاشة الطفل.</p>
       </div>
     </div>
   </div>
@@ -252,68 +258,68 @@
 
 <section id="how">
   <div class="container">
-    <p class="eyebrow">Comment ça marche</p>
-    <h2 style="font-size:clamp(1.5rem,3vw,2rem);">Du profil de l'enfant à la séance corrigée</h2>
+    <p class="eyebrow" data-fr="Comment ça marche" data-ar="كيف يعمل التطبيق">كيف يعمل التطبيق</p>
+    <h2 style="font-size:clamp(1.5rem,3vw,2rem);" data-fr="Du profil de l'enfant à la séance corrigée" data-ar="من ملف الطفل إلى الحصة المصحَّحة">من ملف الطفل إلى الحصة المصحَّحة</h2>
     <div class="steps">
-      <div class="step"><span class="snum">01</span><h3>Un profil par enfant</h3><p>Fratrie ou enfant unique — chacun garde son propre niveau et son propre suivi.</p></div>
-      <div class="step"><span class="snum">02</span><h3>Une section à la fois</h3><p>Le programme du trimestre en cours, organisé par thème — pas un flux aléatoire d'exercices.</p></div>
-      <div class="step"><span class="snum">03</span><h3>Séance type examen</h3><p>Un lot d'exercices variés, répondu en entier, comme un vrai contrôle.</p></div>
-      <div class="step"><span class="snum">04</span><h3>Corrigé + suivi parent</h3><p>Score et corrigé complet à la fin — puis visibles dans l'espace parent à tout moment.</p></div>
+      <div class="step"><span class="snum">01</span><h3 data-fr="Un profil par enfant" data-ar="ملف لكل طفل">ملف لكل طفل</h3><p data-fr="Fratrie ou enfant unique — chacun garde son propre niveau et son propre suivi." data-ar="إخوة أو طفل وحيد — كل واحد يحتفظ بمستواه ومتابعته الخاصة.">إخوة أو طفل وحيد — كل واحد يحتفظ بمستواه ومتابعته الخاصة.</p></div>
+      <div class="step"><span class="snum">02</span><h3 data-fr="Une section à la fois" data-ar="قسم واحد في كل مرة">قسم واحد في كل مرة</h3><p data-fr="Le programme du trimestre en cours, organisé par thème — pas un flux aléatoire d'exercices." data-ar="برنامج الثلاثي الجاري، منظّم حسب المحور — لا سيل عشوائي من التمارين.">برنامج الثلاثي الجاري، منظّم حسب المحور — لا سيل عشوائي من التمارين.</p></div>
+      <div class="step"><span class="snum">03</span><h3 data-fr="Séance type examen" data-ar="حصة على شكل امتحان">حصة على شكل امتحان</h3><p data-fr="Un lot d'exercices variés, répondu en entier, comme un vrai contrôle." data-ar="مجموعة متنوعة من التمارين، تُجاب كاملة، مثل فرض حقيقي.">مجموعة متنوعة من التمارين، تُجاب كاملة، مثل فرض حقيقي.</p></div>
+      <div class="step"><span class="snum">04</span><h3 data-fr="Corrigé + suivi parent" data-ar="تصحيح + متابعة الولي">تصحيح + متابعة الولي</h3><p data-fr="Score et corrigé complet à la fin — puis visibles dans l'espace parent à tout moment." data-ar="النتيجة والتصحيح الكامل في النهاية — ثم مرئيان في فضاء الولي في أي وقت.">النتيجة والتصحيح الكامل في النهاية — ثم مرئيان في فضاء الولي في أي وقت.</p></div>
     </div>
   </div>
 </section>
 
 <section id="programme">
   <div class="container prog-section" style="padding:52px 44px;">
-    <p class="eyebrow">Le programme, en détail</p>
-    <h2 style="font-size:clamp(1.5rem,3vw,2rem);">Toutes les années, toutes les matières</h2>
-    <p style="color:var(--muted);max-width:620px;margin-top:10px;">La structure complète du programme officiel tunisien — matières, chapitres et sections. Le contenu détaillé de chaque exercice n'est visible qu'après inscription.</p>
+    <p class="eyebrow" data-fr="Le programme, en détail" data-ar="البرنامج بالتفصيل">البرنامج بالتفصيل</p>
+    <h2 style="font-size:clamp(1.5rem,3vw,2rem);" data-fr="Toutes les années, toutes les matières" data-ar="كل السنوات، كل المواد">كل السنوات، كل المواد</h2>
+    <p style="color:var(--muted);max-width:620px;margin-top:10px;" data-fr="La structure complète du programme officiel tunisien — matières, chapitres et sections. Le contenu détaillé de chaque exercice n'est visible qu'après inscription." data-ar="الهيكل الكامل للبرنامج الرسمي التونسي — المواد والفصول والأقسام. محتوى كل تمرين بالتفصيل لا يظهر إلا بعد التسجيل.">الهيكل الكامل للبرنامج الرسمي التونسي — المواد والفصول والأقسام. محتوى كل تمرين بالتفصيل لا يظهر إلا بعد التسجيل.</p>
     <div class="level-tabs" id="levelTabs"></div>
-    <div class="prog-grid" id="progGrid"><p class="prog-empty">Chargement du programme…</p></div>
-    <p class="prog-note">La 1ère année dispose déjà d'un contenu complet sur toutes les matières ; les années suivantes sont progressivement approvisionnées, sur la même structure officielle déjà en place pour les 6 années.</p>
+    <div class="prog-grid" id="progGrid"><p class="prog-empty" data-fr="Chargement du programme…" data-ar="جارٍ تحميل البرنامج…">جارٍ تحميل البرنامج…</p></div>
+    <p class="prog-note" data-fr="La 1ère année dispose déjà d'un contenu complet sur toutes les matières ; les années suivantes sont progressivement approvisionnées, sur la même structure officielle déjà en place pour les 6 années." data-ar="السنة الأولى تتوفر بالفعل على محتوى كامل في جميع المواد؛ السنوات الموالية تُزوَّد تدريجيًا، بنفس الهيكل الرسمي المعتمد للسنوات الست.">السنة الأولى تتوفر بالفعل على محتوى كامل في جميع المواد؛ السنوات الموالية تُزوَّد تدريجيًا، بنفس الهيكل الرسمي المعتمد للسنوات الست.</p>
   </div>
 </section>
 
 <section id="services">
   <div class="container">
-    <p class="eyebrow">Ce qui est inclus</p>
-    <h2 style="font-size:clamp(1.5rem,3vw,2rem);">Les services SmartProf</h2>
+    <p class="eyebrow" data-fr="Ce qui est inclus" data-ar="ما هو متوفر">ما هو متوفر</p>
+    <h2 style="font-size:clamp(1.5rem,3vw,2rem);" data-fr="Les services SmartProf" data-ar="خدمات SmartProf">خدمات SmartProf</h2>
     <div class="svc-grid">
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2l2.9 6.3 6.9.9-5 4.9 1.2 6.9L12 17.8 5.9 21l1.2-6.9-5-4.9 6.9-.9L12 2Z" stroke="#FF3D77" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
-        <h3>Sessions adaptées au niveau</h3>
-        <p>Chaque séance est construite pour le niveau et le trimestre réels de l'enfant, jamais générique.</p>
-        <span class="svc-gate">Essai gratuit disponible</span>
+        <h3 data-fr="Sessions adaptées au niveau" data-ar="حصص متأقلمة مع المستوى">حصص متأقلمة مع المستوى</h3>
+        <p data-fr="Chaque séance est construite pour le niveau et le trimestre réels de l'enfant, jamais générique." data-ar="كل حصة مبنية لمستوى وثلاثي الطفل الحقيقيين، ليست عامة أبدًا.">كل حصة مبنية لمستوى وثلاثي الطفل الحقيقيين، ليست عامة أبدًا.</p>
+        <span class="svc-gate" data-fr="Essai gratuit disponible" data-ar="تجربة مجانية متوفرة">تجربة مجانية متوفرة</span>
       </div>
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="#FF3D77" stroke-width="1.6"/><path d="M4.5 20c0-4 3.4-7 7.5-7s7.5 3 7.5 7" stroke="#FF3D77" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-        <h3>Suivi parent détaillé</h3>
-        <p>Historique des séances, points forts et points à renforcer, pour chaque enfant du compte.</p>
-        <span class="svc-gate">Inclus dès l'inscription</span>
+        <h3 data-fr="Suivi parent détaillé" data-ar="متابعة مفصّلة للولي">متابعة مفصّلة للولي</h3>
+        <p data-fr="Historique des séances, points forts et points à renforcer, pour chaque enfant du compte." data-ar="سجل الحصص، نقاط القوة والنقاط التي تحتاج تعزيزًا، لكل طفل في الحساب.">سجل الحصص، نقاط القوة والنقاط التي تحتاج تعزيزًا، لكل طفل في الحساب.</p>
+        <span class="svc-gate" data-fr="Inclus dès l'inscription" data-ar="متوفر منذ التسجيل">متوفر منذ التسجيل</span>
       </div>
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2Zm10-15h6a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-6" stroke="#FF3D77" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
-        <h3>Production écrite &amp; Récitation</h3>
-        <p>Une section indépendante, hors trimestre, pour l'expression écrite en arabe et en français.</p>
-        <span class="svc-gate">Après inscription</span>
+        <h3 data-fr="Production écrite &amp; Récitation" data-ar="الإنتاج الكتابي والإلقاء">الإنتاج الكتابي والإلقاء</h3>
+        <p data-fr="Une section indépendante, hors trimestre, pour l'expression écrite en arabe et en français." data-ar="قسم مستقل، خارج الثلاثي، للتعبير الكتابي بالعربية والفرنسية.">قسم مستقل، خارج الثلاثي، للتعبير الكتابي بالعربية والفرنسية.</p>
+        <span class="svc-gate" data-fr="Après inscription" data-ar="بعد التسجيل">بعد التسجيل</span>
       </div>
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><path d="M5 10v4h3l4 4V6l-4 4H5Z" stroke="#FF3D77" stroke-width="1.6" stroke-linejoin="round"/><path d="M16 9.5a4 4 0 0 1 0 5" stroke="#FF3D77" stroke-width="1.6" stroke-linecap="round"/></svg></div>
-        <h3>Lecture à voix haute</h3>
-        <p>Modèle vocal pour la prononciation, utile en français et en anglais comme en récitation.</p>
-        <span class="svc-gate">Après inscription</span>
+        <h3 data-fr="Lecture à voix haute" data-ar="القراءة بصوت عالٍ">القراءة بصوت عالٍ</h3>
+        <p data-fr="Modèle vocal pour la prononciation, utile en français et en anglais comme en récitation." data-ar="نموذج صوتي للنطق، مفيد بالفرنسية والإنجليزية وفي الإلقاء.">نموذج صوتي للنطق، مفيد بالفرنسية والإنجليزية وفي الإلقاء.</p>
+        <span class="svc-gate" data-fr="Après inscription" data-ar="بعد التسجيل">بعد التسجيل</span>
       </div>
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.4-9.5-9C1 8.5 3 5 6.5 5 9 5 11 7 12 8.5 13 7 15 5 17.5 5 21 5 23 8.5 21.5 12 19 16.6 12 21 12 21Z" stroke="#FF3D77" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
-        <h3>Essai gratuit par matière</h3>
-        <p>Une vraie séance offerte sur chaque matière verrouillée, avant toute décision d'abonnement.</p>
-        <span class="svc-gate">Dès l'inscription</span>
+        <h3 data-fr="Essai gratuit par matière" data-ar="تجربة مجانية لكل مادة">تجربة مجانية لكل مادة</h3>
+        <p data-fr="Une vraie séance offerte sur chaque matière verrouillée, avant toute décision d'abonnement." data-ar="حصة حقيقية مجانية لكل مادة مقفلة، قبل أي قرار اشتراك.">حصة حقيقية مجانية لكل مادة مقفلة، قبل أي قرار اشتراك.</p>
+        <span class="svc-gate" data-fr="Dès l'inscription" data-ar="منذ التسجيل">منذ التسجيل</span>
       </div>
       <div class="svc-card">
         <div class="sico"><svg viewBox="0 0 24 24" fill="none"><path d="M17 8a5 5 0 1 0-10 0M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6" stroke="#FF3D77" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>Parrainage entre parents</h3>
-        <p>Un lien à partager avec d'autres parents — chaque inscription grâce à vous est enregistrée.</p>
-        <span class="svc-gate">Depuis l'espace parent</span>
+        <h3 data-fr="Parrainage entre parents" data-ar="دعوة أولياء آخرين">دعوة أولياء آخرين</h3>
+        <p data-fr="Un lien à partager avec d'autres parents — chaque inscription grâce à vous est enregistrée." data-ar="رابط تشاركه مع أولياء آخرين — كل تسجيل بفضلك يُسجَّل.">رابط تشاركه مع أولياء آخرين — كل تسجيل بفضلك يُسجَّل.</p>
+        <span class="svc-gate" data-fr="Depuis l'espace parent" data-ar="من فضاء الولي">من فضاء الولي</span>
       </div>
     </div>
   </div>
@@ -322,59 +328,59 @@
 <section id="engagement">
   <div class="container trust-section">
     <div>
-      <p class="eyebrow">Notre engagement</p>
-      <h2 style="font-size:clamp(1.5rem,3vw,2rem);margin-bottom:20px;">Pourquoi faire confiance au contenu</h2>
+      <p class="eyebrow" data-fr="Notre engagement" data-ar="التزامنا">التزامنا</p>
+      <h2 style="font-size:clamp(1.5rem,3vw,2rem);margin-bottom:20px;" data-fr="Pourquoi faire confiance au contenu" data-ar="لماذا تثق في المحتوى">لماذا تثق في المحتوى</h2>
       <ul class="trust-list">
-        <li><span class="tick">✓</span><div><b>Respect du droit d'auteur</b><span>Depuis le premier exercice, chaque contenu est généré à partir d'une inspiration pédagogique, jamais recopié d'un manuel ou d'un site existant — un principe posé dès le départ, pas ajouté après coup.</span></div></li>
-        <li><span class="tick">✓</span><div><b>Relu avant publication</b><span>Les premiers exercices de chaque nouvelle matière et niveau passent par une relecture humaine avant diffusion.</span></div></li>
-        <li><span class="tick">✓</span><div><b>Calendrier scolaire réel</b><span>Les trimestres suivent les dates officielles du Ministère — pas un découpage arbitraire.</span></div></li>
-        <li><span class="tick">✓</span><div><b>Aucune donnée revendue</b><span>Les informations d'un enfant restent entre son compte parent et SmartProf.</span></div></li>
+        <li><span class="tick">✓</span><div><b data-fr="Respect du droit d'auteur" data-ar="احترام حقوق الملكية الفكرية">احترام حقوق الملكية الفكرية</b><span data-fr="Depuis le premier exercice, chaque contenu est généré à partir d'une inspiration pédagogique, jamais recopié d'un manuel ou d'un site existant — un principe posé dès le départ, pas ajouté après coup." data-ar="منذ أول تمرين، كل محتوى يُولَّد انطلاقًا من إلهام تربوي، لا يُنسخ أبدًا من كتاب مدرسي أو موقع موجود — مبدأ وُضع منذ البداية، لم يُضَف لاحقًا.">منذ أول تمرين، كل محتوى يُولَّد انطلاقًا من إلهام تربوي، لا يُنسخ أبدًا من كتاب مدرسي أو موقع موجود — مبدأ وُضع منذ البداية، لم يُضَف لاحقًا.</span></div></li>
+        <li><span class="tick">✓</span><div><b data-fr="Relu avant publication" data-ar="مُراجَع قبل النشر">مُراجَع قبل النشر</b><span data-fr="Les premiers exercices de chaque nouvelle matière et niveau passent par une relecture humaine avant diffusion." data-ar="أول تمارين كل مادة ومستوى جديدين تمر عبر مراجعة بشرية قبل النشر.">أول تمارين كل مادة ومستوى جديدين تمر عبر مراجعة بشرية قبل النشر.</span></div></li>
+        <li><span class="tick">✓</span><div><b data-fr="Calendrier scolaire réel" data-ar="تقويم دراسي حقيقي">تقويم دراسي حقيقي</b><span data-fr="Les trimestres suivent les dates officielles du Ministère — pas un découpage arbitraire." data-ar="الثلاثيات تتبع التواريخ الرسمية لوزارة التربية — ليس تقسيمًا عشوائيًا.">الثلاثيات تتبع التواريخ الرسمية لوزارة التربية — ليس تقسيمًا عشوائيًا.</span></div></li>
+        <li><span class="tick">✓</span><div><b data-fr="Aucune donnée revendue" data-ar="لا بيانات تُباع">لا بيانات تُباع</b><span data-fr="Les informations d'un enfant restent entre son compte parent et SmartProf." data-ar="معلومات الطفل تبقى بين حساب الولي وSmartProf فقط.">معلومات الطفل تبقى بين حساب الولي وSmartProf فقط.</span></div></li>
       </ul>
     </div>
     <div class="trust-card">
-      <p class="eyebrow">Licence</p>
-      <h3>Contenu sous licence SmartProf</h3>
-      <p>Chaque exercice publié porte une licence SmartProf propre — jamais republié tel quel depuis un manuel ou un autre site, toujours généré et vérifié comme un contenu original, pensé pour le programme tunisien.</p>
+      <p class="eyebrow" data-fr="Licence" data-ar="الترخيص">الترخيص</p>
+      <h3 data-fr="Contenu sous licence SmartProf" data-ar="محتوى برخصة SmartProf">محتوى برخصة SmartProf</h3>
+      <p data-fr="Chaque exercice publié porte une licence SmartProf propre — jamais republié tel quel depuis un manuel ou un autre site, toujours généré et vérifié comme un contenu original, pensé pour le programme tunisien." data-ar="كل تمرين منشور يحمل رخصة SmartProf خاصة — لا يُعاد نشره أبدًا كما هو من كتاب أو موقع آخر، بل يُولَّد ويُراجَع دائمًا كمحتوى أصلي، مصمَّم للبرنامج التونسي.">كل تمرين منشور يحمل رخصة SmartProf خاصة — لا يُعاد نشره أبدًا كما هو من كتاب أو موقع آخر، بل يُولَّد ويُراجَع دائمًا كمحتوى أصلي، مصمَّم للبرنامج التونسي.</p>
     </div>
   </div>
 </section>
 
 <section id="faq">
   <div class="container">
-    <p class="eyebrow" style="text-align:center;">Questions fréquentes</p>
-    <h2 style="text-align:center;margin-bottom:36px;font-size:clamp(1.5rem,3vw,2rem);">Le soutien scolaire SmartProf, en clair</h2>
+    <p class="eyebrow" style="text-align:center;" data-fr="Questions fréquentes" data-ar="الأسئلة الشائعة">الأسئلة الشائعة</p>
+    <h2 style="text-align:center;margin-bottom:36px;font-size:clamp(1.5rem,3vw,2rem);" data-fr="Le soutien scolaire SmartProf, en clair" data-ar="الدعم المدرسي مع SmartProf، بوضوح">الدعم المدرسي مع SmartProf، بوضوح</h2>
     <div class="faq-list">
       <details class="faq-item">
-        <summary>Qu'est-ce que SmartProf ?</summary>
-        <p>SmartProf est une plateforme de soutien scolaire et d'aide aux devoirs pour le primaire tunisien : des exercices corrigés, adaptés au niveau réel de chaque enfant, en arabe, en français et en anglais.</p>
+        <summary data-fr="Qu'est-ce que SmartProf ?" data-ar="ما هو SmartProf؟">ما هو SmartProf؟</summary>
+        <p data-fr="SmartProf est une plateforme de soutien scolaire et d'aide aux devoirs pour le primaire tunisien : des exercices corrigés, adaptés au niveau réel de chaque enfant, en arabe, en français et en anglais." data-ar="SmartProf منصة دعم مدرسي ومساعدة على الواجبات للمرحلة الابتدائية التونسية: تمارين مصحّحة، متأقلمة مع المستوى الحقيقي لكل طفل، بالعربية والفرنسية والإنجليزية.">SmartProf منصة دعم مدرسي ومساعدة على الواجبات للمرحلة الابتدائية التونسية: تمارين مصحّحة، متأقلمة مع المستوى الحقيقي لكل طفل، بالعربية والفرنسية والإنجليزية.</p>
       </details>
       <details class="faq-item">
-        <summary>Quels niveaux et matières sont couverts ?</summary>
-        <p>Les six années du primaire tunisien, de la 1ère à la 6ème année (السنة الأولى à السنة السادسة ابتدائي), en mathématiques, arabe, français, anglais et éveil scientifique.</p>
+        <summary data-fr="Quels niveaux et matières sont couverts ?" data-ar="ما هي المستويات والمواد المشمولة؟">ما هي المستويات والمواد المشمولة؟</summary>
+        <p data-fr="Les six années du primaire tunisien, de la 1ère à la 6ème année, en mathématiques, arabe, français, anglais et éveil scientifique." data-ar="السنوات الست للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، في الرياضيات والعربية والفرنسية والإنجليزية والإيقاظ العلمي.">السنوات الست للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، في الرياضيات والعربية والفرنسية والإنجليزية والإيقاظ العلمي.</p>
       </details>
       <details class="faq-item">
-        <summary>Le contenu suit-il vraiment le programme officiel tunisien ?</summary>
-        <p>Oui : chaque section suit le découpage officiel par trimestre du Ministère, avec des dates de calendrier réelles — pas un découpage arbitraire.</p>
+        <summary data-fr="Le contenu suit-il vraiment le programme officiel tunisien ?" data-ar="هل يتبع المحتوى فعلاً البرنامج الرسمي التونسي؟">هل يتبع المحتوى فعلاً البرنامج الرسمي التونسي؟</summary>
+        <p data-fr="Oui : chaque section suit le découpage officiel par trimestre du Ministère, avec des dates de calendrier réelles — pas un découpage arbitraire." data-ar="نعم: كل قسم يتبع التقسيم الرسمي لوزارة التربية حسب الثلاثي، بتواريخ تقويم حقيقية — ليس تقسيمًا عشوائيًا.">نعم: كل قسم يتبع التقسيم الرسمي لوزارة التربية حسب الثلاثي، بتواريخ تقويم حقيقية — ليس تقسيمًا عشوائيًا.</p>
       </details>
       <details class="faq-item">
-        <summary>Comment fonctionne l'essai gratuit ?</summary>
-        <p>Chaque enfant peut essayer gratuitement, une fois, une séance complète sur une matière verrouillée — sans carte bancaire — avant qu'un parent décide de la débloquer.</p>
+        <summary data-fr="Comment fonctionne l'essai gratuit ?" data-ar="كيف تعمل التجربة المجانية؟">كيف تعمل التجربة المجانية؟</summary>
+        <p data-fr="Chaque enfant peut essayer gratuitement, une fois, une séance complète sur une matière verrouillée — sans carte bancaire — avant qu'un parent décide de la débloquer." data-ar="يمكن لكل طفل أن يجرّب مجانًا، مرة واحدة، حصة كاملة في مادة مقفلة — بدون بطاقة بنكية — قبل أن يقرر الولي فتحها.">يمكن لكل طفل أن يجرّب مجانًا، مرة واحدة، حصة كاملة في مادة مقفلة — بدون بطاقة بنكية — قبل أن يقرر الولي فتحها.</p>
       </details>
       <details class="faq-item">
-        <summary>Comment je suis les progrès de mon enfant ?</summary>
-        <p>Depuis l'espace parent : niveau adapté à chaque enfant, suivi détaillé par matière, points forts et points à travailler après chaque séance.</p>
+        <summary data-fr="Comment je suis les progrès de mon enfant ?" data-ar="كيف أتابع تقدم طفلي؟">كيف أتابع تقدم طفلي؟</summary>
+        <p data-fr="Depuis l'espace parent : niveau adapté à chaque enfant, suivi détaillé par matière, points forts et points à travailler après chaque séance." data-ar="من فضاء الولي: مستوى متأقلم مع كل طفل، متابعة مفصّلة حسب المادة، نقاط القوة والنقاط المطلوب العمل عليها بعد كل حصة.">من فضاء الولي: مستوى متأقلم مع كل طفل، متابعة مفصّلة حسب المادة، نقاط القوة والنقاط المطلوب العمل عليها بعد كل حصة.</p>
       </details>
       <details class="faq-item">
-        <summary>La correction est-elle automatique ?</summary>
-        <p>Oui, chaque séance est corrigée automatiquement dès qu'elle est terminée, avec le corrigé complet affiché à l'enfant.</p>
+        <summary data-fr="La correction est-elle automatique ?" data-ar="هل التصحيح آلي؟">هل التصحيح آلي؟</summary>
+        <p data-fr="Oui, chaque séance est corrigée automatiquement dès qu'elle est terminée, avec le corrigé complet affiché à l'enfant." data-ar="نعم، كل حصة تُصحَّح آليًا بمجرد إنهائها، مع عرض التصحيح الكامل للطفل.">نعم، كل حصة تُصحَّح آليًا بمجرد إنهائها، مع عرض التصحيح الكامل للطفل.</p>
       </details>
       <details class="faq-item">
-        <summary>Les exercices sont-ils copiés d'un manuel scolaire ?</summary>
-        <p>Non. Chaque exercice est généré à partir d'une inspiration pédagogique et vérifié avant publication — jamais recopié tel quel d'un manuel ou d'un site existant.</p>
+        <summary data-fr="Les exercices sont-ils copiés d'un manuel scolaire ?" data-ar="هل التمارين منسوخة من كتاب مدرسي؟">هل التمارين منسوخة من كتاب مدرسي؟</summary>
+        <p data-fr="Non. Chaque exercice est généré à partir d'une inspiration pédagogique et vérifié avant publication — jamais recopié tel quel d'un manuel ou d'un site existant." data-ar="لا. كل تمرين يُولَّد انطلاقًا من إلهام تربوي ويُراجَع قبل النشر — لا يُنسخ أبدًا كما هو من كتاب أو موقع موجود.">لا. كل تمرين يُولَّد انطلاقًا من إلهام تربوي ويُراجَع قبل النشر — لا يُنسخ أبدًا كما هو من كتاب أو موقع موجود.</p>
       </details>
       <details class="faq-item">
-        <summary>Comment débloquer une matière payante ?</summary>
-        <p>Depuis l'espace parent, en choisissant un mode de paiement disponible (virement bancaire notamment) — l'accès s'active dès la confirmation.</p>
+        <summary data-fr="Comment débloquer une matière payante ?" data-ar="كيف أفتح مادة مدفوعة؟">كيف أفتح مادة مدفوعة؟</summary>
+        <p data-fr="Depuis l'espace parent, en choisissant un mode de paiement disponible (virement bancaire notamment) — l'accès s'active dès la confirmation." data-ar="من فضاء الولي، باختيار وسيلة دفع متوفرة (التحويل البنكي خاصة) — يُفعَّل الوصول فور التأكيد.">من فضاء الولي، باختيار وسيلة دفع متوفرة (التحويل البنكي خاصة) — يُفعَّل الوصول فور التأكيد.</p>
       </details>
     </div>
   </div>
@@ -385,14 +391,14 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {"@type": "Question", "name": "Qu'est-ce que SmartProf ?", "acceptedAnswer": {"@type": "Answer", "text": "SmartProf est une plateforme de soutien scolaire et d'aide aux devoirs pour le primaire tunisien : des exercices corrigés, adaptés au niveau réel de chaque enfant, en arabe, en français et en anglais."}},
-    {"@type": "Question", "name": "Quels niveaux et matières sont couverts ?", "acceptedAnswer": {"@type": "Answer", "text": "Les six années du primaire tunisien, de la 1ère à la 6ème année, en mathématiques, arabe, français, anglais et éveil scientifique."}},
-    {"@type": "Question", "name": "Le contenu suit-il vraiment le programme officiel tunisien ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui, chaque section suit le découpage officiel par trimestre du Ministère, avec des dates de calendrier réelles."}},
-    {"@type": "Question", "name": "Comment fonctionne l'essai gratuit ?", "acceptedAnswer": {"@type": "Answer", "text": "Chaque enfant peut essayer gratuitement, une fois, une séance complète sur une matière verrouillée, sans carte bancaire."}},
-    {"@type": "Question", "name": "Comment je suis les progrès de mon enfant ?", "acceptedAnswer": {"@type": "Answer", "text": "Depuis l'espace parent : niveau adapté, suivi détaillé par matière, points forts et points à travailler après chaque séance."}},
-    {"@type": "Question", "name": "La correction est-elle automatique ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui, chaque séance est corrigée automatiquement dès qu'elle est terminée, avec le corrigé complet affiché à l'enfant."}},
-    {"@type": "Question", "name": "Les exercices sont-ils copiés d'un manuel scolaire ?", "acceptedAnswer": {"@type": "Answer", "text": "Non, chaque exercice est généré à partir d'une inspiration pédagogique et vérifié avant publication, jamais recopié d'un manuel existant."}},
-    {"@type": "Question", "name": "Comment débloquer une matière payante ?", "acceptedAnswer": {"@type": "Answer", "text": "Depuis l'espace parent, en choisissant un mode de paiement disponible comme le virement bancaire — l'accès s'active dès la confirmation."}}
+    {"@type": "Question", "name": "ما هو SmartProf؟", "acceptedAnswer": {"@type": "Answer", "text": "SmartProf منصة دعم مدرسي ومساعدة على الواجبات للمرحلة الابتدائية التونسية: تمارين مصحّحة، متأقلمة مع المستوى الحقيقي لكل طفل، بالعربية والفرنسية والإنجليزية."}},
+    {"@type": "Question", "name": "ما هي المستويات والمواد المشمولة؟", "acceptedAnswer": {"@type": "Answer", "text": "السنوات الست للمرحلة الابتدائية التونسية، من السنة الأولى إلى السادسة، في الرياضيات والعربية والفرنسية والإنجليزية والإيقاظ العلمي."}},
+    {"@type": "Question", "name": "هل يتبع المحتوى فعلاً البرنامج الرسمي التونسي؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، كل قسم يتبع التقسيم الرسمي لوزارة التربية حسب الثلاثي، بتواريخ تقويم حقيقية."}},
+    {"@type": "Question", "name": "كيف تعمل التجربة المجانية؟", "acceptedAnswer": {"@type": "Answer", "text": "يمكن لكل طفل أن يجرّب مجانًا، مرة واحدة، حصة كاملة في مادة مقفلة، بدون بطاقة بنكية."}},
+    {"@type": "Question", "name": "كيف أتابع تقدم طفلي؟", "acceptedAnswer": {"@type": "Answer", "text": "من فضاء الولي: مستوى متأقلم، متابعة مفصّلة حسب المادة، نقاط القوة والنقاط المطلوب العمل عليها بعد كل حصة."}},
+    {"@type": "Question", "name": "هل التصحيح آلي؟", "acceptedAnswer": {"@type": "Answer", "text": "نعم، كل حصة تُصحَّح آليًا بمجرد إنهائها، مع عرض التصحيح الكامل للطفل."}},
+    {"@type": "Question", "name": "هل التمارين منسوخة من كتاب مدرسي؟", "acceptedAnswer": {"@type": "Answer", "text": "لا، كل تمرين يُولَّد انطلاقًا من إلهام تربوي ويُراجَع قبل النشر، لا يُنسخ أبدًا من كتاب موجود."}},
+    {"@type": "Question", "name": "كيف أفتح مادة مدفوعة؟", "acceptedAnswer": {"@type": "Answer", "text": "من فضاء الولي، باختيار وسيلة دفع متوفرة مثل التحويل البنكي — يُفعَّل الوصول فور التأكيد."}}
   ]
 }
 </script>
@@ -400,9 +406,9 @@
 <section>
   <div class="container">
     <div class="final-cta">
-      <h2>Prêt à essayer une vraie séance ?</h2>
-      <p>Créez un compte parent, ajoutez votre enfant, et essayez gratuitement une matière verrouillée — sans carte bancaire.</p>
-      <a href="/app?register=1" class="btn btn-primary">Essayer gratuitement</a>
+      <h2 data-fr="Prêt à essayer une vraie séance ?" data-ar="مستعد لتجربة حصة حقيقية؟">مستعد لتجربة حصة حقيقية؟</h2>
+      <p data-fr="Créez un compte parent, ajoutez votre enfant, et essayez gratuitement une matière verrouillée — sans carte bancaire." data-ar="أنشئ حساب ولي، أضف طفلك، وجرّب مجانًا مادة مقفلة — بدون بطاقة بنكية.">أنشئ حساب ولي، أضف طفلك، وجرّب مجانًا مادة مقفلة — بدون بطاقة بنكية.</p>
+      <a href="/app?register=1" class="btn btn-primary" data-fr="Essayer gratuitement" data-ar="جرّب مجانًا">جرّب مجانًا</a>
     </div>
   </div>
 </section>
@@ -410,15 +416,47 @@
 <footer>
   <div class="container">
     <div class="foot-row">
-      <span>SmartProf — plateforme éducative pour le primaire tunisien</span>
-      <span><a href="/app">Accéder à l'application</a> · <a href="/confidentialite">Politique de confidentialité</a></span>
+      <span data-fr="SmartProf — plateforme éducative pour le primaire tunisien" data-ar="SmartProf — منصة تربوية للمرحلة الابتدائية في تونس">SmartProf — منصة تربوية للمرحلة الابتدائية في تونس</span>
+      <span><a href="/app" data-fr="Accéder à l'application" data-ar="الدخول إلى التطبيق">الدخول إلى التطبيق</a> · <a href="/confidentialite" data-fr="Politique de confidentialité" data-ar="سياسة الخصوصية">سياسة الخصوصية</a></span>
     </div>
-    <p class="legal-note">© 2026 SmartProf. Tous droits réservés. L'ensemble du contenu pédagogique, des textes et des visuels de ce site est protégé par le droit d'auteur — toute reproduction, extraction ou réutilisation non autorisée, notamment à des fins d'aspiration automatisée ou de republication, est interdite et peut faire l'objet de poursuites.</p>
+    <p class="legal-note" data-fr="© 2026 SmartProf. Tous droits réservés. L'ensemble du contenu pédagogique, des textes et des visuels de ce site est protégé par le droit d'auteur — toute reproduction, extraction ou réutilisation non autorisée, notamment à des fins d'aspiration automatisée ou de republication, est interdite et peut faire l'objet de poursuites." data-ar="© 2026 SmartProf. جميع الحقوق محفوظة. كل المحتوى التربوي والنصوص والعناصر البصرية لهذا الموقع محمية بحقوق الملكية الفكرية — أي إعادة إنتاج أو استخراج أو استعمال غير مرخّص، لا سيما بغرض الجمع الآلي أو إعادة النشر، ممنوع وقد يعرّض صاحبه للملاحقة القضائية.">© 2026 SmartProf. جميع الحقوق محفوظة. كل المحتوى التربوي والنصوص والعناصر البصرية لهذا الموقع محمية بحقوق الملكية الفكرية — أي إعادة إنتاج أو استخراج أو استعمال غير مرخّص، لا سيما بغرض الجمع الآلي أو إعادة النشر، ممنوع وقد يعرّض صاحبه للملاحقة القضائية.</p>
   </div>
 </footer>
 
 <script>
-const LEVEL_NAMES = {"1":"1ère année","2":"2ème année","3":"3ème année","4":"4ème année","5":"5ème année","6":"6ème année"};
+// --- Bascule de langue (arabe par défaut) -----------------------------------
+// Contrairement à l'app (currentLang figé à 'ar', pas de bascule), la vitrine
+// publique doit permettre au visiteur de choisir -- voir échange avec
+// l'utilisateur du 2026-09-03. L'arabe reste la langue par défaut/de premier
+// chargement, conforme au reste du projet.
+let currentLang = localStorage.getItem('smartprof_vitrine_lang') || 'ar';
+
+function applyLang(){
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-fr][data-ar]').forEach(el => {
+    el.textContent = currentLang === 'ar' ? el.dataset.ar : el.dataset.fr;
+  });
+  document.querySelectorAll('[data-fr-html][data-ar-html]').forEach(el => {
+    el.innerHTML = currentLang === 'ar' ? el.dataset.arHtml : el.dataset.frHtml;
+  });
+  const toggle = document.getElementById('langToggle');
+  if(toggle) toggle.textContent = currentLang === 'ar' ? 'Français' : 'العربية';
+  renderLevelTabs();
+  renderProgGrid();
+}
+
+document.getElementById('langToggle').addEventListener('click', () => {
+  currentLang = currentLang === 'ar' ? 'fr' : 'ar';
+  localStorage.setItem('smartprof_vitrine_lang', currentLang);
+  applyLang();
+});
+
+// --- Programme (chargé depuis l'API, déjà bilingue côté serveur) -----------
+const LEVEL_NAMES = {
+  fr: {"1":"1ère année","2":"2ème année","3":"3ème année","4":"4ème année","5":"5ème année","6":"6ème année"},
+  ar: {"1":"السنة الأولى","2":"السنة الثانية","3":"السنة الثالثة","4":"السنة الرابعة","5":"السنة الخامسة","6":"السنة السادسة"}
+};
 const SUBJECT_ICONS = {
   math: '<svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="14" rx="2" stroke="#FF3D77" stroke-width="1.8"/><path d="M7 9h3M7 13h6" stroke="#FF3D77" stroke-width="1.8" stroke-linecap="round"/></svg>',
   science: '<svg viewBox="0 0 24 24" fill="none"><path d="M9 3v5l-5 9a2 2 0 0 0 1.8 3h12.4a2 2 0 0 0 1.8-3l-5-9V3" stroke="#B4790E" stroke-width="1.8" stroke-linejoin="round"/></svg>',
@@ -426,18 +464,28 @@ const SUBJECT_ICONS = {
   fr: '<svg viewBox="0 0 24 24" fill="none"><path d="M4 19V6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2Zm10-15h6a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-6" stroke="#0E9F6E" stroke-width="1.8" stroke-linejoin="round"/></svg>',
   en: '<svg viewBox="0 0 24 24" fill="none"><path d="M5 10v4h3l4 4V6l-4 4H5Z" stroke="#8A4FE0" stroke-width="1.8" stroke-linejoin="round"/></svg>'
 };
+const PROG_TEXT = {
+  loading: {fr:"Chargement du programme…", ar:"جارٍ تحميل البرنامج…"},
+  unavailable: {fr:"Programme indisponible pour le moment — réessayez dans un instant.", ar:"البرنامج غير متوفر حاليًا — أعد المحاولة بعد قليل."},
+  deploying: {fr:"Programme en cours de déploiement pour cette année.", ar:"البرنامج قيد الإعداد لهذه السنة."},
+  free: {fr:"Gratuit", ar:"مجاني"},
+  paid: {fr:"Sur abonnement", ar:"بالاشتراك"},
+  more: {fr:n => `+ ${n} autres chapitres`, ar:n => `+ ${n} فصول أخرى`}
+};
 
 let SUBJECTS_CACHE = [];
 let SKILLS_CACHE = null;
 let activeLevel = "1";
+let programmeLoaded = false;
 
 async function loadProgramme(){
   try {
     const [subjRes, skillsRes] = await Promise.all([fetch('/api/subjects'), fetch('/api/skills')]);
     SUBJECTS_CACHE = await subjRes.json();
     SKILLS_CACHE = await skillsRes.json();
+    programmeLoaded = true;
   } catch(e){
-    document.getElementById('progGrid').innerHTML = '<p class="prog-empty">Programme indisponible pour le moment — réessayez dans un instant.</p>';
+    document.getElementById('progGrid').innerHTML = `<p class="prog-empty">${PROG_TEXT.unavailable[currentLang]}</p>`;
     return;
   }
   renderLevelTabs();
@@ -446,8 +494,9 @@ async function loadProgramme(){
 
 function renderLevelTabs(){
   const tabs = document.getElementById('levelTabs');
-  tabs.innerHTML = Object.keys(LEVEL_NAMES).map(code =>
-    `<button type="button" class="level-tab${code===activeLevel?' active':''}" data-level="${code}">${LEVEL_NAMES[code]}</button>`
+  const names = LEVEL_NAMES[currentLang];
+  tabs.innerHTML = Object.keys(names).map(code =>
+    `<button type="button" class="level-tab${code===activeLevel?' active':''}" data-level="${code}">${names[code]}</button>`
   ).join('');
   tabs.querySelectorAll('.level-tab').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -460,9 +509,13 @@ function renderLevelTabs(){
 
 function renderProgGrid(){
   const grid = document.getElementById('progGrid');
+  if(!programmeLoaded){
+    grid.innerHTML = `<p class="prog-empty">${PROG_TEXT.loading[currentLang]}</p>`;
+    return;
+  }
   const levelTree = (SKILLS_CACHE && SKILLS_CACHE.levels) ? SKILLS_CACHE.levels[activeLevel] : null;
   if(!levelTree){
-    grid.innerHTML = '<p class="prog-empty">Programme en cours de déploiement pour cette année.</p>';
+    grid.innerHTML = `<p class="prog-empty">${PROG_TEXT.deploying[currentLang]}</p>`;
     return;
   }
   grid.innerHTML = SUBJECTS_CACHE.map(subj => {
@@ -477,21 +530,23 @@ function renderProgGrid(){
     (subjTree.expression || []).forEach(addSection);
     if(!chapters.length) return '';
     const isFree = (subj.free_levels || []).includes(activeLevel);
+    const subjName = currentLang === 'ar' ? subj.name_ar : subj.name;
     const listHtml = chapters.slice(0, 6).map(c =>
-      `<li><span>${c.name_fr}</span><span class="cnt">${c.skill_count}</span></li>`
+      `<li><span>${currentLang === 'ar' ? c.name_ar : c.name_fr}</span><span class="cnt">${c.skill_count}</span></li>`
     ).join('');
-    const more = chapters.length > 6 ? `<li><span>+ ${chapters.length - 6} autres chapitres</span><span></span></li>` : '';
+    const more = chapters.length > 6 ? `<li><span>${PROG_TEXT.more[currentLang](chapters.length - 6)}</span><span></span></li>` : '';
     return `<div class="subj-card">
       <div class="subj-top">
         <div class="subj-ico">${SUBJECT_ICONS[subj.id] || ''}</div>
-        <h3>${subj.name}</h3>
-        <span class="subj-lock ${isFree?'free':'paid'}">${isFree?'Gratuit':'Sur abonnement'}</span>
+        <h3>${subjName}</h3>
+        <span class="subj-lock ${isFree?'free':'paid'}">${isFree?PROG_TEXT.free[currentLang]:PROG_TEXT.paid[currentLang]}</span>
       </div>
       <ul class="chapitre-list">${listHtml}${more}</ul>
     </div>`;
-  }).join('') || '<p class="prog-empty">Programme en cours de déploiement pour cette année.</p>';
+  }).join('') || `<p class="prog-empty">${PROG_TEXT.deploying[currentLang]}</p>`;
 }
 
+applyLang();
 loadProgramme();
 </script>
 
