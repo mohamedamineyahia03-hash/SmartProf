@@ -39,6 +39,14 @@ class CurriculumDomain(db.Model):
     # independent section shown outside the trimester tabs (Expression orale
     # et écrite, Récitation) — no trimester rows are created for it.
     category = db.Column(db.String(16), nullable=False, default="programme")
+    # True only for real mock-exam sections (concours_blanc, revision_generale
+    # — currently niveau 6 only) — orthogonal to `category`, which controls
+    # *where* a section renders in the tree, not how its session is graded.
+    # Everyday practice sections stay False: the child sees correct/incorrect
+    # (and any explanation) right after each answer instead of only at the
+    # end, per the 2026-09-03 decision to reserve deferred-only grading for
+    # actual exam conditions.
+    is_exam = db.Column(db.Boolean, nullable=False, default=False)
 
     level = db.relationship("CurriculumLevel")
     subject = db.relationship("CurriculumSubject")
@@ -229,14 +237,18 @@ class LibraryCacheExercise(db.Model):
 
 
 class Session(db.Model):
-    """An exam-style session: a fixed, varied batch of exercises drawn from one
-    curriculum section (domain) and built all at once — see
-    server/session_engine.build_exam_session(). The child answers every
-    question with no immediate feedback; the corrigé (score + full answer
-    key) is only available once every exercise has an answer, via
-    GET /api/session/<id>/corrige. child_profile_id is nullable for now —
-    accounts don't exist yet (Phase 4), so sessions are anonymous until
-    then."""
+    """A fixed, varied batch of exercises drawn from one curriculum section
+    (domain) and built all at once — see server/session_engine.build_exam_session().
+    Grading timing depends on is_exam (copied from the domain at creation, so
+    it stays stable even if the curriculum changes later): exam sections
+    (concours_blanc, revision_generale) show no feedback until every question
+    is answered, via GET /api/session/<id>/corrige — a real mock exam.
+    Everyday practice sections (is_exam=False, the common case) return
+    correct/incorrect and any explanation immediately in the POST .../answer
+    response instead. Either way an answer, once submitted, can never be
+    resubmitted for the same exercise (see answer_session). child_profile_id
+    is nullable for now — accounts don't exist yet (Phase 4), so sessions are
+    anonymous until then."""
 
     __tablename__ = "session"
 
@@ -246,6 +258,7 @@ class Session(db.Model):
     subject_code = db.Column(db.String(16), nullable=False)
     trimester = db.Column(db.String(2), nullable=False)
     domain_code = db.Column(db.String(64), nullable=False)  # the section this session was started from
+    is_exam = db.Column(db.Boolean, nullable=False, default=False)
     exercise_ids = db.Column(db.JSON, nullable=False)  # the full batch, fixed at session creation
     answers = db.Column(db.JSON, nullable=False, default=dict)  # {exercise_id: {given, correct, skill}}
     created_at = db.Column(db.DateTime, server_default=db.func.now())

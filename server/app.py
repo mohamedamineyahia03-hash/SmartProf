@@ -778,6 +778,7 @@ def start_session():
         subject_code=subject_code,
         trimester=trimester,
         domain_code=domain_code,
+        is_exam=domain_row.is_exam,
         exercise_ids=[e.id for e in exercises],
         answers={},
         client_ip=_client_ip(),
@@ -792,6 +793,7 @@ def start_session():
             "session_id": session_row.id,
             "domain": domain_code,
             "trimester": trimester,
+            "is_exam": session_row.is_exam,
             "total": len(exercises),
             "exercises": [public_exercise_payload(e) for e in exercises],
         }
@@ -862,6 +864,14 @@ def answer_session(session_id):
     if exercise_id not in session_row.exercise_ids:
         return jsonify({"error": "exercise_not_in_session"}), 400
 
+    # An answer, once stored, is final — neither an exam nor an everyday
+    # practice session lets a child change their mind after seeing the next
+    # question's screen (the frontend already disables its inputs post-submit;
+    # this is the server-side guarantee behind that, since exercise_id/answer
+    # is otherwise just a POST body an already-disabled button can't protect).
+    if str(exercise_id) in (session_row.answers or {}):
+        return jsonify({"error": "already_answered"}), 400
+
     exercise = LibraryCacheExercise.query.get(exercise_id)
     if exercise is None:
         return jsonify({"error": "exercise_not_found"}), 404
@@ -912,14 +922,27 @@ def answer_session(session_id):
 
     db.session.commit()
 
-    return jsonify(
-        {
-            "stored": True,
-            "answered_count": len(answers),
-            "total": len(session_row.exercise_ids),
-            "completed": session_row.completed_at is not None,
-        }
-    )
+    response = {
+        "stored": True,
+        "answered_count": len(answers),
+        "total": len(session_row.exercise_ids),
+        "completed": session_row.completed_at is not None,
+    }
+
+    # Everyday practice sections (is_exam=False, the common case) reveal
+    # correct/incorrect — and any explanation — right after this answer
+    # instead of only at the end. Nothing to reveal for grading_mode="open"
+    # (production écrite/récitation, never scored): is_correct is already
+    # None there, so this naturally stays absent for those.
+    if not session_row.is_exam and is_correct is not None:
+        response["feedback"] = {"correct": is_correct}
+        if sub_results is not None:
+            response["feedback"]["sub_results"] = sub_results
+        else:
+            response["feedback"]["correct_answer"] = exercise.content.get("answer")
+            response["feedback"]["explanation"] = exercise.content.get("explanation")
+
+    return jsonify(response)
 
 
 @app.get("/api/session/<int:session_id>/corrige")

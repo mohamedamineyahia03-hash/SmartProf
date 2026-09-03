@@ -32,6 +32,11 @@ import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # server/
 
+# Real mock-exam sections (see module docstring) -- graded like an actual
+# exam (no feedback until every question is answered, see Session.is_exam),
+# unlike every other "programme" section which gives feedback per question.
+EXAM_DOMAIN_CODES = {"concours_blanc", "revision_generale"}
+
 from app import app  # noqa: E402
 from db import db  # noqa: E402
 from models import (  # noqa: E402
@@ -332,6 +337,7 @@ def seed_domain_curriculum(levels, subjects, level_code, subject_code, curriculu
             name_ar=domain_data["name_ar"],
             sort_order=sort_order,
             category=category,
+            is_exam=domain_data["id"] in EXAM_DOMAIN_CODES,
         )
         db.session.add(domain)
         db.session.flush()
@@ -389,6 +395,7 @@ def seed_skeleton_curriculum(levels, subjects, subject_code, skeleton):
                 name_fr=name,
                 name_ar=name,  # no Arabic label authored yet for these levels
                 sort_order=sort_order,
+                is_exam=code in EXAM_DOMAIN_CODES,
             )
             db.session.add(domain)
             db.session.flush()

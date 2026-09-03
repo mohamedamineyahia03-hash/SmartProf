@@ -1261,7 +1261,7 @@ async function startExamSession(subjectId, domainCode, trimester){
   if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
   if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
 
-  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, subjectId, level: currentLevel};
+  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, subjectId, level: currentLevel, isExam: !!data.is_exam};
   renderSessionQuestion();
 }
 
@@ -1663,12 +1663,60 @@ async function submitAnswer(answer){
     return;
   }
 
-  if(data.completed){
+  if(data.feedback){
+    renderInlineFeedback(data.feedback, data.completed);
+    return;
+  }
+  advanceSession(data.completed);
+}
+
+function advanceSession(completed){
+  if(completed){
     renderSessionSummary();
   } else {
     currentSession.index += 1;
     renderSessionQuestion();
   }
+}
+
+// Séance de pratique courante (is_exam=false, le cas normal) : contrairement
+// à une session-examen, l'enfant voit tout de suite si sa réponse est bonne
+// (et l'explication si disponible) plutôt qu'attendre le corrigé final —
+// voir GET/POST .../answer côté serveur. Cette bannière s'insère dans la
+// carte déjà affichée, puis le bouton "Valider" devient "Suivant"/"Terminer"
+// pour avancer explicitement, sans jamais permettre de changer la réponse.
+function renderInlineFeedback(feedback, completed){
+  const view = document.getElementById('sessionView');
+  const actions = view.querySelector('.session-actions');
+  const isLast = currentSession.index === currentSession.exercises.length - 1;
+
+  let bannerHtml;
+  if(feedback.sub_results){
+    const rows = feedback.sub_results.map((r, i) => `
+      <div class="sub-question-feedback">
+        <span class="corrige-badge">${r.correct ? '✅' : '❌'}</span>
+        ${!r.correct ? `<span>${incorrectFeedbackText(r.correct_answer)}</span>` : ''}
+        ${r.explanation ? `<div class="feedback-explain">${r.explanation}</div>` : ''}
+      </div>`).join('');
+    const allCorrect = feedback.sub_results.every(r => r.correct);
+    bannerHtml = `<div class="feedback-banner ${allCorrect ? 'correct' : 'incorrect'}">${rows}</div>`;
+  } else {
+    bannerHtml = `<div class="feedback-banner ${feedback.correct ? 'correct' : 'incorrect'}">
+      ${feedback.correct ? TEXT.correctFeedback[currentLang] : incorrectFeedbackText(feedback.correct_answer)}
+      ${feedback.explanation ? `<p class="feedback-explain">${feedback.explanation}</p>` : ''}
+    </div>`;
+  }
+
+  const banner = document.createElement('div');
+  banner.innerHTML = bannerHtml;
+  actions.insertAdjacentElement('beforebegin', banner.firstElementChild);
+
+  const validateBtn = document.getElementById('validateBtn');
+  validateBtn.disabled = false;
+  validateBtn.textContent = isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang];
+  const advance = () => advanceSession(completed);
+  validateBtn.replaceWith(validateBtn.cloneNode(true));
+  document.getElementById('validateBtn').addEventListener('click', advance);
 }
 
 function corrigeItemHtml(item, i){
