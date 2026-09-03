@@ -1,10 +1,14 @@
 import hmac
+import logging
 import os
 from datetime import datetime, timedelta, timezone
 from functools import wraps
+from logging.handlers import RotatingFileHandler
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from sqlalchemy.orm import joinedload
 
 from db import db
@@ -28,8 +32,20 @@ from session_engine import build_exam_session
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FREE_CHILD_SLOTS = 2
 
+# Set SMARTPROF_ENV=production on any real deployment. Gates the dev-secret
+# check below and nothing else — local/dev/staging all behave as before.
+IS_PRODUCTION = os.environ.get("SMARTPROF_ENV", "development") == "production"
+
 app = Flask(__name__)
-CORS(app)
+
+# Open by default (matches prior behaviour, convenient for local dev). Set
+# ALLOWED_ORIGINS to a comma-separated list (e.g. "https://smartprof.tn")
+# to restrict it — required before a real deployment goes live.
+_allowed_origins = os.environ.get("ALLOWED_ORIGINS")
+if _allowed_origins:
+    CORS(app, origins=[o.strip() for o in _allowed_origins.split(",") if o.strip()])
+else:
+    CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
     "DATABASE_URL", "sqlite:///" + os.path.join(BASE_DIR, "smartprof.db")
@@ -37,13 +53,68 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Dev fallback only — MUST be overridden via env var before any real deployment,
 # otherwise session cookies could be forged by anyone who reads this source.
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-insecure-secret-change-in-production")
+_DEV_SECRET_KEY = "dev-only-insecure-secret-change-in-production"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", _DEV_SECRET_KEY)
 db.init_app(app)
 
 # Dev fallback only, same rule as SECRET_KEY and library-service's API_KEY —
 # gates the payment-confirmation admin routes. No admin/staff account system
 # exists yet, so a shared key (checked in constant time) is the whole model.
-ADMIN_KEY = os.environ.get("ADMIN_KEY", "dev-local-admin-key")
+_DEV_ADMIN_KEY = "dev-local-admin-key"
+ADMIN_KEY = os.environ.get("ADMIN_KEY", _DEV_ADMIN_KEY)
+
+if IS_PRODUCTION and (app.config["SECRET_KEY"] == _DEV_SECRET_KEY or ADMIN_KEY == _DEV_ADMIN_KEY):
+    raise RuntimeError(
+        "SMARTPROF_ENV=production but SECRET_KEY and/or ADMIN_KEY are still the dev "
+        "defaults. Set both via environment variables before starting a real deployment."
+    )
+
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per minute"], storage_uri="memory://")
+
+# Local rotating log file — a real hosted error tracker (e.g. Sentry) needs its
+# own account/DSN, which is a decision for whoever deploys this; this gives a
+# durable local record of server errors in the meantime, in any environment.
+_LOG_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(_LOG_DIR, exist_ok=True)
+_file_handler = RotatingFileHandler(os.path.join(_LOG_DIR, "app.log"), maxBytes=2_000_000, backupCount=5)
+_file_handler.setLevel(logging.WARNING)
+_file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
+app.logger.addHandler(_file_handler)
+app.logger.setLevel(logging.WARNING)
+
+
+@app.errorhandler(Exception)
+def _log_unhandled_exception(exc):
+    from werkzeug.exceptions import HTTPException
+
+    if isinstance(exc, HTTPException):
+        return exc
+    app.logger.exception("Unhandled exception on %s %s", request.method, request.path)
+    return jsonify({"error": "internal_error"}), 500
+
+
+@app.after_request
+def _security_headers(response):
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    # 'unsafe-inline' is required because the app/vitrine pages use inline
+    # <script>/<style> blocks rather than external files — this CSP still
+    # blocks loading script/style/frames from any other origin, which is
+    # the actual attack surface for stored/reflected XSS on this app.
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data:; "
+        "connect-src 'self'; "
+        "frame-ancestors 'none'; "
+        "object-src 'none'"
+    )
+    if IS_PRODUCTION:
+        response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+    return response
 
 
 def require_admin_key(fn):
@@ -73,6 +144,16 @@ def index():
 @app.get("/confidentialite")
 def privacy_policy():
     return send_from_directory(BASE_DIR.replace("server", "web"), "confidentialite.html")
+
+
+@app.get("/mentions-legales")
+def legal_notice():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "mentions-legales.html")
+
+
+@app.get("/cgu")
+def terms_of_use():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "cgu.html")
 
 
 @app.get("/robots.txt")
@@ -272,6 +353,7 @@ def user_payload(user):
 
 
 @app.post("/api/auth/register")
+@limiter.limit("10 per hour")
 def register():
     data = request.get_json(silent=True) or {}
     user, error = register_user(data.get("email"), data.get("password"), data.get("ref"))
@@ -290,6 +372,7 @@ def register():
 
 
 @app.post("/api/auth/login")
+@limiter.limit("15 per hour")
 def login():
     data = request.get_json(silent=True) or {}
     user = authenticate(data.get("email"), data.get("password"))
@@ -865,6 +948,7 @@ def serialize_payment(payment):
 
 
 @app.post("/api/payments/bank-transfer/request")
+@limiter.limit("20 per hour")
 def request_bank_transfer():
     """Creates a trackable Payment and hands back a reference + the
     business's RIB — the transfer itself happens outside this app entirely.
@@ -956,4 +1040,6 @@ def admin_payments_page():
 
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    # debug=True (autoreload + interactive debugger) only outside production —
+    # never expose the Werkzeug debugger publicly.
+    app.run(host="127.0.0.1", port=5000, debug=not IS_PRODUCTION)

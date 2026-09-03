@@ -895,7 +895,10 @@ const PARENT_TEXT = {
   referralTitle:{fr:"🎁 Parraine d'autres parents", ar:"🎁 ادعُ أولياء آخرين"},
   referralNote:{fr:"Partage ce lien avec d'autres parents (groupe WhatsApp de la classe, Facebook...). Chaque parent inscrit grâce à toi te fera gagner un avantage sur SmartProf.", ar:"شارك هذا الرابط مع أولياء آخرين (مجموعة واتساب القسم، فيسبوك...). كل ولي يسجل بفضلك يمنحك ميزة على سمارت بروف."},
   copyLink:{fr:"Copier le lien", ar:"نسخ الرابط"},
-  linkCopied:{fr:"Lien copié !", ar:"تم نسخ الرابط!"}
+  linkCopied:{fr:"Lien copié !", ar:"تم نسخ الرابط!"},
+  supportTitle:{fr:"Besoin d'aide ?", ar:"تحتاج مساعدة؟"},
+  supportNote:{fr:"Une question sur votre compte, un paiement ou un enfant ? Écrivez-nous.", ar:"لديك سؤال حول حسابك أو عملية دفع أو أحد أبنائك؟ راسلنا."},
+  supportEmail:{fr:"contact@smartprof.tn", ar:"contact@smartprof.tn"}
 };
 
 const REPORT_TEXT = {
@@ -1970,6 +1973,8 @@ function renderParentDashboard(view){
           <button type="submit" class="btn-primary">${PARENT_TEXT.addChildSubmit[currentLang]}</button>
         </div>
       </form>
+      <h3 class="parent-section-title">${PARENT_TEXT.supportTitle[currentLang]}</h3>
+      <p class="muted-note">${PARENT_TEXT.supportNote[currentLang]} <a href="mailto:${PARENT_TEXT.supportEmail[currentLang]}">${PARENT_TEXT.supportEmail[currentLang]}</a></p>
     </div>
   `;
 
