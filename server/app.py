@@ -5,6 +5,7 @@ from functools import wraps
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+from sqlalchemy.orm import joinedload
 
 from db import db
 from models import (
@@ -354,11 +355,16 @@ def _as_naive_utc(dt):
     return dt
 
 
-def _skill_label(skill_code, lang):
-    skill = CurriculumSkill.query.filter_by(code=skill_code).first()
-    if skill is None:
-        return skill_code.replace("_", " ")
-    return skill.name_ar if lang == "ar" else skill.name_fr
+def _skill_labels(skill_codes, lang):
+    """Batched version of _skill_label — one query for every code instead of
+    one per code, used by child_report() where both skill breakdowns can
+    otherwise issue dozens of individual lookups."""
+    skill_codes = list(skill_codes)
+    if not skill_codes:
+        return {}
+    rows = CurriculumSkill.query.filter(CurriculumSkill.code.in_(skill_codes)).all()
+    found = {row.code: (row.name_ar if lang == "ar" else row.name_fr) for row in rows}
+    return {code: found.get(code, code.replace("_", " ")) for code in skill_codes}
 
 
 def _session_score(session_row):
@@ -413,10 +419,11 @@ def child_report(child_id):
             stats["total"] += 1
             if answer.get("correct"):
                 stats["correct"] += 1
+    week_labels = _skill_labels(week_skill_stats.keys(), lang)
     skills_this_week = [
         {
             "skill": skill,
-            "label": _skill_label(skill, lang),
+            "label": week_labels[skill],
             "correct": stats["correct"],
             "total": stats["total"],
             "percentage": round(100 * stats["correct"] / stats["total"]) if stats["total"] else 0,
@@ -436,10 +443,11 @@ def child_report(child_id):
             if answer.get("correct"):
                 stats["correct"] += 1
 
+    all_labels = _skill_labels(skill_stats.keys(), lang)
     skills = [
         {
             "skill": skill,
-            "label": _skill_label(skill, lang),
+            "label": all_labels[skill],
             "correct": stats["correct"],
             "total": stats["total"],
             "percentage": round(100 * stats["correct"] / stats["total"]) if stats["total"] else 0,
@@ -574,7 +582,8 @@ def start_session():
     if subject_row is None:
         return jsonify({"error": "invalid_subject"}), 400
 
-    if is_subject_locked(level_code, subject_row, user_id=user.id if user else None):
+    subject_locked = is_subject_locked(level_code, subject_row, user_id=user.id if user else None)
+    if subject_locked:
         # One free look per child per paid subject (any level, any section) —
         # a diagnostic trial before asking a parent to pay, not a loophole:
         # anonymous play (no child) never gets it, it's spent the moment this
@@ -637,7 +646,7 @@ def start_session():
         answers={},
         client_ip=_client_ip(),
         user_agent=(request.headers.get("User-Agent") or "")[:255],
-        is_trial=is_subject_locked(level_code, subject_row, user_id=user.id if user else None),
+        is_trial=subject_locked,
     )
     db.session.add(session_row)
     db.session.commit()
@@ -875,6 +884,13 @@ def request_bank_transfer():
         return jsonify({"error": "invalid_subject"}), 400
     if CurriculumLevel.query.filter_by(code=level_code).first() is None:
         return jsonify({"error": "invalid_level"}), 400
+    # Anything other than "annual" is treated by bank_transfer.verify() as a
+    # never-expiring one_time grant -- without this check a caller could send
+    # billing_cycle="whatever" and get permanent access confirmed for the
+    # price of an annual one, since the admin only sees the label, not this
+    # branch, when confirming.
+    if billing_cycle not in ("annual", "one_time"):
+        return jsonify({"error": "invalid_billing_cycle"}), 400
 
     payment = bank_transfer.create_request(user.id, subject_code, level_code, billing_cycle)
     return jsonify({"payment": serialize_payment(payment), "bank_details": bank_transfer.bank_details()})
@@ -892,7 +908,12 @@ def my_payments():
 @app.get("/api/admin/payments/pending")
 @require_admin_key
 def admin_pending_payments():
-    rows = Payment.query.filter_by(status="pending_verification").order_by(Payment.created_at).all()
+    rows = (
+        Payment.query.options(joinedload(Payment.user))
+        .filter_by(status="pending_verification")
+        .order_by(Payment.created_at)
+        .all()
+    )
     return jsonify(
         [
             {
@@ -911,7 +932,18 @@ def admin_verify_payment(payment_id):
     if payment is None:
         return jsonify({"error": "not_found"}), 404
     data = request.get_json(silent=True) or {}
-    bank_transfer.verify(payment, verified_by=data.get("verified_by", "admin"), amount_tnd=data.get("amount_tnd"))
+    amount_tnd = data.get("amount_tnd")
+    # amount_tnd is admin-supplied free text on the confirmation page (see
+    # web/admin_payments.html) -- reject anything that isn't a plausible
+    # positive amount rather than trusting it straight into the Numeric(8,2)
+    # column (a negative value would "confirm" a transfer that pays nothing,
+    # a non-numeric value would blow up at the DB layer instead of a clean 400).
+    if amount_tnd is not None:
+        if isinstance(amount_tnd, bool) or not isinstance(amount_tnd, (int, float)):
+            return jsonify({"error": "invalid_amount"}), 400
+        if amount_tnd <= 0 or amount_tnd > 999999.99:
+            return jsonify({"error": "invalid_amount"}), 400
+    bank_transfer.verify(payment, verified_by=data.get("verified_by", "admin"), amount_tnd=amount_tnd)
     return jsonify(serialize_payment(payment))
 
 

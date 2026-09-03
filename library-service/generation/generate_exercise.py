@@ -245,13 +245,18 @@ def generate_exercise(
             raw_text = next((b.text for b in message.content if b.type == "text"), "")
             run.raw_model_output = raw_text
             parsed = _parse_json_response(raw_text)
+            if not isinstance(parsed, dict) or not isinstance(parsed.get("content"), dict):
+                # Valid JSON but not the expected shape (e.g. missing/wrong-typed
+                # "content") — without this check, parsed["content"] below would
+                # raise an uncaught KeyError/TypeError and crash the request.
+                raise ValueError("model response missing a 'content' object")
         except anthropic.APIError as exc:
             run.status = "failed"
             run.raw_model_output = str(exc)
             db.session.add(run)
             db.session.commit()
             return run, None
-        except (json.JSONDecodeError, IndexError):
+        except (json.JSONDecodeError, IndexError, ValueError):
             run.status = "flagged_for_review"
             parsed = _dry_run_output(skill, exercise_format, language)
     else:

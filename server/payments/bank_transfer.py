@@ -66,11 +66,35 @@ def verify(payment, verified_by, amount_tnd=None):
     if payment.status == "confirmed":
         return payment
 
-    payment.status = "confirmed"
-    payment.verified_by = verified_by
-    payment.verified_at = datetime.utcnow()
+    # The check above is only a fast path -- it can't stop two /verify calls
+    # that race each other (a double-click, or two admins on the same stale
+    # pending list) from both reading status="pending_verification" before
+    # either writes. If that happened with a plain attribute assignment,
+    # both requests would fall through to the entitlement code below and a
+    # renewal would stack two 365-day extensions on top of each other.
+    # Guard against it with a single atomic UPDATE ... WHERE status=
+    # 'pending_verification': the database, not this process, decides which
+    # caller (if any) actually gets to flip the row, and the loser's rowcount
+    # comes back 0 so it can just return the winner's already-committed result.
+    update_values = {
+        "status": "confirmed",
+        "verified_by": verified_by,
+        "verified_at": datetime.utcnow(),
+    }
     if amount_tnd is not None:
-        payment.amount_tnd = amount_tnd
+        update_values["amount_tnd"] = amount_tnd
+
+    claimed = (
+        Payment.query.filter_by(id=payment.id, status="pending_verification")
+        .update(update_values, synchronize_session=False)
+    )
+    if claimed == 0:
+        db.session.commit()
+        db.session.refresh(payment)
+        return payment
+
+    for key, value in update_values.items():
+        setattr(payment, key, value)
 
     entitlement = Entitlement.query.filter_by(
         user_id=payment.user_id, subject_code=payment.subject_code, level_code=payment.level_code
