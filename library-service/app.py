@@ -3,11 +3,11 @@ import os
 from functools import wraps
 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 
 from db import db
-from generation.publish import approve, reject
+from generation.publish import approve, reject, bucket_sample, bulk_approve_bucket, bulk_reject_bucket
 from models import Exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -61,6 +61,13 @@ def serialize_exercise(exercise):
 @app.get("/api/health")
 def health():
     return {"status": "ok", "app": "SmartProf Library Service"}
+
+
+@app.get("/admin")
+def admin_page():
+    """Internal review tool -- not linked from anywhere public, gated by the
+    same X-Api-Key the JSON admin routes require (entered client-side)."""
+    return send_from_directory(BASE_DIR, "admin.html")
 
 
 @app.get("/api/v1/exercises/export")
@@ -142,6 +149,56 @@ def admin_reject_exercise(exercise_id):
         return jsonify({"error": "not_found"}), 404
     reject(exercise)
     return jsonify(serialize_admin_exercise(exercise))
+
+
+@app.get("/api/admin/buckets")
+@require_service_api_key
+def admin_pending_buckets():
+    """One row per (level, subject, domain) still holding draft content --
+    77 buckets covers the entire 20 573-exercise backlog, versus reviewing
+    20 573 rows one by one. Each bucket carries a small sample so a human
+    can make one real judgment call per bucket instead of per exercise."""
+    rows = (
+        db.session.query(Exercise.level_code, Exercise.subject_code, Exercise.domain_code, db.func.count(Exercise.id))
+        .filter(Exercise.status == "draft")
+        .group_by(Exercise.level_code, Exercise.subject_code, Exercise.domain_code)
+        .order_by(Exercise.level_code, Exercise.subject_code, Exercise.domain_code)
+        .all()
+    )
+    return jsonify(
+        [
+            {
+                "level": level,
+                "subject": subject,
+                "domain": domain,
+                "pending_count": count,
+                "sample": [serialize_admin_exercise(e) for e in bucket_sample(level, subject, domain)],
+            }
+            for level, subject, domain, count in rows
+        ]
+    )
+
+
+@app.post("/api/admin/buckets/approve")
+@require_service_api_key
+def admin_approve_bucket():
+    data = request.get_json(silent=True) or {}
+    level, subject, domain = data.get("level"), data.get("subject"), data.get("domain")
+    if not (level and subject and domain):
+        return jsonify({"error": "level, subject and domain are required"}), 400
+    result = bulk_approve_bucket(level, subject, domain, reviewed_by=data.get("reviewed_by", "admin"))
+    return jsonify(result)
+
+
+@app.post("/api/admin/buckets/reject")
+@require_service_api_key
+def admin_reject_bucket():
+    data = request.get_json(silent=True) or {}
+    level, subject, domain = data.get("level"), data.get("subject"), data.get("domain")
+    if not (level and subject and domain):
+        return jsonify({"error": "level, subject and domain are required"}), 400
+    result = bulk_reject_bucket(level, subject, domain, reviewed_by=data.get("reviewed_by", "admin"))
+    return jsonify(result)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartProf — Relecture bibliothèque</title>
+<style>
+  :root{
+    --bg:#12162B; --surface:#1C2244; --surface-2:#242B52; --border:rgba(237,235,250,.1);
+    --text:#EDEBFA; --muted:#9296C4; --accent:#FF3D77; --good:#34D399; --warn:#FFC93C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',sans-serif;}
+  .wrap{max-width:860px;margin:0 auto;padding:32px 20px 80px;}
+  h1{font-size:1.4rem;margin:0 0 4px;}
+  .sub{color:var(--muted);font-size:.85rem;margin:0 0 20px;}
+  .key-row{display:flex;gap:8px;margin-bottom:24px;}
+  .key-row input{flex:1;padding:8px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);}
+  .key-row button, .bucket-actions button{padding:8px 14px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:.85rem;}
+  .btn-save{background:var(--surface-2);color:var(--text);border:1px solid var(--border) !important;}
+  .btn-approve{background:var(--good);color:#06231a;}
+  .btn-reject{background:var(--accent);color:#2a0713;}
+  .btn-approve:disabled, .btn-reject:disabled{opacity:.5;cursor:default;}
+  .summary{display:flex;gap:16px;margin-bottom:20px;font-size:.85rem;color:var(--muted);}
+  .summary b{color:var(--text);}
+  .bucket{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+  .bucket-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;}
+  .bucket-title{font-weight:600;}
+  .bucket-title .code{color:var(--muted);font-weight:400;font-size:.8rem;}
+  .bucket-count{font-size:.78rem;background:var(--surface-2);padding:3px 9px;border-radius:999px;color:var(--warn);}
+  .sample{margin-top:12px;border-top:1px solid var(--border);padding-top:10px;}
+  .sample-item{font-size:.85rem;padding:6px 0;border-bottom:1px dashed var(--border);}
+  .sample-item:last-child{border-bottom:none;}
+  .sample-item .q{color:var(--text);}
+  .sample-item .meta{color:var(--muted);font-size:.75rem;margin-top:2px;}
+  .bucket-actions{margin-top:12px;display:flex;gap:8px;}
+  .empty{color:var(--muted);text-align:center;padding:60px 0;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--surface-2);border:1px solid var(--border);padding:10px 18px;border-radius:10px;font-size:.85rem;display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Relecture de la bibliothèque</h1>
+  <p class="sub">Un lot = un (niveau, matière, domaine). Regardez l'échantillon, puis approuvez ou rejetez tout le lot d'un coup.</p>
+
+  <div class="key-row">
+    <input id="apiKey" type="password" placeholder="Clé API (X-Api-Key)">
+    <button class="btn-save" id="saveKey">Charger</button>
+  </div>
+
+  <div class="summary" id="summary"></div>
+  <div id="buckets"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const API = location.origin;
+const keyInput = document.getElementById('apiKey');
+const toast = document.getElementById('toast');
+keyInput.value = localStorage.getItem('smartprof_admin_key') || '';
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.style.display = 'block';
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.style.display = 'none', 2500);
+}
+
+async function callApi(path, opts = {}){
+  const res = await fetch(API + path, {
+    ...opts,
+    headers: {'Content-Type': 'application/json', 'X-Api-Key': keyInput.value, ...(opts.headers || {})},
+  });
+  if(res.status === 401){ showToast('Clé API invalide.'); throw new Error('unauthorized'); }
+  if(!res.ok){ showToast('Erreur serveur (' + res.status + ').'); throw new Error('http ' + res.status); }
+  return res.json();
+}
+
+function bucketHtml(b){
+  const samples = b.sample.map(e => `
+    <div class="sample-item">
+      <div class="q">${(e.content && e.content.question) ? escapeHtml(e.content.question) : '(pas de question)'}</div>
+      <div class="meta">#${e.id} · ${escapeHtml(e.skill)} · ${escapeHtml(e.format)} · ${escapeHtml(e.difficulty)}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="bucket" data-level="${b.level}" data-subject="${b.subject}" data-domain="${b.domain}">
+      <div class="bucket-head">
+        <div class="bucket-title">${escapeHtml(b.subject)} — niveau ${escapeHtml(b.level)} <span class="code">${escapeHtml(b.domain)}</span></div>
+        <div class="bucket-count">${b.pending_count} en attente</div>
+      </div>
+      <div class="sample">${samples || '<div class="sample-item">(échantillon vide)</div>'}</div>
+      <div class="bucket-actions">
+        <button class="btn-approve">✅ Approuver le lot (${b.pending_count})</button>
+        <button class="btn-reject">❌ Rejeter le lot</button>
+      </div>
+    </div>
+  `;
+}
+
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadBuckets(){
+  const buckets = await callApi('/api/admin/buckets');
+  document.getElementById('summary').innerHTML =
+    `<span><b>${buckets.length}</b> lots en attente</span><span><b>${buckets.reduce((s,b) => s+b.pending_count,0)}</b> exercices au total</span>`;
+
+  const container = document.getElementById('buckets');
+  if(!buckets.length){
+    container.innerHTML = '<p class="empty">Rien en attente — tout est déjà relu.</p>';
+    return;
+  }
+  container.innerHTML = buckets.map(bucketHtml).join('');
+
+  container.querySelectorAll('.bucket').forEach(el => {
+    const {level, subject, domain} = el.dataset;
+    el.querySelector('.btn-approve').addEventListener('click', async (ev) => {
+      ev.target.disabled = true;
+      try {
+        const r = await callApi('/api/admin/buckets/approve', {method: 'POST', body: JSON.stringify({level, subject, domain})});
+        showToast(`Approuvé : ${r.total} exercices publiés.`);
+        el.remove();
+      } catch { ev.target.disabled = false; }
+    });
+    el.querySelector('.btn-reject').addEventListener('click', async (ev) => {
+      if(!confirm('Rejeter tout ce lot ? Les exercices passeront en "retired".')) return;
+      ev.target.disabled = true;
+      try {
+        const r = await callApi('/api/admin/buckets/reject', {method: 'POST', body: JSON.stringify({level, subject, domain})});
+        showToast(`Rejeté : ${r.rejected} exercices.`);
+        el.remove();
+      } catch { ev.target.disabled = false; }
+    });
+  });
+}
+
+document.getElementById('saveKey').addEventListener('click', () => {
+  localStorage.setItem('smartprof_admin_key', keyInput.value);
+  loadBuckets().catch(() => {});
+});
+
+if(keyInput.value) loadBuckets().catch(() => {});
+</script>
+</body>
+</html>

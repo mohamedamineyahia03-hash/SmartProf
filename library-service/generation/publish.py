@@ -54,3 +54,56 @@ def reject(exercise, reviewed_by="admin"):
     exercise.reviewed_at = datetime.now(timezone.utc)
     db.session.commit()
     return exercise
+
+
+def bucket_sample(level_code, subject_code, domain_code, sample_size=3):
+    """The exercises a human should actually look at before approving a
+    bucket -- the oldest ones (lowest id), same selection order approve/
+    bulk_approve_bucket use, so what's shown is exactly what gets marked
+    human-reviewed."""
+    return (
+        Exercise.query.filter_by(
+            level_code=level_code, subject_code=subject_code, domain_code=domain_code, status="draft"
+        )
+        .order_by(Exercise.id)
+        .limit(sample_size)
+        .all()
+    )
+
+
+def bulk_approve_bucket(level_code, subject_code, domain_code, reviewed_by="admin", sample_size=3):
+    """Applies the review policy documented at the top of this file to an
+    entire (level, subject, domain) bucket at once: the first `sample_size`
+    exercises (oldest first) are approved individually, as a real human
+    review record (reviewed_by/reviewed_at) -- these must be the same ones
+    a reviewer was actually shown (see bucket_sample). Every other draft
+    exercise in the bucket is then auto-published, exactly like
+    try_auto_publish() would do for newly generated content once the
+    bucket is trusted -- this is the retroactive equivalent for content
+    that was bulk-imported and never went through the generation
+    pipeline's own validate()/try_auto_publish() call."""
+    sample = bucket_sample(level_code, subject_code, domain_code, sample_size)
+    for exercise in sample:
+        approve(exercise, reviewed_by=reviewed_by)
+
+    remaining = Exercise.query.filter_by(
+        level_code=level_code, subject_code=subject_code, domain_code=domain_code, status="draft"
+    ).all()
+    for exercise in remaining:
+        exercise.review_status = "auto_passed_schema"
+        exercise.status = "published"
+    db.session.commit()
+
+    return {"approved_by_review": len(sample), "auto_published": len(remaining), "total": len(sample) + len(remaining)}
+
+
+def bulk_reject_bucket(level_code, subject_code, domain_code, reviewed_by="admin"):
+    """Rejects every remaining draft exercise in a bucket -- for when the
+    sample shown to the reviewer was bad enough that nothing in the bucket
+    should be trusted."""
+    rows = Exercise.query.filter_by(
+        level_code=level_code, subject_code=subject_code, domain_code=domain_code, status="draft"
+    ).all()
+    for exercise in rows:
+        reject(exercise, reviewed_by=reviewed_by)
+    return {"rejected": len(rows)}
