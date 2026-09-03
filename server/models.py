@@ -144,6 +144,32 @@ class Entitlement(db.Model):
     source = db.Column(db.String(16), nullable=False, default="purchase_onetime")
 
 
+class Payment(db.Model):
+    __tablename__ = "payment"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    subject_code = db.Column(db.String(16), nullable=False)
+    level_code = db.Column(db.String(1), nullable=False)
+    billing_cycle = db.Column(db.String(16), nullable=False, default="annual")  # "annual" | "one_time"
+    provider = db.Column(db.String(24), nullable=False, default="bank_transfer")
+    # "pending_verification": bank_transfer only, no instant webhook -- an
+    # admin has to look at the actual bank statement before confirming.
+    # Other providers (Konnect/Flouci, once integrated) would go straight to
+    # "confirmed" via their own webhook instead of sitting here.
+    status = db.Column(db.String(24), nullable=False, default="pending_verification")
+    # A short reference the payer is asked to put in the transfer's label,
+    # so an admin can match an anonymous bank statement line back to this
+    # row without guessing.
+    reference = db.Column(db.String(32), unique=True, nullable=False)
+    amount_tnd = db.Column(db.Numeric(8, 2), nullable=True)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    verified_at = db.Column(db.DateTime, nullable=True)
+    verified_by = db.Column(db.String(64), nullable=True)
+
+    user = db.relationship("User")
+
+
 class DiagnosticResult(db.Model):
     __tablename__ = "diagnostic_result"
 

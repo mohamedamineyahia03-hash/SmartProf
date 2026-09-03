@@ -1,5 +1,7 @@
+import hmac
 import os
 from datetime import datetime, timedelta, timezone
+from functools import wraps
 
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
@@ -12,11 +14,14 @@ from models import (
     CurriculumSkill,
     CurriculumSubject,
     LibraryCacheExercise,
+    Payment,
     Session,
 )
 from academic_calendar import TRIMESTER_DATES, current_trimester, is_trimester_unlocked
 from auth import authenticate, current_user, login_user, logout_user, register_user
 from diagnostic_engine import diagnose
+from entitlements import has_active_entitlement
+from payments import bank_transfer
 from session_engine import build_exam_session
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -33,6 +38,21 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # otherwise session cookies could be forged by anyone who reads this source.
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-only-insecure-secret-change-in-production")
 db.init_app(app)
+
+# Dev fallback only, same rule as SECRET_KEY and library-service's API_KEY —
+# gates the payment-confirmation admin routes. No admin/staff account system
+# exists yet, so a shared key (checked in constant time) is the whole model.
+ADMIN_KEY = os.environ.get("ADMIN_KEY", "dev-local-admin-key")
+
+
+def require_admin_key(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not hmac.compare_digest(request.headers.get("X-Admin-Key") or "", ADMIN_KEY):
+            return jsonify({"error": "unauthorized"}), 401
+        return fn(*args, **kwargs)
+
+    return wrapper
 
 
 @app.get("/")
@@ -440,12 +460,13 @@ def _ip_already_used_trial(client_ip, subject_code):
     )
 
 
-def is_subject_locked(level_code, subject_row):
+def is_subject_locked(level_code, subject_row, user_id=None):
     """A subject requires an unlock at any level not listed in its free_levels
-    (e.g. Fr/En at levels 1-2, En also at level 3). No account/entitlement
-    system exists yet (Phase 4), so any locked combination is always locked
-    for now — the free ones are never affected."""
-    return level_code not in (subject_row.free_levels or [])
+    (e.g. Fr/En at levels 1-2, En also at level 3) -- unless this user holds
+    an active Entitlement for it (granted by a confirmed payment)."""
+    if level_code in (subject_row.free_levels or []):
+        return False
+    return not has_active_entitlement(user_id, subject_row.code, level_code)
 
 
 def public_content(content):
@@ -493,9 +514,9 @@ def start_session():
     # attribute their own session to a different child, fully independently:
     # nothing here serializes across devices, so two children can be mid-session
     # in parallel with no coordination needed.
+    user = current_user()
     child = None
     if child_id is not None:
-        user = current_user()
         if user is None:
             return jsonify(
                 {"error": "not_authenticated", "message": "Connexion parent requise pour sélectionner un enfant."}
@@ -512,7 +533,7 @@ def start_session():
     if subject_row is None:
         return jsonify({"error": "invalid_subject"}), 400
 
-    if is_subject_locked(level_code, subject_row):
+    if is_subject_locked(level_code, subject_row, user_id=user.id if user else None):
         # One free look per child per paid subject (any level, any section) —
         # a diagnostic trial before asking a parent to pay, not a loophole:
         # anonymous play (no child) never gets it, it's spent the moment this
@@ -575,7 +596,7 @@ def start_session():
         answers={},
         client_ip=_client_ip(),
         user_agent=(request.headers.get("User-Agent") or "")[:255],
-        is_trial=is_subject_locked(level_code, subject_row),
+        is_trial=is_subject_locked(level_code, subject_row, user_id=user.id if user else None),
     )
     db.session.add(session_row)
     db.session.commit()
@@ -776,6 +797,89 @@ def session_corrige(session_id):
             "items": items,
         }
     )
+
+
+def serialize_payment(payment):
+    return {
+        "id": payment.id,
+        "subject": payment.subject_code,
+        "level": payment.level_code,
+        "billing_cycle": payment.billing_cycle,
+        "provider": payment.provider,
+        "status": payment.status,
+        "reference": payment.reference,
+        "amount_tnd": float(payment.amount_tnd) if payment.amount_tnd is not None else None,
+        "created_at": payment.created_at.isoformat() if payment.created_at else None,
+        "verified_at": payment.verified_at.isoformat() if payment.verified_at else None,
+    }
+
+
+@app.post("/api/payments/bank-transfer/request")
+def request_bank_transfer():
+    """Creates a trackable Payment and hands back a reference + the
+    business's RIB — the transfer itself happens outside this app entirely.
+    Nothing is unlocked here; only POST /api/admin/payments/<id>/verify
+    (a human, looking at the real bank statement) can do that."""
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "not_authenticated", "message": "Connexion parent requise."}), 401
+
+    data = request.get_json(silent=True) or {}
+    level_code = str(data.get("level", ""))
+    subject_code = data.get("subject", "")
+    billing_cycle = data.get("billing_cycle", "annual")
+
+    subject_row = CurriculumSubject.query.filter_by(code=subject_code).first()
+    if subject_row is None:
+        return jsonify({"error": "invalid_subject"}), 400
+    if CurriculumLevel.query.filter_by(code=level_code).first() is None:
+        return jsonify({"error": "invalid_level"}), 400
+
+    payment = bank_transfer.create_request(user.id, subject_code, level_code, billing_cycle)
+    return jsonify({"payment": serialize_payment(payment), "bank_details": bank_transfer.bank_details()})
+
+
+@app.get("/api/payments/mine")
+def my_payments():
+    user = current_user()
+    if user is None:
+        return jsonify({"error": "not_authenticated"}), 401
+    rows = Payment.query.filter_by(user_id=user.id).order_by(Payment.created_at.desc()).all()
+    return jsonify([serialize_payment(p) for p in rows])
+
+
+@app.get("/api/admin/payments/pending")
+@require_admin_key
+def admin_pending_payments():
+    rows = Payment.query.filter_by(status="pending_verification").order_by(Payment.created_at).all()
+    return jsonify(
+        [
+            {
+                **serialize_payment(p),
+                "user_email": p.user.email,
+            }
+            for p in rows
+        ]
+    )
+
+
+@app.post("/api/admin/payments/<int:payment_id>/verify")
+@require_admin_key
+def admin_verify_payment(payment_id):
+    payment = Payment.query.get(payment_id)
+    if payment is None:
+        return jsonify({"error": "not_found"}), 404
+    data = request.get_json(silent=True) or {}
+    bank_transfer.verify(payment, verified_by=data.get("verified_by", "admin"), amount_tnd=data.get("amount_tnd"))
+    return jsonify(serialize_payment(payment))
+
+
+@app.get("/admin/payments")
+def admin_payments_page():
+    """Internal payment-confirmation tool — gated by the same X-Admin-Key
+    the JSON routes require (entered client-side), not linked from
+    anywhere public."""
+    return send_from_directory(BASE_DIR.replace("server", "web"), "admin_payments.html")
 
 
 if __name__ == "__main__":
