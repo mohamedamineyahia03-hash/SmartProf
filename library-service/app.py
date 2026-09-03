@@ -1,3 +1,4 @@
+import hmac
 import os
 from functools import wraps
 
@@ -11,6 +12,8 @@ from models import Exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, ".env"))
+# Dev fallback only — MUST be overridden via env var before any real
+# deployment, same rule as SECRET_KEY in the Main App's server/app.py.
 API_KEY = os.environ.get("LIBRARY_SERVICE_API_KEY", "dev-local-key")
 
 app = Flask(__name__)
@@ -26,7 +29,10 @@ db.init_app(app)
 def require_service_api_key(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
-        if request.headers.get("X-Api-Key") != API_KEY:
+        # compare_digest, not != : a plain string compare leaks how many
+        # leading characters matched through response timing, letting an
+        # attacker recover the key byte by byte.
+        if not hmac.compare_digest(request.headers.get("X-Api-Key") or "", API_KEY):
             return jsonify({"error": "unauthorized"}), 401
         return fn(*args, **kwargs)
 
@@ -68,11 +74,13 @@ def export_exercises():
     subject = request.args.get("subject")
     trimester = request.args.get("trimester")
     domain = request.args.get("domain")
-    status = request.args.get("status", "published")
     since = request.args.get("since", default=0, type=int)
     limit = min(request.args.get("limit", default=100, type=int), 500)
 
-    query = Exercise.query.filter(Exercise.status == status, Exercise.id > since)
+    # Fixed at "published", never taken from the query string: this is the
+    # only guarantee that content bypassing human review (draft) or pulled
+    # for a known issue (retired) can never leave this service.
+    query = Exercise.query.filter(Exercise.status == "published", Exercise.id > since)
     if level:
         query = query.filter(Exercise.level_code == level)
     if subject:

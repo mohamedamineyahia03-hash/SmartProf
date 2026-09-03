@@ -591,11 +591,30 @@ def start_session():
     )
 
 
+def _session_access_denied(session_row):
+    """Anonymous play (no child attached) stays open to whoever holds the
+    session_id, matching the rest of the anonymous-play support. A session
+    tied to a child is only visible to that child's own parent account —
+    session_id is a plain auto-incrementing int, trivially enumerable, so
+    without this check anyone could read another child's answers/scores,
+    read any corrige (bypassing the paywall on locked subjects), or post
+    fake answers into a session that isn't theirs while it's still open."""
+    if session_row.child_profile_id is None:
+        return False
+    user = current_user()
+    if user is None:
+        return True
+    child = ChildProfile.query.filter_by(id=session_row.child_profile_id, user_id=user.id).first()
+    return child is None
+
+
 @app.get("/api/session/<int:session_id>")
 def get_session(session_id):
     session_row = Session.query.get(session_id)
     if session_row is None:
         return jsonify({"error": "not_found"}), 404
+    if _session_access_denied(session_row):
+        return jsonify({"error": "forbidden"}), 403
 
     exercises = LibraryCacheExercise.query.filter(
         LibraryCacheExercise.id.in_(session_row.exercise_ids)
@@ -621,6 +640,8 @@ def answer_session(session_id):
     session_row = Session.query.get(session_id)
     if session_row is None:
         return jsonify({"error": "not_found"}), 404
+    if _session_access_denied(session_row):
+        return jsonify({"error": "forbidden"}), 403
     if session_row.completed_at is not None:
         return jsonify({"error": "session_already_completed"}), 400
 
@@ -703,6 +724,8 @@ def session_corrige(session_id):
     session_row = Session.query.get(session_id)
     if session_row is None:
         return jsonify({"error": "not_found"}), 404
+    if _session_access_denied(session_row):
+        return jsonify({"error": "forbidden"}), 403
     if session_row.completed_at is None:
         return jsonify(
             {"error": "session_not_completed", "message": "Termine d'abord toutes les questions."}

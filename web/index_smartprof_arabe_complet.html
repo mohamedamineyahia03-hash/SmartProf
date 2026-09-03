@@ -816,6 +816,14 @@ const TRIMESTER_ORDER = ['T1', 'T2', 'T3'];
 // identique pour tous les niveaux (voir server/academic_calendar.py). Une
 // fois débloqué il le reste (révision des trimestres passés toujours
 // possible) ; currentTree.currentTrimester vient de GET /api/skills.
+// Le seul champ vraiment "texte libre" saisi par un parent (le prénom de
+// l'enfant) est réaffiché tel quel à plusieurs endroits via innerHTML —
+// sans ceci, un prénom du genre "<img src=x onerror=...>" s'exécuterait à
+// chaque affichage du tableau de bord/rapport.
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function isTrimesterLocked(trimester){
   return TRIMESTER_ORDER.indexOf(trimester) > TRIMESTER_ORDER.indexOf(currentTree.currentTrimester);
 }
@@ -1908,10 +1916,10 @@ function renderParentDashboard(view){
         const level = LEVELS.find(l => l.id === Number(c.level_code));
         const levelName = level ? level.name[currentLang] : c.level_code;
         return `<div class="child-row">
-          <span>${c.display_name}</span>
+          <span>${escapeHtml(c.display_name)}</span>
           <span class="child-level">${levelName}</span>
           <button type="button" class="start-btn child-report-btn" data-child-id="${c.id}">${PARENT_TEXT.reportLabel[currentLang]}</button>
-          <button type="button" class="start-btn child-start-btn" data-child-id="${c.id}" data-child-name="${c.display_name.replace(/"/g,'&quot;')}" data-child-level="${c.level_code}">${TEXT.startLabel[currentLang]}</button>
+          <button type="button" class="start-btn child-start-btn" data-child-id="${c.id}" data-child-name="${escapeHtml(c.display_name)}" data-child-level="${c.level_code}">${TEXT.startLabel[currentLang]}</button>
         </div>`;
       }).join('')
     : `<p class="muted-note">${PARENT_TEXT.noChildren[currentLang]}</p>`;
@@ -2067,7 +2075,7 @@ function renderChildReportContent(view, data){
       <div class="supervision-header">
         <div class="supervision-avatar">🧑‍🎓</div>
         <div>
-          <div class="supervision-name">${data.child.display_name}</div>
+          <div class="supervision-name">${escapeHtml(data.child.display_name)}</div>
           <div class="supervision-status"><span class="status-dot"></span>${REPORT_TEXT.lastActivity[currentLang]} : ${lastActivityText}</div>
         </div>
       </div>
