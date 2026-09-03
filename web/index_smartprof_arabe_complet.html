@@ -122,10 +122,19 @@
   .level-connector{position:relative;z-index:1;width:28px;height:3px;background:var(--card);border-radius:3px;margin-top:-28px;pointer-events:none;}
 
   .subjects{display:grid;grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));gap:16px;margin-bottom:40px;}
-  .subject-card{position:relative;background:var(--card);border-radius:var(--radius);padding:20px 14px;text-align:center;border:2px solid transparent;box-shadow:0 4px 18px rgba(27,35,64,.06);transition:all .35s ease;}
+  .subject-card{position:relative;background:var(--card);border-radius:var(--radius);padding:20px 14px;text-align:center;border:2px solid transparent;box-shadow:0 4px 18px rgba(27,35,64,.06);transition:all .35s ease;cursor:pointer;}
   .subject-card:hover{border-color:var(--accent);transform:translateY(-4px);}
+  .subject-card:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
   .subject-card.locked{opacity:.75;}
   .subject-card.trial{border-color:var(--accent-2);}
+  /* La grille passe à 2 colonnes serrées sur téléphone (voir minmax(150px,...)
+     ci-dessus) -- une carte seule en fin de liste y laisse une case vide très
+     visible à côté d'elle. Sur tablette/desktop l'auto-fit donne 3+ colonnes,
+     où une dernière carte seule sur sa ligne est normale et n'a pas besoin de
+     s'étirer -- d'où la portée de cette règle limitée au téléphone. */
+  @media (max-width: 480px){
+    .subject-card.wide{grid-column:1 / -1;}
+  }
   .trial-note{display:block;font-size:.7rem;font-weight:700;color:var(--accent);background:var(--paper-soft);border-radius:999px;padding:2px 10px;margin:-4px 0 8px;}
   .subject-card.trial .start-btn{background:linear-gradient(135deg, var(--accent), var(--accent-2));}
   .subject-card .icon-wrap{width:72px;height:72px;margin:0 auto 8px;filter:drop-shadow(0 6px 8px rgba(27,35,64,.15)) drop-shadow(0 0 12px var(--glow));transition:filter 1s ease;}
@@ -1034,21 +1043,33 @@ function render(){
   /* Matières */
   const subjectsEl = document.getElementById('subjects');
   subjectsEl.innerHTML = '';
-  SUBJECTS.forEach(s => {
+  SUBJECTS.forEach((s, i) => {
     const locked = isSubjectLocked(s, currentLevel);
     const trial = locked && s.trialAvailable;
     const card = document.createElement('div');
-    card.className = 'subject-card' + (locked && !trial ? ' locked' : '') + (trial ? ' trial' : '');
+    const isLastOrphan = i === SUBJECTS.length - 1 && SUBJECTS.length % 2 === 1;
+    card.className = 'subject-card' + (locked && !trial ? ' locked' : '') + (trial ? ' trial' : '') + (isLastOrphan ? ' wide' : '');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
     const btnLabel = trial ? TEXT.trialLabel[currentLang] : (locked ? TEXT.unlockLabel[currentLang] : TEXT.startLabel[currentLang]);
     card.innerHTML = `
       <div class="icon-wrap">${SUBJECT_ICONS[s.id] ? SUBJECT_ICONS[s.id](lvl.accent, lvl.accent2) : ''}</div>
       <span class="name">${s.name[currentLang]}</span>
       ${trial ? `<span class="trial-note">${TEXT.trialNote[currentLang]}</span>` : ''}
-      <button type="button" class="start-btn">${btnLabel}</button>
+      <button type="button" class="start-btn" tabindex="-1">${btnLabel}</button>
     `;
-    card.querySelector('.start-btn').addEventListener('click', () => {
+    // Toute la carte est une cible tactile, pas seulement le petit bouton en
+    // bas — un enfant qui ne lit pas encore doit pouvoir taper l'icône
+    // directement. Le bouton reste dans le DOM comme repère visuel de
+    // l'action, mais n'est plus le seul point cliquable (tabindex="-1" pour
+    // qu'un lecteur d'écran/clavier ne s'arrête pas deux fois sur la même carte).
+    const activate = () => {
       if(locked && !trial){ showLockedToast(TEXT.lockedMessage[currentLang]); }
       else { openSectionTree(s.id); }
+    };
+    card.addEventListener('click', activate);
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
     });
     subjectsEl.appendChild(card);
   });
