@@ -802,6 +802,7 @@ const TEXT = {
   stopRecordLabel:{fr:"⏹️ Arrêter", ar:"⏹️ إيقاف"},
   micErrorMessage:{fr:"Micro indisponible ou refusé.", ar:"الميكروفون غير متاح أو تم رفض الإذن."},
   ttsUnavailableMessage:{fr:"Lecture à voix haute indisponible sur cet appareil.", ar:"القراءة الصوتية غير متاحة على هذا الجهاز."},
+  ttsWrongVoiceMessage:{fr:"Aucune voix dans cette langue sur cet appareil — la prononciation ne sera pas fidèle.", ar:"لا توجد على هذا الجهاز أي صوت بهذه اللغة — النطق لن يكون دقيقًا."},
   recitationHint:{fr:"Écoute le modèle, entraîne-toi à réciter, puis enregistre-toi si tu veux te réécouter.", ar:"استمع للنموذج، تدرّب على الإلقاء، ثم سجّل صوتك إن أردت الاستماع لنفسك."}
 };
 
@@ -1259,7 +1260,11 @@ function speakUtterance(text, language){
 }
 
 // Lit un texte à voix haute. Affiche un message si la synthèse vocale
-// n'est pas disponible sur cet appareil plutôt que de rester silencieux.
+// n'est pas disponible sur cet appareil plutôt que de rester silencieux —
+// et aussi si aucune voix de la bonne langue n'existe : le navigateur
+// retombe alors sur une voix par défaut (souvent une autre langue) qui
+// massacre la prononciation sans jamais déclencher onerror, donc sans ce
+// contrôle explicite l'appli reste fausse en silence.
 async function speakText(text, language){
   if(!(window.speechSynthesis) || !text){
     showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
@@ -1267,6 +1272,7 @@ async function speakText(text, language){
   }
   window.speechSynthesis.cancel();
   await waitForVoices();
+  if(!pickVoice(ttsLangCode(language))) showLockedToast(TEXT.ttsWrongVoiceMessage[currentLang]);
   const ok = await speakUtterance(text, language);
   if(!ok) showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
 }
@@ -1281,6 +1287,7 @@ async function speakLines(text, language){
   }
   window.speechSynthesis.cancel();
   await waitForVoices();
+  if(!pickVoice(ttsLangCode(language))) showLockedToast(TEXT.ttsWrongVoiceMessage[currentLang]);
   const lines = text.split('\n').filter(l => l.trim());
   let anySucceeded = false;
   for(const line of lines){
