@@ -167,6 +167,8 @@
   .sub-question-label{font-weight:700;font-size:1.02rem;margin-bottom:12px;}
   .sub-question-feedback{margin-top:10px;}
   .session-summary{text-align:center;}
+  .success-badge-stage{width:120px;margin:4px auto 8px;}
+  .success-badge-stage svg{width:100%;height:auto;display:block;}
   .session-summary .score-big{font-size:3rem;font-weight:800;font-family:'Baloo 2',sans-serif;margin:10px 0;}
 
   .tree-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
@@ -392,6 +394,23 @@ function svgLogo(a,a2){
 }
 
 /* ---- Mascottes ---- */
+// Badge de réussite pour l'écran de corrigé de fin de session — même recette
+// que les mascottes (contour encre, dégradé deux tons, reflet, étincelles),
+// grille icône (0 0 100 100) plutôt que grille mascotte : cf. SmartProf Design § 06/07.
+function successBadge(a,a2){
+  return `<svg viewBox="0 0 100 100" class="success-badge">
+    <defs>${lgrad('gBadge', a2, a, 55)}</defs>
+    <g class="m-sparkle" style="animation-delay:.2s"><path d="M14 20 l1.6 3.6 3.6 1.6-3.6 1.6-1.6 3.6-1.6-3.6-3.6-1.6 3.6-1.6z" fill="${a2}" stroke="${INK}" stroke-width=".8"/></g>
+    <g class="m-sparkle" style="animation-delay:.7s"><path d="M86 24 l1.4 3.2 3.2 1.4-3.2 1.4-1.4 3.2-1.4-3.2-3.2-1.4 3.2-1.4z" fill="${a}" stroke="${INK}" stroke-width=".7"/></g>
+    ${shadowEllipse(50,90,26,5)}
+    <path d="M50 6 L61 34 L91 36 L67 55 L76 85 L50 68 L24 85 L33 55 L9 36 L39 34 Z" fill="url(#gBadge)" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>
+    ${shine(38,32,10,6,-20)}
+    ${eyesFace(42,58,52,7,4)}
+    <path d="M43 63 q7 7 14 0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <ellipse cx="34" cy="58" rx="5.5" ry="4" fill="${a}" opacity=".5"/>
+    <ellipse cx="66" cy="58" rx="5.5" ry="4" fill="${a}" opacity=".5"/>
+  </svg>`;
+}
 function mascotUnicorn(a,a2){
   return `<svg viewBox="0 0 200 200">
     <defs>${lgrad('gUniBody','#FFFFFF','#EAF0FF',90)}${lgrad('gUniHorn', a2, a, 45)}${lgrad('gUniMane', a, a2, 60)}</defs>
@@ -896,6 +915,9 @@ const PARENT_TEXT = {
   referralNote:{fr:"Partage ce lien avec d'autres parents (groupe WhatsApp de la classe, Facebook...). Chaque parent inscrit grâce à toi te fera gagner un avantage sur SmartProf.", ar:"شارك هذا الرابط مع أولياء آخرين (مجموعة واتساب القسم، فيسبوك...). كل ولي يسجل بفضلك يمنحك ميزة على سمارت بروف."},
   copyLink:{fr:"Copier le lien", ar:"نسخ الرابط"},
   linkCopied:{fr:"Lien copié !", ar:"تم نسخ الرابط!"},
+  copyMessage:{fr:"Copier le message", ar:"نسخ الرسالة"},
+  messageCopied:{fr:"Message copié !", ar:"تم نسخ الرسالة!"},
+  shareWhatsapp:{fr:"Partager sur WhatsApp", ar:"مشاركة عبر واتساب"},
   supportTitle:{fr:"Besoin d'aide ?", ar:"تحتاج مساعدة؟"},
   supportNote:{fr:"Une question sur votre compte, un paiement ou un enfant ? Écrivez-nous.", ar:"لديك سؤال حول حسابك أو عملية دفع أو أحد أبنائك؟ راسلنا."},
   supportEmail:{fr:"contact@smartprof.tn", ar:"contact@smartprof.tn"},
@@ -1675,10 +1697,13 @@ async function renderSessionSummary(){
   const scoreHtml = data.graded_total > 0
     ? `<div class="score-big">${data.score} / ${data.graded_total}</div>`
     : `<p class="muted-note">${TEXT.emptyResultsNote[currentLang]}</p>`;
+  const summaryLvl = LEVELS.find(l => l.id === (currentSession && currentSession.level)) || LEVELS[0];
+  const badgeHtml = `<div class="success-badge-stage">${successBadge(summaryLvl.accent, summaryLvl.accent2)}</div>`;
 
   view.innerHTML = `
     <div class="session-card session-summary">
       <div class="session-question">${TEXT.summaryTitle[currentLang]}</div>
+      ${badgeHtml}
       ${scoreHtml}
       <div class="corrige-list">${data.items.map(corrigeItemHtml).join('')}</div>
       <div class="session-actions" style="justify-content:center;">
@@ -1693,6 +1718,15 @@ async function renderSessionSummary(){
     shareResultCard(data.score || 0, data.graded_total || 0, currentSession && currentSession.subjectId, currentSession && currentSession.level)
       .finally(() => { e.target.disabled = false; });
   });
+}
+
+// Message prêt à coller dans un groupe WhatsApp de parents — inclut
+// toujours le lien de parrainage plutôt qu'un texte générique, pour que
+// le partage reste traçable jusqu'au parent qui l'a envoyé.
+function referralMessageText(link){
+  return currentLang === 'ar'
+    ? `طفلي يستعمل SmartProf للمراجعة (البرنامج التونسي، عربية/فرنسية/إنجليزية) — فيه تجربة مجانية، يستاهل تجربها: ${link}`
+    : `Mon enfant utilise SmartProf pour réviser (programme tunisien, arabe/français/anglais) — il y a un essai gratuit, ça vaut le coup d'essayer : ${link}`;
 }
 
 // Génère une image carrée (1080×1080) reprenant l'identité visuelle de
@@ -1771,12 +1805,20 @@ async function shareResultCard(score, total, subjectId, level){
   ctx.font = "500 32px 'Inter', sans-serif";
   ctx.fillText(TEXT.heroTagline[currentLang], 540, 970);
 
+  // Le lien de parrainage voyage avec l'image quand le parent est connecté et
+  // en a un — sans ça, l'image circule mais ne ramène jamais personne vers
+  // une inscription traçable.
+  const shareLink = (currentUser && currentUser.referral_code)
+    ? `${window.location.origin}${window.location.pathname}?ref=${currentUser.referral_code}`
+    : `${window.location.origin}${window.location.pathname}`;
+  const shareText = referralMessageText(shareLink);
+
   await new Promise((resolve) => {
     canvas.toBlob(async (blob) => {
       if(!blob){ resolve(); return; }
       const file = new File([blob], 'smartprof-resultat.png', {type: 'image/png'});
       if(navigator.share && navigator.canShare && navigator.canShare({files: [file]})){
-        try { await navigator.share({files: [file], title: 'SmartProf'}); resolve(); return; }
+        try { await navigator.share({files: [file], title: 'SmartProf', text: shareText}); resolve(); return; }
         catch(e){ /* partage annulé/indisponible — repli téléchargement ci-dessous */ }
       }
       const url = URL.createObjectURL(blob);
@@ -2055,6 +2097,13 @@ function renderParentDashboard(view){
         <input type="text" class="answer-input" id="referralLinkInput" value="${referralLink}" readonly>
         <button type="button" class="btn-secondary" id="copyReferralBtn">${PARENT_TEXT.copyLink[currentLang]}</button>
       </div>
+      <div class="referral-row">
+        <input type="text" class="answer-input" id="referralMessageInput" value="${escapeHtml(referralMessageText(referralLink))}" readonly>
+        <button type="button" class="btn-secondary" id="copyReferralMessageBtn">${PARENT_TEXT.copyMessage[currentLang]}</button>
+      </div>
+      <div class="session-actions" style="justify-content:flex-start;">
+        <a href="https://wa.me/?text=${encodeURIComponent(referralMessageText(referralLink))}" target="_blank" rel="noopener" class="btn-secondary" id="shareWhatsappBtn">${PARENT_TEXT.shareWhatsapp[currentLang]}</a>
+      </div>
       ` : ''}
       <h3 class="parent-section-title">${PARENT_TEXT.addChild[currentLang]}</h3>
       <form id="addChildForm">
@@ -2096,6 +2145,22 @@ function renderParentDashboard(view){
       const original = copyReferralBtn.textContent;
       copyReferralBtn.textContent = PARENT_TEXT.linkCopied[currentLang];
       setTimeout(() => { copyReferralBtn.textContent = original; }, 2000);
+    });
+  }
+
+  const copyReferralMessageBtn = document.getElementById('copyReferralMessageBtn');
+  if(copyReferralMessageBtn){
+    copyReferralMessageBtn.addEventListener('click', async () => {
+      const input = document.getElementById('referralMessageInput');
+      try {
+        await navigator.clipboard.writeText(input.value);
+      } catch(e){
+        input.select();
+        try { document.execCommand('copy'); } catch(e2){ /* rien de plus possible */ }
+      }
+      const original = copyReferralMessageBtn.textContent;
+      copyReferralMessageBtn.textContent = PARENT_TEXT.messageCopied[currentLang];
+      setTimeout(() => { copyReferralMessageBtn.textContent = original; }, 2000);
     });
   }
 
