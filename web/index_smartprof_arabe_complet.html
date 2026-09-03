@@ -1307,7 +1307,16 @@ async function speakLines(text, language){
   if(!anySucceeded) showLockedToast(TEXT.ttsUnavailableMessage[currentLang]);
 }
 
-function ttsButtonHtml(){
+// La lecture à voix haute n'a de sens que pour s'entraîner à prononcer une
+// langue étrangère (français/anglais) — en arabe, langue d'interface de
+// l'élève, ça n'apporte rien pédagogiquement, donc pas de bouton du tout
+// pour math/éveil scientifique/arabe.
+function isPronunciationLanguage(language){
+  return language === 'fr' || language === 'en';
+}
+
+function ttsButtonHtml(language){
+  if(!isPronunciationLanguage(language)) return '';
   return `<button type="button" class="tts-btn" id="ttsBtn" title="${TEXT.listenLabel[currentLang]}">🔊</button>`;
 }
 
@@ -1396,7 +1405,7 @@ function renderSessionQuestion(){
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
+        <div class="session-question">${content.question} ${ttsButtonHtml(ex.language)}</div>
         ${visualArea}
         ${answerArea}
       </div>
@@ -1408,7 +1417,7 @@ function renderSessionQuestion(){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
+  document.getElementById('ttsBtn')?.addEventListener('click', () => speakText(content.question, ex.language));
   const validateBtn = document.getElementById('validateBtn');
 
   // Disables everything synchronously, before the async submitAnswer() call
@@ -1456,7 +1465,7 @@ function renderRecitationExercise(view, ex, content, isLast){
         </div>
         <p class="muted-note oral-hint">${TEXT.recitationHint[currentLang]}</p>
         <div class="tts-row">
-          <button type="button" class="btn-secondary" id="listenBtn">${TEXT.listenLabel[currentLang]}</button>
+          ${isPronunciationLanguage(ex.language) ? `<button type="button" class="btn-secondary" id="listenBtn">${TEXT.listenLabel[currentLang]}</button>` : ''}
           ${recordControlsHtml()}
         </div>
       </div>
@@ -1468,7 +1477,7 @@ function renderRecitationExercise(view, ex, content, isLast){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('listenBtn').addEventListener('click', () => speakLines(content.text, ex.language));
+  document.getElementById('listenBtn')?.addEventListener('click', () => speakLines(content.text, ex.language));
   wireRecordControls(view);
   document.getElementById('validateBtn').addEventListener('click', () => {
     document.getElementById('validateBtn').disabled = true;
@@ -1486,7 +1495,7 @@ function renderWrittenExpressionExercise(view, ex, content, isLast){
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="session-question">${content.question} ${ttsButtonHtml()}</div>
+        <div class="session-question">${content.question} ${ttsButtonHtml(ex.language)}</div>
         ${visualArea}
         <textarea class="answer-textarea" id="answerTextarea" placeholder="${TEXT.answerPlaceholder[currentLang]}" rows="4"></textarea>
       </div>
@@ -1498,7 +1507,7 @@ function renderWrittenExpressionExercise(view, ex, content, isLast){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
+  document.getElementById('ttsBtn')?.addEventListener('click', () => speakText(content.question, ex.language));
   const validateBtn = document.getElementById('validateBtn');
   const textarea = document.getElementById('answerTextarea');
   validateBtn.addEventListener('click', () => {
@@ -1528,7 +1537,7 @@ function renderMultiQuestionExercise(view, ex, content, isLast){
     <div class="session-card">
       <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
       <div class="exercise-content" dir="${dirFor(ex.language)}">
-        <div class="recit-context">${content.question} ${ttsButtonHtml()}</div>
+        <div class="recit-context">${content.question} ${ttsButtonHtml(ex.language)}</div>
         ${blocksHtml}
       </div>
       <div class="session-actions">
@@ -1539,7 +1548,7 @@ function renderMultiQuestionExercise(view, ex, content, isLast){
   `;
 
   document.getElementById('backHomeBtn').addEventListener('click', backToHome);
-  document.getElementById('ttsBtn').addEventListener('click', () => speakText(content.question, ex.language));
+  document.getElementById('ttsBtn')?.addEventListener('click', () => speakText(content.question, ex.language));
   const validateBtn = document.getElementById('validateBtn');
   const selections = new Array(subs.length).fill(null);
 
