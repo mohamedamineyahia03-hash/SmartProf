@@ -17,6 +17,7 @@ from datetime import datetime, timedelta
 
 from db import db
 from models import Entitlement, Payment
+from notifications.email import send_email
 
 REFERENCE_PREFIX = "SP"
 
@@ -120,4 +121,16 @@ def verify(payment, verified_by, amount_tnd=None):
         entitlement.source = "bank_transfer"
 
     db.session.commit()
+
+    send_email(
+        payment.user.email,
+        "Confirmation de votre paiement SmartProf",
+        "Votre paiement a bien été confirmé.\n\n"
+        f"Référence : {payment.reference}\n"
+        f"Matière : {payment.subject_code} — Niveau {payment.level_code}\n"
+        f"Montant : {payment.amount_tnd} TND\n"
+        f"Formule : {'Annuelle' if payment.billing_cycle == 'annual' else 'Ponctuelle'}\n\n"
+        "L'accès est actif dès maintenant depuis votre espace parent.\n\n"
+        "L'équipe SmartProf",
+    )
     return payment

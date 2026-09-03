@@ -122,6 +122,20 @@ class User(db.Model):
     children = db.relationship("ChildProfile", backref="user", cascade="all, delete-orphan")
 
 
+class PasswordResetToken(db.Model):
+    __tablename__ = "password_reset_token"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    # Only the hash is stored (like a password) so a DB leak alone can't be
+    # used to reset an account -- the raw token only ever exists in the
+    # emailed link and this request's memory.
+    token_hash = db.Column(db.String(64), unique=True, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    expires_at = db.Column(db.DateTime, nullable=False)
+    used_at = db.Column(db.DateTime, nullable=True)
+
+
 class ChildProfile(db.Model):
     __tablename__ = "child_profile"
 

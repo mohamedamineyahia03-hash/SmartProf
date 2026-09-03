@@ -898,7 +898,16 @@ const PARENT_TEXT = {
   linkCopied:{fr:"Lien copié !", ar:"تم نسخ الرابط!"},
   supportTitle:{fr:"Besoin d'aide ?", ar:"تحتاج مساعدة؟"},
   supportNote:{fr:"Une question sur votre compte, un paiement ou un enfant ? Écrivez-nous.", ar:"لديك سؤال حول حسابك أو عملية دفع أو أحد أبنائك؟ راسلنا."},
-  supportEmail:{fr:"contact@smartprof.tn", ar:"contact@smartprof.tn"}
+  supportEmail:{fr:"contact@smartprof.tn", ar:"contact@smartprof.tn"},
+  forgotPasswordLink:{fr:"Mot de passe oublié ?", ar:"نسيت كلمة المرور؟"},
+  forgotPasswordTitle:{fr:"Réinitialiser le mot de passe", ar:"إعادة تعيين كلمة المرور"},
+  forgotPasswordNote:{fr:"Indiquez votre email : si un compte existe, un lien de réinitialisation vous sera envoyé.", ar:"أدخل بريدك الإلكتروني: إذا كان هناك حساب مطابق، سيصلك رابط لإعادة تعيين كلمة المرور."},
+  forgotPasswordSubmit:{fr:"Envoyer le lien", ar:"إرسال الرابط"},
+  forgotPasswordSent:{fr:"Si un compte existe avec cet email, un lien de réinitialisation vient d'être envoyé.", ar:"إذا كان هناك حساب بهذا البريد الإلكتروني، تم للتو إرسال رابط لإعادة التعيين."},
+  backToLogin:{fr:"← Retour à la connexion", ar:"← الرجوع لتسجيل الدخول"},
+  resetPasswordTitle:{fr:"Choisir un nouveau mot de passe", ar:"اختيار كلمة مرور جديدة"},
+  newPasswordLabel:{fr:"Nouveau mot de passe", ar:"كلمة المرور الجديدة"},
+  resetPasswordSubmit:{fr:"Valider", ar:"تأكيد"}
 };
 
 const REPORT_TEXT = {
@@ -941,7 +950,8 @@ const AUTH_ERROR_TEXT = {
   invalid_credentials:{fr:"Email ou mot de passe incorrect.", ar:"البريد الإلكتروني أو كلمة المرور غير صحيحة."},
   display_name_required:{fr:"Le prénom de l'enfant est requis.", ar:"اسم الطفل مطلوب."},
   invalid_level:{fr:"Niveau invalide.", ar:"مستوى غير صالح."},
-  supplement_required:{fr:"Un supplément payant est nécessaire à partir du 3ème enfant (bientôt disponible).", ar:"مطلوب اشتراك إضافي مدفوع ابتداءً من الطفل الثالث (قريبًا)."}
+  supplement_required:{fr:"Un supplément payant est nécessaire à partir du 3ème enfant (bientôt disponible).", ar:"مطلوب اشتراك إضافي مدفوع ابتداءً من الطفل الثالث (قريبًا)."},
+  invalid_or_expired_token:{fr:"Lien invalide ou expiré.", ar:"الرابط غير صالح أو منتهي الصلاحية."}
 };
 
 function localizedError(data){
@@ -1857,7 +1867,46 @@ function renderParentView(){
   else { renderAuthForms(view); }
 }
 
-function renderAuthForms(view){
+function renderAuthForms(view, initialMode){
+  let mode = initialMode || 'login';
+
+  if(mode === 'forgot'){
+    view.innerHTML = `
+      <div class="session-card">
+        <h3 class="parent-section-title">${PARENT_TEXT.forgotPasswordTitle[currentLang]}</h3>
+        <p class="muted-note">${PARENT_TEXT.forgotPasswordNote[currentLang]}</p>
+        <form id="forgotForm">
+          <label class="form-label">${PARENT_TEXT.emailLabel[currentLang]}</label>
+          <input type="email" class="answer-input" id="forgotEmail" required>
+          <div id="forgotError" class="form-error"></div>
+          <div id="forgotSuccess" class="muted-note"></div>
+          <div class="session-actions">
+            <button type="button" class="btn-secondary" id="backToLoginBtn">${PARENT_TEXT.backToLogin[currentLang]}</button>
+            <button type="submit" class="btn-primary">${PARENT_TEXT.forgotPasswordSubmit[currentLang]}</button>
+          </div>
+        </form>
+      </div>
+    `;
+    document.getElementById('backToLoginBtn').addEventListener('click', () => renderAuthForms(view, 'login'));
+    document.getElementById('forgotForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      try {
+        await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({email})
+        });
+      } catch(err){
+        document.getElementById('forgotError').textContent = TEXT.genericError[currentLang];
+        return;
+      }
+      document.getElementById('forgotForm').querySelector('button[type="submit"]').disabled = true;
+      document.getElementById('forgotSuccess').textContent = PARENT_TEXT.forgotPasswordSent[currentLang];
+    });
+    return;
+  }
+
   view.innerHTML = `
     <div class="session-card">
       <div class="parent-tabs">
@@ -1869,6 +1918,7 @@ function renderAuthForms(view){
         <input type="email" class="answer-input" id="authEmail" required>
         <label class="form-label">${PARENT_TEXT.passwordLabel[currentLang]}</label>
         <input type="password" class="answer-input" id="authPassword" required>
+        <div id="forgotLinkRow"><a href="#" id="forgotPasswordLink">${PARENT_TEXT.forgotPasswordLink[currentLang]}</a></div>
         <div id="authError" class="form-error"></div>
         <div class="session-actions">
           <button type="button" class="btn-secondary" id="parentCloseBtn">${TEXT.backHome[currentLang]}</button>
@@ -1878,20 +1928,26 @@ function renderAuthForms(view){
     </div>
   `;
 
-  let mode = 'login';
   const loginTab = document.getElementById('loginTabBtn');
   const registerTab = document.getElementById('registerTabBtn');
   const submitBtn = document.getElementById('authSubmitBtn');
+  const forgotLinkRow = document.getElementById('forgotLinkRow');
 
   function setMode(newMode){
     mode = newMode;
     loginTab.classList.toggle('active', mode === 'login');
     registerTab.classList.toggle('active', mode === 'register');
     submitBtn.textContent = mode === 'login' ? PARENT_TEXT.loginSubmit[currentLang] : PARENT_TEXT.registerSubmit[currentLang];
+    forgotLinkRow.style.display = mode === 'login' ? '' : 'none';
   }
   loginTab.addEventListener('click', () => setMode('login'));
   registerTab.addEventListener('click', () => setMode('register'));
   document.getElementById('parentCloseBtn').addEventListener('click', closeParentView);
+  document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    renderAuthForms(view, 'forgot');
+  });
+  setMode(mode);
 
   document.getElementById('authForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -1918,6 +1974,46 @@ function renderAuthForms(view){
     }
     if(!res.ok){
       document.getElementById('authError').textContent = localizedError(data);
+      return;
+    }
+    currentUser = data;
+    renderParentView();
+  });
+}
+
+function renderResetPasswordForm(view, token){
+  view.innerHTML = `
+    <div class="session-card">
+      <h3 class="parent-section-title">${PARENT_TEXT.resetPasswordTitle[currentLang]}</h3>
+      <form id="resetForm">
+        <label class="form-label">${PARENT_TEXT.newPasswordLabel[currentLang]}</label>
+        <input type="password" class="answer-input" id="resetPassword" required>
+        <div id="resetError" class="form-error"></div>
+        <div class="session-actions">
+          <button type="button" class="btn-secondary" id="resetBackBtn">${PARENT_TEXT.backToLogin[currentLang]}</button>
+          <button type="submit" class="btn-primary">${PARENT_TEXT.resetPasswordSubmit[currentLang]}</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.getElementById('resetBackBtn').addEventListener('click', () => renderAuthForms(view, 'login'));
+  document.getElementById('resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const password = document.getElementById('resetPassword').value;
+    let res, data;
+    try {
+      res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token, password})
+      });
+      data = await res.json();
+    } catch(err){
+      document.getElementById('resetError').textContent = TEXT.genericError[currentLang];
+      return;
+    }
+    if(!res.ok){
+      document.getElementById('resetError').textContent = localizedError(data);
       return;
     }
     currentUser = data;
@@ -2149,7 +2245,7 @@ document.getElementById('parentToggleBtn').addEventListener('click', openParentV
 document.getElementById('activeChildBadge').addEventListener('click', () => clearActiveChild());
 
 captureReferralCode();
-restoreSession().then(checkAutoRegister);
+restoreSession().then(() => { checkAutoRegister(); checkResetToken(); });
 loadSubjects();
 
 // Arrive depuis la page vitrine (bouton "Essayer gratuitement" -> /app?register=1) :
@@ -2164,6 +2260,18 @@ function checkAutoRegister(){
     openParentView();
     const registerTab = document.getElementById('registerTabBtn');
     if(registerTab) registerTab.click();
+  } catch(e){ /* param absent ou navigateur ancien — pas bloquant */ }
+}
+
+// Lien reçu par email (/app?reset_token=...) : ouvre directement le
+// formulaire de nouveau mot de passe plutôt que le tableau de bord/login.
+function checkResetToken(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('reset_token');
+    if(!token) return;
+    openParentView();
+    renderResetPasswordForm(document.getElementById('parentView'), token);
   } catch(e){ /* param absent ou navigateur ancien — pas bloquant */ }
 }
 

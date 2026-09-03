@@ -23,9 +23,18 @@ from models import (
     Session,
 )
 from academic_calendar import TRIMESTER_DATES, current_trimester, is_trimester_unlocked
-from auth import authenticate, current_user, login_user, logout_user, register_user
+from auth import (
+    authenticate,
+    create_password_reset_token,
+    current_user,
+    login_user,
+    logout_user,
+    register_user,
+    reset_password,
+)
 from diagnostic_engine import diagnose
 from entitlements import has_active_entitlement
+from notifications.email import send_email
 from payments import bank_transfer
 from session_engine import build_exam_session
 
@@ -76,7 +85,9 @@ limiter = Limiter(get_remote_address, app=app, default_limits=["200 per minute"]
 # durable local record of server errors in the meantime, in any environment.
 _LOG_DIR = os.path.join(BASE_DIR, "logs")
 os.makedirs(_LOG_DIR, exist_ok=True)
-_file_handler = RotatingFileHandler(os.path.join(_LOG_DIR, "app.log"), maxBytes=2_000_000, backupCount=5)
+_file_handler = RotatingFileHandler(
+    os.path.join(_LOG_DIR, "app.log"), maxBytes=2_000_000, backupCount=5, encoding="utf-8"
+)
 _file_handler.setLevel(logging.WARNING)
 _file_handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s"))
 app.logger.addHandler(_file_handler)
@@ -368,6 +379,13 @@ def register():
         return jsonify({"error": error, "message": "Un compte existe déjà avec cet email."}), 409
 
     login_user(user)
+    send_email(
+        user.email,
+        "Bienvenue sur SmartProf",
+        "Votre compte parent SmartProf est créé.\n\n"
+        "Vous pouvez maintenant ajouter vos enfants et essayer gratuitement une matière verrouillée.\n\n"
+        "L'équipe SmartProf",
+    )
     return jsonify(user_payload(user)), 201
 
 
@@ -394,6 +412,41 @@ def me():
     user = current_user()
     if user is None:
         return jsonify({"error": "not_authenticated"}), 401
+    return jsonify(user_payload(user))
+
+
+@app.post("/api/auth/forgot-password")
+@limiter.limit("5 per hour")
+def forgot_password():
+    data = request.get_json(silent=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    user, raw_token = create_password_reset_token(email)
+    if user is not None:
+        reset_link = f"{request.url_root.rstrip('/')}/app?reset_token={raw_token}"
+        send_email(
+            user.email,
+            "Réinitialisation de votre mot de passe SmartProf",
+            "Cliquez sur ce lien pour choisir un nouveau mot de passe (valable 1 heure) :\n\n"
+            f"{reset_link}\n\n"
+            "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email — rien ne change sur votre compte.",
+        )
+    # Same response whether or not the email is registered, on purpose.
+    return jsonify({"status": "ok"})
+
+
+@app.post("/api/auth/reset-password")
+@limiter.limit("10 per hour")
+def reset_password_route():
+    data = request.get_json(silent=True) or {}
+    user, error = reset_password(data.get("token"), data.get("password"))
+    if error == "password_too_short":
+        return jsonify(
+            {"error": error, "message": "Le mot de passe doit contenir au moins 8 caractères."}
+        ), 400
+    if error == "invalid_or_expired_token":
+        return jsonify({"error": error, "message": "Lien invalide ou expiré."}), 400
+
+    login_user(user)
     return jsonify(user_payload(user))
 
 
