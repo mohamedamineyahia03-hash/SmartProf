@@ -753,10 +753,49 @@ const VISUAL_ICON_MAP = {
 // Remplace chaque emoji connu de content.visual par son icône SVG cartoon ;
 // un emoji non répertorié (ou tout autre caractère, "<br>" inclus) reste
 // affiché tel quel.
+// Diagramme générique pour les exercices "positions" (التوجيه في الفضاء) :
+// un rectangle (le support, ex. السرير) et un rond (l'objet, ex. السيارة)
+// positionnés selon la relation ÉNONCÉE dans la question — pas la réponse.
+// Sans image, "X est sous Y, où est Y par rapport à X ?" oblige un enfant de
+// 6 ans à inverser la relation dans sa tête ; avec le dessin, il voit
+// directement où se trouve Y et lit la réponse plutôt que de la déduire.
+// Formes génériques (pas les objets réels du texte) : trop de combinaisons
+// objet/support pour illustrer chacune, et l'important pédagogiquement est
+// la relation spatiale elle-même, pas la reconnaissance de l'objet.
+function positionDiagramSvg(code){
+  const layouts = {
+    above:  {cx:60, cy:20, dashed:false},
+    below:  {cx:60, cy:100, dashed:false},
+    inside: {cx:60, cy:60, dashed:false},
+    outside:{cx:130, cy:60, dashed:false},
+    front:  {cx:60, cy:92, dashed:false, front:true},
+    behind: {cx:60, cy:60, dashed:true},
+    near:   {cx:104, cy:60, dashed:false},
+    far:    {cx:150, cy:60, dashed:false},
+    right:  {cx:130, cy:60, dashed:false},
+    left:   {cx:-10, cy:60, dashed:false},
+  };
+  const l = layouts[code];
+  if(!l) return '';
+  const rectOnTop = code === 'behind';
+  const objectShape = `<circle cx="${l.cx}" cy="${l.cy}" r="14" fill="#FF3D77" stroke="#1B2340" stroke-width="2.5" ${l.dashed ? 'stroke-dasharray="4 3"' : ''} opacity="${l.dashed ? .55 : 1}"/>`;
+  const supportShape = `<rect x="30" y="42" width="60" height="36" rx="8" fill="#FFF3EC" stroke="#1B2340" stroke-width="2.5"/>`;
+  return `<svg viewBox="-20 0 180 120" style="width:120px;height:80px;">
+    ${rectOnTop ? objectShape + supportShape : supportShape + objectShape}
+  </svg>`;
+}
+
 function renderVisual(text){
-  if(!text) return '';
+  if(text === null || text === undefined || text === '') return '';
+  // Trouvé en auditant "numeration/composition" : ses choix étaient stockés
+  // comme des nombres (16 au lieu de "16"), et `for...of` sur un nombre
+  // plante immédiatement — un seul exercice mal formé aurait bloqué toute la
+  // session, pas juste cet exercice. On force la conversion en texte une
+  // bonne fois pour toutes plutôt que de compter sur chaque générateur pour
+  // garantir des chaînes.
+  const str = String(text);
   let out = '';
-  for(const ch of text){
+  for(const ch of str){
     const iconFn = VISUAL_ICON_MAP[ch];
     out += iconFn ? `<span class="visual-icon">${iconFn()}</span>` : ch;
   }
@@ -1458,7 +1497,9 @@ function renderSessionQuestion(){
     ? `<div class="choice-list" id="choiceList">${shuffled(content.choices).map(c => `<button type="button" class="choice-btn" data-choice="${String(c).replace(/"/g,'&quot;')}">${renderVisual(c)}</button>`).join('')}</div>`
     : `<input type="text" class="answer-input" id="answerInput" placeholder="${TEXT.answerPlaceholder[currentLang]}">`;
 
-  const visualArea = content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
+  const visualArea = content.diagram
+    ? `<div class="session-visual position-diagram">${positionDiagramSvg(content.diagram)}</div>`
+    : content.visual ? `<div class="session-visual">${renderVisual(content.visual)}</div>` : '';
 
   view.innerHTML = `
     <div class="session-card">
