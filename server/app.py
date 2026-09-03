@@ -400,6 +400,31 @@ def child_report(child_id):
         week_total += t
     average_this_week = round(100 * week_correct / week_total) if week_total else None
 
+    # Compétences vraiment travaillées CETTE semaine -- distinct de skills
+    # plus bas qui agrège tout l'historique. C'est le coeur du récap hebdo :
+    # pas juste "N séances", mais sur quoi précisément.
+    week_skill_stats = {}
+    for s in week_sessions:
+        for answer in (s.answers or {}).values():
+            skill = answer.get("skill")
+            if not skill or answer.get("correct") is None:
+                continue
+            stats = week_skill_stats.setdefault(skill, {"correct": 0, "total": 0})
+            stats["total"] += 1
+            if answer.get("correct"):
+                stats["correct"] += 1
+    skills_this_week = [
+        {
+            "skill": skill,
+            "label": _skill_label(skill, lang),
+            "correct": stats["correct"],
+            "total": stats["total"],
+            "percentage": round(100 * stats["correct"] / stats["total"]) if stats["total"] else 0,
+        }
+        for skill, stats in week_skill_stats.items()
+    ]
+    skills_this_week.sort(key=lambda s: s["total"], reverse=True)
+
     skill_stats = {}
     for s in sessions:
         for answer in (s.answers or {}).values():
@@ -450,6 +475,7 @@ def child_report(child_id):
             "last_activity": last_activity.isoformat() if last_activity else None,
             "sessions_this_week": len(week_sessions),
             "average_this_week": average_this_week,
+            "skills_this_week": skills_this_week,
             "strengths": strengths,
             "weaknesses": weaknesses,
             "skills": skills,

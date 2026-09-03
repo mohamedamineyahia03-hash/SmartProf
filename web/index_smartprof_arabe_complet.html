@@ -234,6 +234,7 @@
   .skill-badge{padding:6px 14px;border-radius:999px;font-size:.8rem;font-weight:600;}
   .skill-badge.good{background:#DCFCE7;color:#166534;}
   .skill-badge.weak{background:#FEE2E2;color:#991B1B;}
+  .skill-badge.mid{background:#FEF3C7;color:#92400E;}
 
   .supervision-header{display:flex;align-items:center;gap:14px;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid #ececec;}
   .supervision-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg, var(--accent), var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
@@ -905,6 +906,8 @@ const REPORT_TEXT = {
   thisWeek:{fr:"Cette semaine", ar:"هذا الأسبوع"},
   noSessionThisWeek:{fr:"Aucune séance cette semaine.", ar:"لا توجد حصة هذا الأسبوع."},
   averageLabel:{fr:"moyenne", ar:"المعدل"},
+  weeklyRecapTitle:{fr:"Récap de la semaine", ar:"ملخص الأسبوع"},
+  skillsThisWeek:{fr:"Compétences travaillées", ar:"المهارات المُتدرَّب عليها"},
   strengths:{fr:"Points forts", ar:"نقاط القوة"},
   weaknesses:{fr:"À renforcer", ar:"للتحسين"},
   notEnoughData:{fr:"Pas encore assez de données pour l'évaluer.", ar:"لا توجد بيانات كافية بعد للتقييم."},
@@ -2079,6 +2082,10 @@ function renderChildReportContent(view, data){
 
   const averageDisplay = data.average_this_week !== null ? `${data.average_this_week}%` : '—';
 
+  const skillsThisWeekHtml = (data.skills_this_week && data.skills_this_week.length)
+    ? `<div class="skill-badges">${data.skills_this_week.map(s => `<span class="skill-badge ${s.percentage >= 70 ? 'good' : s.percentage < 50 ? 'weak' : 'mid'}">${s.label} (${s.correct}/${s.total})</span>`).join('')}</div>`
+    : '';
+
   view.innerHTML = `
     <div class="session-card supervision-card">
       <div class="supervision-header">
@@ -2102,6 +2109,13 @@ function renderChildReportContent(view, data){
         </div>
       </div>
       ${data.sessions_this_week === 0 ? `<p class="muted-note" style="margin:-14px 0 20px;">${REPORT_TEXT.noSessionThisWeek[currentLang]}</p>` : ''}
+
+      ${data.sessions_this_week > 0 ? `
+      <div class="supervision-section">
+        <div class="supervision-section-title">🗓️ ${REPORT_TEXT.weeklyRecapTitle[currentLang]}</div>
+        <p class="muted-note" style="margin:0 0 8px;">${REPORT_TEXT.skillsThisWeek[currentLang]} :</p>
+        ${skillsThisWeekHtml}
+      </div>` : ''}
 
       <div class="supervision-section">
         <div class="supervision-section-title">💪 ${REPORT_TEXT.strengths[currentLang]}</div>
