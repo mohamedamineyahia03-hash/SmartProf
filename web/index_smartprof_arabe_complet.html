@@ -2084,7 +2084,7 @@ function renderChildReportContent(view, data){
 
   const skillsThisWeekHtml = (data.skills_this_week && data.skills_this_week.length)
     ? `<div class="skill-badges">${data.skills_this_week.map(s => `<span class="skill-badge ${s.percentage >= 70 ? 'good' : s.percentage < 50 ? 'weak' : 'mid'}">${s.label} (${s.correct}/${s.total})</span>`).join('')}</div>`
-    : '';
+    : `<p class="muted-note">${REPORT_TEXT.notEnoughData[currentLang]}</p>`;
 
   view.innerHTML = `
     <div class="session-card supervision-card">
