@@ -74,6 +74,16 @@ def privacy_policy():
     return send_from_directory(BASE_DIR.replace("server", "web"), "confidentialite.html")
 
 
+@app.get("/robots.txt")
+def robots_txt():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "robots.txt")
+
+
+@app.get("/sitemap.xml")
+def sitemap_xml():
+    return send_from_directory(BASE_DIR.replace("server", "web"), "sitemap.xml")
+
+
 @app.get("/manifest.json")
 def pwa_manifest():
     return send_from_directory(BASE_DIR.replace("server", "web"), "manifest.json")
