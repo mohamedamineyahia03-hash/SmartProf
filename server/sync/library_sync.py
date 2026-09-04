@@ -21,9 +21,25 @@ LIBRARY_SERVICE_API_KEY = os.environ.get("LIBRARY_SERVICE_API_KEY", "dev-local-k
 
 def sync_once(limit=500):
     """Pulls every published exercise page by page and upserts into the local
-    cache. Safe to re-run: an already-cached exercise is just updated in place."""
+    cache, then reconciles: any cached row NOT seen in this pass is deleted.
+
+    That reconciliation step matters for a reason beyond "the source
+    unpublished/deleted it" (the obvious case): library-service's `exercise`
+    table is a plain SQLite INTEGER PRIMARY KEY, not AUTOINCREMENT, so a
+    deleted row's id gets reused by a later, unrelated insert. Without
+    deleting stale cache rows, a future sync would silently overwrite an
+    orphaned cache row with new content that happens to share the recycled
+    id, which is harmless -- but until that next sync runs, the cache can
+    hold a row whose library_exercise_id no longer corresponds to anything
+    real. Found and root-caused 2026-09-04 (a manual cache write during that
+    session's Dictee guidee rollout collided with recycled ids from an
+    earlier, already-deleted test batch). This function was previously
+    add/update-only ("never deletes"), which is what let that class of bug
+    exist at all -- fixed here rather than only patching the specific rows
+    it caused."""
     synced = 0
     cursor = 0
+    seen_ids = set()
 
     while True:
         response = requests.get(
@@ -37,6 +53,7 @@ def sync_once(limit=500):
         exercises = payload["exercises"]
 
         for item in exercises:
+            seen_ids.add(item["id"])
             row = LibraryCacheExercise.query.filter_by(library_exercise_id=item["id"]).first()
             if row is None:
                 row = LibraryCacheExercise(library_exercise_id=item["id"])
@@ -61,14 +78,33 @@ def sync_once(limit=500):
             break
         cursor = payload["next_cursor"]
 
-    return synced
+    # Guard: an empty seen_ids with existing cache rows means something went
+    # wrong upstream (wrong URL, auth issue returning an empty-but-200 body,
+    # library-service genuinely down) rather than "everything was
+    # unpublished at once" -- reconciling against an empty set in that case
+    # would wipe the entire cache. Skip reconciliation rather than risk it;
+    # a real mass-unpublish is vanishingly unlikely and can be handled by
+    # hand if it's ever actually intended.
+    stale = []
+    if seen_ids or LibraryCacheExercise.query.first() is None:
+        stale = LibraryCacheExercise.query.filter(
+            LibraryCacheExercise.library_exercise_id.notin_(seen_ids)
+        ).all()
+        for row in stale:
+            db.session.delete(row)
+        if stale:
+            db.session.commit()
+    elif synced == 0:
+        print("! sync returned 0 exercises but the cache is non-empty -- skipping stale-row cleanup as a safety guard")
+
+    return synced, len(stale)
 
 
 def main():
     with app.app_context():
         db.create_all()
-        count = sync_once()
-        print(f"Synced {count} exercises from library-service.")
+        count, removed = sync_once()
+        print(f"Synced {count} exercises from library-service, removed {removed} stale cache row(s).")
 
 
 if __name__ == "__main__":

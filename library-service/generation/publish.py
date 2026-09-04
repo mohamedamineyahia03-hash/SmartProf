@@ -1,41 +1,50 @@
-"""Stage 6-7 — the review policy + the single function allowed to move an
-exercise to 'published'. Policy (validated with the user): the first
-AUTO_TRUST_THRESHOLD published exercises in each (level, subject, domain)
-bucket need a human's explicit approval (api/admin.py); once a bucket has
-that many published, newly generated exercises in the same bucket that pass
-validate() publish automatically."""
+"""Stage 6-7 -- the functions allowed to move an exercise to 'published'.
+
+Two paths exist:
+
+1. try_auto_publish() -- the pipeline-time gate used by jobs/run_crawl.py
+   and jobs/run_batch_from_besoin.py right after validate() passes. Policy
+   changed 2026-09-04: the user has no time for manual review, so this now
+   runs an automated Opus-5 coherence review (generation/review.py) instead
+   of the original "first 3 per bucket need a human" trust threshold --
+   there is no human gate left in the generation pipeline itself. A
+   rejected exercise is marked review_status="rejected" and never
+   published; the caller regenerates a fresh one instead of editing it in
+   place.
+
+2. approve() / reject() / bucket_sample() / bulk_approve_bucket() /
+   bulk_reject_bucket() -- the manual admin API (library-service/app.py,
+   /api/admin/...) kept for retroactive use: inspecting or bulk-clearing
+   already-generated draft content (e.g. bulk-imported batches that never
+   went through try_auto_publish() at all) without a human being required
+   to touch every new generation going forward.
+"""
 
 from datetime import datetime, timezone
 
 from db import db
+from generation.review import review_exercise
 from models import Exercise
 
-AUTO_TRUST_THRESHOLD = 3
 
-
-def published_count(level_code, subject_code, domain_code):
-    return Exercise.query.filter_by(
-        level_code=level_code, subject_code=subject_code, domain_code=domain_code, status="published"
-    ).count()
-
-
-def is_bucket_trusted(exercise):
-    return published_count(exercise.level_code, exercise.subject_code, exercise.domain_code) >= AUTO_TRUST_THRESHOLD
-
-
-def try_auto_publish(exercise):
-    """Call right after validate() passes. Publishes immediately if this
-    exercise's bucket already has enough human-approved history; otherwise
-    leaves it as draft/pending_human_review for api/admin.py to act on."""
+def try_auto_publish(exercise, domain, skill):
+    """Call right after validate() passes. Runs the automated coherence
+    review and publishes only if it passes. Always returns (published: bool,
+    reason: str) -- reason is empty on success, the review's rejection
+    reason otherwise -- so the caller can log why and regenerate."""
     if exercise.review_status == "rejected":
-        return False
-    if not is_bucket_trusted(exercise):
-        return False
+        return False, "already rejected"
+
+    passed, reason = review_exercise(exercise, domain, skill)
+    if not passed:
+        exercise.review_status = "rejected"
+        db.session.commit()
+        return False, reason
 
     exercise.review_status = "auto_passed_schema"
     exercise.status = "published"
     db.session.commit()
-    return True
+    return True, reason
 
 
 def approve(exercise, reviewed_by="admin"):
@@ -77,11 +86,10 @@ def bulk_approve_bucket(level_code, subject_code, domain_code, reviewed_by="admi
     exercises (oldest first) are approved individually, as a real human
     review record (reviewed_by/reviewed_at) -- these must be the same ones
     a reviewer was actually shown (see bucket_sample). Every other draft
-    exercise in the bucket is then auto-published, exactly like
-    try_auto_publish() would do for newly generated content once the
-    bucket is trusted -- this is the retroactive equivalent for content
-    that was bulk-imported and never went through the generation
-    pipeline's own validate()/try_auto_publish() call."""
+    exercise in the bucket is then auto-published -- this is the
+    retroactive equivalent for content that was bulk-imported and never
+    went through the generation pipeline's own validate()/try_auto_publish()
+    call."""
     sample = bucket_sample(level_code, subject_code, domain_code, sample_size)
     for exercise in sample:
         approve(exercise, reviewed_by=reviewed_by)

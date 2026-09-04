@@ -3,11 +3,15 @@ __pycache__/
 .smartprof-sync.log
 *.log
 *.db
+*.db.bak-*
+~$*
 node_modules/
 .env
 *.env
 backups/
 server/logs/
+_local-work/
+smartprof-agent/
 
 # mobile/ (Capacitor Android wrapper) — generated build output and anything
 # that could contain a signing secret or a machine-specific SDK path.

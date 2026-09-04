@@ -1,8 +1,12 @@
 """Entry point: python jobs/run_crawl.py <level_code> <subject_code>
 Orchestrates discover -> classify -> curriculum_match -> generate -> validate
--> (auto-)publish for one (level, subject) combination, pulling sources only
-from the curated allowlist and only generating for domains/skills that
-actually exist in the Main App's curriculum.
+-> automated review -> (auto-)publish for one (level, subject) combination,
+pulling sources only from the curated allowlist and only generating for
+domains/skills that actually exist in the Main App's curriculum.
+
+No human review step (see generation/publish.py, 2026-09-04): a rejected
+exercise gets regenerated in place, up to MAX_REGEN_ATTEMPTS times, before
+being left as a permanent rejection.
 """
 
 import os
@@ -20,6 +24,34 @@ from curriculum_client import fetch_curriculum_schema  # noqa: E402
 from generation.generate_exercise import generate_exercise  # noqa: E402
 from generation.publish import try_auto_publish  # noqa: E402
 from generation.validate import validate  # noqa: E402
+
+MAX_REGEN_ATTEMPTS = 3
+
+
+def generate_validate_publish(source, level_code, subject_code, domain, skill, exercise_format):
+    """One skill/format slot, regenerated up to MAX_REGEN_ATTEMPTS times if
+    validate() or the automated review rejects it. Returns
+    (outcome, exercise) where outcome is "published" | "rejected" | "error"
+    (generation itself failed, e.g. an API error) -- "error" stops retrying
+    immediately since a broken API call won't fix itself on retry."""
+    last_exercise = None
+    for attempt in range(1, MAX_REGEN_ATTEMPTS + 1):
+        _run, exercise = generate_exercise(source, level_code, subject_code, domain, skill, exercise_format)
+        if exercise is None:
+            return "error", last_exercise
+        last_exercise = exercise
+
+        issues = validate(exercise, source)
+        if issues:
+            print(f"    attempt {attempt}: rejected by validate() -- {issues}")
+            continue
+
+        published, reason = try_auto_publish(exercise, domain, skill)
+        if published:
+            return "published", exercise
+        print(f"    attempt {attempt}: rejected by review -- {reason}")
+
+    return "rejected", last_exercise
 
 
 def run(level_code, subject_code):
@@ -42,32 +74,27 @@ def run(level_code, subject_code):
         print("No curriculum defined for this level/subject yet — nothing to generate.")
         return
 
-    generated = published = pending = rejected_count = 0
+    generated = published = rejected_count = 0
     source = matched[0]
 
     for domain in domains:
         for skill in domain["skills"]:
             formats = skill["exercise_formats"] or ["qcm"]
             for exercise_format in formats:
-                _run, exercise = generate_exercise(source, level_code, subject_code, domain, skill, exercise_format)
-                if exercise is None:
-                    continue
-                generated += 1
-
-                issues = validate(exercise, source)
-                if issues:
-                    rejected_count += 1
-                    print(f"  rejected {domain['domain']}/{skill['code']}/{exercise_format}: {issues}")
-                    continue
-
-                if try_auto_publish(exercise):
+                outcome, exercise = generate_validate_publish(source, level_code, subject_code, domain, skill, exercise_format)
+                if exercise is not None:
+                    generated += 1
+                label = f"{domain['domain']}/{skill['code']}/{exercise_format}"
+                if outcome == "published":
                     published += 1
-                    print(f"  auto-published {domain['domain']}/{skill['code']}/{exercise_format} (id={exercise.id})")
+                    print(f"  auto-published {label} (id={exercise.id})")
+                elif outcome == "rejected":
+                    rejected_count += 1
+                    print(f"  permanently rejected {label} after {MAX_REGEN_ATTEMPTS} attempts (id={exercise.id if exercise else '?'})")
                 else:
-                    pending += 1
-                    print(f"  pending review {domain['domain']}/{skill['code']}/{exercise_format} (id={exercise.id})")
+                    print(f"  generation error {label} -- skipped")
 
-    print(f"\nDone: {generated} generated — {published} auto-published, {pending} pending review, {rejected_count} rejected.")
+    print(f"\nDone: {generated} generated — {published} auto-published, {rejected_count} permanently rejected.")
     if not os.environ.get("ANTHROPIC_API_KEY"):
         print("(ran in dry-run mode — set ANTHROPIC_API_KEY for real generation)")
 

@@ -55,3 +55,44 @@ def build_exam_session(level_code, subject_code, domain_code, size=SESSION_SIZE)
 
     random.shuffle(picked)
     return picked
+
+
+def build_academy_session(subject_code, size=SESSION_SIZE):
+    """"L'Academie du Francais" / "The English Academy" (added 2026-09-04):
+    a paid bundle that re-serves the WHOLE niveau 1 + niveau 2 curriculum
+    for one subject as a single session pool, relabelled "Niveau 1"/
+    "Niveau 2" by the frontend (LibraryCacheExercise.level_code on each
+    returned row is exactly what to label it by -- no separate academy
+    content exists, this is intentionally the same rows a normal niveau 1/2
+    session would use, never duplicated). Round-robins across
+    (level_code, domain_code, skill_code) buckets so a batch mixes both
+    levels and several domains rather than exhausting one first."""
+    candidates = LibraryCacheExercise.query.filter(
+        LibraryCacheExercise.subject_code == subject_code,
+        LibraryCacheExercise.level_code.in_(["1", "2"]),
+    ).all()
+    if not candidates:
+        return []
+
+    by_bucket = defaultdict(list)
+    for c in candidates:
+        by_bucket[(c.level_code, c.domain_code, c.skill_code)].append(c)
+    for bucket in by_bucket.values():
+        random.shuffle(bucket)
+
+    bucket_keys = list(by_bucket.keys())
+    random.shuffle(bucket_keys)
+
+    picked = []
+    idx = 0
+    remaining = sum(len(bucket) for bucket in by_bucket.values())
+    while len(picked) < size and remaining > 0:
+        key = bucket_keys[idx % len(bucket_keys)]
+        bucket = by_bucket[key]
+        if bucket:
+            picked.append(bucket.pop())
+            remaining -= 1
+        idx += 1
+
+    random.shuffle(picked)
+    return picked

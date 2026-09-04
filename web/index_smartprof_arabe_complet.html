@@ -213,6 +213,23 @@
   .tts-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0;}
   .recitation-poem{background:var(--paper-soft, #f4f4f6);border-radius:14px;padding:18px 20px;margin-bottom:18px;font-size:1.1rem;line-height:1.7;font-family:'Baloo 2', sans-serif;}
   .recitation-author{margin-top:10px;font-size:.85rem;color:var(--muted);font-style:italic;}
+  .lesson-board{background:var(--paper-soft, #f4f4f6);border-radius:14px;padding:32px 20px;margin-bottom:16px;text-align:center;}
+  .lesson-main{font-size:2.8rem;font-weight:700;line-height:1.1;font-family:'Baloo 2', sans-serif;}
+  .lesson-sub{margin-top:10px;font-size:1.05rem;color:var(--muted);}
+  .lesson-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:18px;}
+  .lesson-nav button{border:none;background:var(--card);width:42px;height:42px;border-radius:50%;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 16px rgba(27,35,64,.08);transition:transform .15s ease;}
+  .lesson-nav button:hover:not(:disabled){transform:scale(1.06);}
+  .lesson-nav button:disabled{opacity:.35;cursor:default;}
+  .lesson-progress{font-size:.85rem;color:var(--muted);min-width:80px;text-align:center;}
+  .lesson-theme-block{margin-bottom:18px;text-align:start;}
+  .lesson-theme-title{font-weight:700;margin-bottom:8px;font-size:1.02rem;}
+  .lesson-word-chip{display:inline-flex;align-items:center;gap:6px;background:var(--paper-soft, #f4f4f6);border:none;border-radius:999px;padding:8px 14px;margin:4px;font-size:.92rem;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s ease;}
+  .lesson-word-chip:hover{background:var(--card);}
+  .academy-block{margin-top:14px;}
+  .academy-card{width:100%;text-align:start;display:block;background:linear-gradient(135deg, var(--paper-soft, #f4f4f6), var(--card));border:2px solid transparent;}
+  .academy-card:not(.locked){border-color:#f4c14a;}
+  .academy-tagline{margin-top:6px;line-height:1.5;}
+  .academy-unlock-btn{width:100%;margin-top:10px;}
   .oral-hint{margin-top:2px;font-size:.82rem;}
   .answer-textarea{width:100%;padding:14px;border-radius:10px;border:2px solid #e5e7eb;font-size:1rem;margin-bottom:20px;font-family:'Inter',sans-serif;resize:vertical;}
   #recordPlayback{max-width:100%;height:36px;}
@@ -871,7 +888,14 @@ const TEXT = {
   micErrorMessage:{fr:"Micro indisponible ou refusé.", ar:"الميكروفون غير متاح أو تم رفض الإذن."},
   ttsUnavailableMessage:{fr:"Lecture à voix haute indisponible sur cet appareil.", ar:"القراءة الصوتية غير متاحة على هذا الجهاز."},
   ttsWrongVoiceMessage:{fr:"Aucune voix dans cette langue sur cet appareil — la prononciation ne sera pas fidèle.", ar:"لا توجد على هذا الجهاز أي صوت بهذه اللغة — النطق لن يكون دقيقًا."},
-  recitationHint:{fr:"Écoute le modèle, entraîne-toi à réciter, puis enregistre-toi si tu veux te réécouter.", ar:"استمع للنموذج، تدرّب على الإلقاء، ثم سجّل صوتك إن أردت الاستماع لنفسك."}
+  recitationHint:{fr:"Écoute le modèle, entraîne-toi à réciter, puis enregistre-toi si tu veux te réécouter.", ar:"استمع للنموذج، تدرّب على الإلقاء، ثم سجّل صوتك إن أردت الاستماع لنفسك."},
+  lessonPrevious:{fr:"◀ Précédent", ar:"◀ السابق"},
+  lessonNextItem:{fr:"Suivant ▶", ar:"التالي ▶"},
+  listenWrittenLabel:{fr:"🔊 Écoute ce que tu as écrit", ar:"🔊 استمع لما كتبت"},
+  writtenEmptyMessage:{fr:"Écris quelque chose d'abord.", ar:"اكتب شيئًا أولًا."},
+  academyLockedTitle:{fr:"Espace premium à débloquer", ar:"مساحة مميزة، فعّلها للوصول"},
+  academyUnlockBtn:{fr:"🔓 Débloquer", ar:"🔓 تفعيل"},
+  academyUnlockRequested:{fr:"Demande envoyée — l'accès s'active dès le paiement confirmé.", ar:"تم إرسال الطلب — سيتم التفعيل فور تأكيد الدفع."}
 };
 
 const TRIMESTER_LABELS = {
@@ -1208,7 +1232,7 @@ async function openSectionTree(subjectId){
 
   const tree = ((data.levels[String(currentLevel)] || {})[subjectId]) || {programme:{}, expression:[]};
   const currentTrimester = data.current_trimester || 'T1';
-  currentTree = {subjectId, tree, currentTrimester, trimesterStarts: data.trimester_starts || {}};
+  currentTree = {subjectId, tree, currentTrimester, trimesterStarts: data.trimester_starts || {}, academyStatus: null};
 
   const defaultTrimester = TRIMESTER_ORDER.find(t => !isTrimesterLocked(t) && (tree.programme[t] || []).length) || currentTrimester;
   currentTree.trimester = defaultTrimester;
@@ -1216,6 +1240,19 @@ async function openSectionTree(subjectId){
   document.getElementById('homeView').style.display = 'none';
   document.getElementById('sessionView').classList.add('active');
   renderSectionTree();
+
+  // "L'Académie du Français" / "The English Academy" : n'existe qu'au
+  // niveau 3, pour fr/en (voir ACADEMY_LEVEL côté serveur) — chargé après
+  // le premier rendu (statut non bloquant) puis re-rendu une fois connu.
+  if((subjectId === 'fr' || subjectId === 'en') && currentLevel === 3){
+    try {
+      const statusRes = await fetch(`/api/academie/${subjectId}/status`);
+      if(statusRes.ok){
+        currentTree.academyStatus = await statusRes.json();
+        if(currentTree.subjectId === subjectId) renderSectionTree();
+      }
+    } catch(e){ /* silencieux — la carte Académie reste simplement absente */ }
+  }
 }
 
 function renderSectionTree(){
@@ -1250,12 +1287,15 @@ function renderSectionTree(){
       </div>
     </div>` : '';
 
+  const academyHtml = academyCardHtml(subjectId);
+
   view.innerHTML = `
     <div class="session-card tree-card">
       <div class="session-progress">${subject ? subject.name[currentLang] : ''}</div>
       <div class="tree-tabs">${tabsHtml}</div>
       <div class="section-list">${sectionsHtml}</div>
       ${expressionHtml}
+      ${academyHtml}
       <div class="session-actions">
         <button type="button" class="btn-secondary" id="treeBackBtn">${TEXT.backHome[currentLang]}</button>
       </div>
@@ -1277,6 +1317,92 @@ function renderSectionTree(){
   view.querySelectorAll('.section-card').forEach(btn => {
     btn.addEventListener('click', () => startExamSession(subjectId, btn.dataset.domain, btn.dataset.trimester));
   });
+  wireAcademyCard(subjectId);
+}
+
+// L'Académie du Français / The English Academy : texte rédigé fourni par
+// l'utilisateur (français) et son équivalent anglais dans le même esprit —
+// jamais traduit en arabe, comme le reste du contenu propre à ces matières.
+const ACADEMY_COPY = {
+  fr: {
+    title: "L'Académie du Français",
+    tagline: "Votre espace premium de perfectionnement en français. Retrouvez des parcours guidés pas-à-pas, des ateliers de production écrite et des entraînements exclusifs conçus autour des modules clés Niveau 1 et Niveau 2 Français.",
+    goal: "Objectif : Booster la confiance de l'élève, fluidifier son expression écrite et orale, et lui donner toutes les clés pour maîtriser le programme officiel avec mention.",
+  },
+  en: {
+    title: "The English Academy",
+    tagline: "Your premium space for mastering English. Discover step-by-step guided journeys, writing workshops, and exclusive practice built around the key Level 1 and Level 2 English modules.",
+    goal: "Goal: build the student's confidence, sharpen their written and spoken English, and give every key to master the official programme with distinction.",
+  },
+};
+
+function academyCardHtml(subjectId){
+  if(!(subjectId === 'fr' || subjectId === 'en') || currentLevel !== 3) return '';
+  const status = currentTree.academyStatus;
+  const copy = ACADEMY_COPY[subjectId];
+  const locked = !status || status.locked;
+  return `
+    <div class="expression-block academy-block">
+      <button type="button" class="section-card academy-card ${locked ? 'locked' : ''}" id="academyCardBtn" dir="ltr">
+        <span class="section-name">${copy.title}</span>
+        <p class="muted-note academy-tagline">${copy.tagline}</p>
+        <p class="muted-note academy-tagline">${copy.goal}</p>
+        ${locked ? `<span class="section-count">${TEXT.academyLockedTitle[currentLang]}</span>` : ''}
+      </button>
+      ${locked ? `<button type="button" class="btn-primary academy-unlock-btn" id="academyUnlockBtn">${TEXT.academyUnlockBtn[currentLang]}</button>` : ''}
+    </div>`;
+}
+
+function wireAcademyCard(subjectId){
+  const cardBtn = document.getElementById('academyCardBtn');
+  if(!cardBtn) return;
+  const status = currentTree.academyStatus;
+  const locked = !status || status.locked;
+  if(!locked){
+    cardBtn.addEventListener('click', () => startAcademySession(subjectId));
+  }
+  document.getElementById('academyUnlockBtn')?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    requestAcademyUnlock(subjectId);
+  });
+}
+
+async function requestAcademyUnlock(subjectId){
+  const academyCode = subjectId === 'fr' ? 'fr_academie' : 'en_academie';
+  try {
+    const res = await fetch('/api/payments/bank-transfer/request', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({subject: academyCode, billing_cycle: 'annual'})
+    });
+    if(res.status === 401){ showLockedToast(TEXT.lockedMessage[currentLang]); return; }
+    if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
+    showLockedToast(TEXT.academyUnlockRequested[currentLang]);
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+  }
+}
+
+async function startAcademySession(subjectId){
+  let res, data;
+  try {
+    res = await fetch('/api/academie/session/start', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({subject: subjectId, child_id: activeChild ? activeChild.id : undefined})
+    });
+    data = await res.json();
+  } catch(e){
+    showLockedToast(TEXT.genericError[currentLang]);
+    return;
+  }
+
+  if(res.status === 403){ showLockedToast(TEXT.lockedMessage[currentLang]); return; }
+  if(res.status === 404){ showLockedToast(TEXT.noContentMessage[currentLang]); return; }
+  if(!res.ok){ showLockedToast(TEXT.genericError[currentLang]); return; }
+
+  currentSession = {sessionId: data.session_id, exercises: data.exercises, index: 0, subjectId, level: currentLevel, isExam: false};
+  renderSessionQuestion();
 }
 
 async function startExamSession(subjectId, domainCode, trimester){
@@ -1481,6 +1607,22 @@ function renderSessionQuestion(){
     renderRecitationExercise(view, ex, content, isLast);
     return;
   }
+  if(ex.format === 'lecon_lettres'){
+    renderLettresLesson(view, ex, content, isLast);
+    return;
+  }
+  if(ex.format === 'lecon_syllabes'){
+    renderSyllabesLesson(view, ex, content, isLast);
+    return;
+  }
+  if(ex.format === 'lecon_mots'){
+    renderMotsLesson(view, ex, content, isLast);
+    return;
+  }
+  if(ex.format === 'ecoute_ecriture'){
+    renderEcouteEcritureExercise(view, ex, content, isLast);
+    return;
+  }
   // grading_mode "open" = production écrite (pas de réponse exacte à
   // vérifier) : toujours une réponse tapée, jamais orale — voir le
   // commentaire en tête de seed_expression_recitation.py.
@@ -1582,6 +1724,181 @@ function renderRecitationExercise(view, ex, content, isLast){
   document.getElementById('validateBtn').addEventListener('click', () => {
     document.getElementById('validateBtn').disabled = true;
     submitAnswer(null);
+  });
+}
+
+// Dictée guidée — "Alphabet" : une lettre à la fois, mot-repère, navigation
+// libre au sein de la leçon (les flèches précédent/suivant) séparée du
+// "Suivant" de session (qui passe à l'exercice suivant). Jamais noté.
+function renderLettresLesson(view, ex, content, isLast){
+  const items = content.letters || [];
+  let idx = 0;
+
+  function draw(){
+    const item = items[idx] || {letter: '', word: ''};
+    const phrase = ex.language === 'en'
+      ? `${item.letter}. ${item.letter} as in ${item.word}.`
+      : `${item.letter}. ${item.letter} comme ${item.word}.`;
+
+    view.innerHTML = `
+      <div class="session-card">
+        <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+        <div class="exercise-content" dir="${dirFor(ex.language)}">
+          <div class="session-question">${content.question} ${ttsButtonHtml(ex.language)}</div>
+          <div class="lesson-board">
+            <div class="lesson-main">${item.letter}${item.letter.toLowerCase()}</div>
+            <div class="lesson-sub">${item.word}</div>
+          </div>
+          <div class="lesson-nav">
+            <button type="button" id="lessonPrevBtn" ${idx === 0 ? 'disabled' : ''}>◀</button>
+            <span class="lesson-progress">${idx + 1} / ${items.length}</span>
+            <button type="button" id="lessonNextBtn" ${idx === items.length - 1 ? 'disabled' : ''}>▶</button>
+          </div>
+        </div>
+        <div class="session-actions">
+          <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+          <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+    document.getElementById('ttsBtn')?.addEventListener('click', () => speakText(phrase, ex.language));
+    document.getElementById('lessonPrevBtn').addEventListener('click', () => { if(idx > 0){ idx--; draw(); } });
+    document.getElementById('lessonNextBtn').addEventListener('click', () => { if(idx < items.length - 1){ idx++; draw(); } });
+    document.getElementById('validateBtn').addEventListener('click', () => {
+      document.getElementById('validateBtn').disabled = true;
+      submitAnswer(null);
+    });
+  }
+
+  draw();
+}
+
+// Dictée guidée — "Syllabe" : accepte deux formes de contenu selon la
+// langue (content.syllables pour le français — syllabaire consonne+voyelle
+// — ou content.syllable_families pour l'anglais — word families type
+// -AT/-AN), normalisées ici en une seule liste d'éléments affichables.
+function renderSyllabesLesson(view, ex, content, isLast){
+  let items;
+  if(content.syllables){
+    items = content.syllables.map(s => ({
+      main: s.syllable,
+      sub: s.example,
+      speak: ex.language === 'en' ? s.syllable : `${s.syllable}. ${s.syllable} comme ${s.example}.`,
+    }));
+  } else {
+    items = (content.syllable_families || []).map(f => ({
+      main: f.family,
+      sub: f.words.join(', '),
+      speak: `${f.family}. ${f.words.join(', ')}.`,
+    }));
+  }
+  let idx = 0;
+
+  function draw(){
+    const item = items[idx] || {main: '', sub: ''};
+    view.innerHTML = `
+      <div class="session-card">
+        <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+        <div class="exercise-content" dir="${dirFor(ex.language)}">
+          <div class="session-question">${content.question} ${ttsButtonHtml(ex.language)}</div>
+          <div class="lesson-board">
+            <div class="lesson-main">${item.main}</div>
+            <div class="lesson-sub">${item.sub}</div>
+          </div>
+          <div class="lesson-nav">
+            <button type="button" id="lessonPrevBtn" ${idx === 0 ? 'disabled' : ''}>◀</button>
+            <span class="lesson-progress">${idx + 1} / ${items.length}</span>
+            <button type="button" id="lessonNextBtn" ${idx === items.length - 1 ? 'disabled' : ''}>▶</button>
+          </div>
+        </div>
+        <div class="session-actions">
+          <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+          <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+        </div>
+      </div>
+    `;
+    document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+    document.getElementById('ttsBtn')?.addEventListener('click', () => speakText(item.speak, ex.language));
+    document.getElementById('lessonPrevBtn').addEventListener('click', () => { if(idx > 0){ idx--; draw(); } });
+    document.getElementById('lessonNextBtn').addEventListener('click', () => { if(idx < items.length - 1){ idx++; draw(); } });
+    document.getElementById('validateBtn').addEventListener('click', () => {
+      document.getElementById('validateBtn').disabled = true;
+      submitAnswer(null);
+    });
+  }
+
+  draw();
+}
+
+// Dictée guidée — "Mots simples" : tous les thèmes affichés d'un coup (pas
+// de pagination — parcourir/taper au choix), chaque mot est un bouton qui
+// le prononce au clic.
+function renderMotsLesson(view, ex, content, isLast){
+  const themes = content.themes || [];
+  const themesHtml = themes.map(t => `
+    <div class="lesson-theme-block">
+      <div class="lesson-theme-title">${t.theme}</div>
+      <div>${t.words.map(w => `<button type="button" class="lesson-word-chip" data-word="${String(w).replace(/"/g, '&quot;')}">${w}</button>`).join('')}</div>
+    </div>
+  `).join('');
+
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question}</div>
+        ${themesHtml}
+      </div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  view.querySelectorAll('.lesson-word-chip').forEach(btn => {
+    btn.addEventListener('click', () => speakText(btn.dataset.word, ex.language));
+  });
+  document.getElementById('validateBtn').addEventListener('click', () => {
+    document.getElementById('validateBtn').disabled = true;
+    submitAnswer(null);
+  });
+}
+
+// Dictée guidée — "Écris et écoute" : champ libre, jamais noté (grading_mode
+// "open") — le bouton lit à voix haute ce que l'élève vient de taper, pas
+// une réponse-cible fixe (contrairement à renderWrittenExpressionExercise
+// juste en dessous, qui lit content.question).
+function renderEcouteEcritureExercise(view, ex, content, isLast){
+  view.innerHTML = `
+    <div class="session-card">
+      <div class="session-progress">${exerciseProgressText(currentSession.index + 1, currentSession.exercises.length)}</div>
+      <div class="exercise-content" dir="${dirFor(ex.language)}">
+        <div class="session-question">${content.question}</div>
+        <textarea class="answer-textarea" id="ecouteTextarea" placeholder="${TEXT.answerPlaceholder[currentLang]}" rows="4"></textarea>
+        <div class="tts-row">
+          <button type="button" class="btn-secondary" id="listenWrittenBtn">${TEXT.listenWrittenLabel[currentLang]}</button>
+        </div>
+      </div>
+      <div class="session-actions">
+        <button type="button" class="btn-secondary" id="backHomeBtn">${TEXT.backHome[currentLang]}</button>
+        <button type="button" class="btn-primary" id="validateBtn">${isLast ? TEXT.finish[currentLang] : TEXT.next[currentLang]}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('backHomeBtn').addEventListener('click', backToHome);
+  const textarea = document.getElementById('ecouteTextarea');
+  document.getElementById('listenWrittenBtn').addEventListener('click', () => {
+    const val = textarea.value.trim();
+    if(!val){ showLockedToast(TEXT.writtenEmptyMessage[currentLang]); return; }
+    speakText(val, ex.language);
+  });
+  document.getElementById('validateBtn').addEventListener('click', () => {
+    const val = textarea.value.trim();
+    document.getElementById('validateBtn').disabled = true;
+    textarea.disabled = true;
+    submitAnswer(val || null);
   });
 }
 

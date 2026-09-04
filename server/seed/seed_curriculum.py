@@ -65,7 +65,12 @@ SUBJECTS = [
     ("science", "Éveil scientifique", "الإيقاظ العلمي", ALL_LEVELS),
     ("ar", "Arabe", "العربية", ALL_LEVELS),
     ("fr", "Français", "الفرنسية", ["3", "4", "5", "6"]),
-    ("en", "Anglais", "الإنجليزية", ["4", "5", "6"]),  # paid unlock at levels 1-2-3
+    # 2026-09-04: English now follows French's exact calendar -- paid at
+    # levels 1-2, free/included from level 3 onward (was previously free
+    # only from level 4). "The English Academy" (a separate paid add-on,
+    # see ACADEMY_SUBJECT_CODES below) triggers at level 3 alongside it,
+    # mirroring "L'Académie du Français".
+    ("en", "Anglais", "الإنجليزية", ["3", "4", "5", "6"]),
 ]
 
 MATH_SKELETON = {

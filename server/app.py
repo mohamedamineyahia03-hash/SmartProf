@@ -36,7 +36,7 @@ from diagnostic_engine import diagnose
 from entitlements import has_active_entitlement
 from notifications.email import send_email
 from payments import bank_transfer
-from session_engine import build_exam_session
+from session_engine import build_academy_session, build_exam_session
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FREE_CHILD_SLOTS = 2
@@ -654,6 +654,23 @@ def is_subject_locked(level_code, subject_row, user_id=None):
     return not has_active_entitlement(user_id, subject_row.code, level_code)
 
 
+# "L'Academie du Francais" / "The English Academy" (added 2026-09-04): a
+# paid bundle re-serving the whole niveau 1 + niveau 2 curriculum for one
+# subject, offered right where that subject becomes free (level 3, for
+# both fr and en). Deliberately NOT a real CurriculumSubject -- there is no
+# separate content behind it (see session_engine.build_academy_session),
+# just an Entitlement/Payment bookkeeping key. ACADEMY_LEVEL is where both
+# currently trigger; kept as one constant so a future "academy for a
+# different level" doesn't require touching every call site.
+ACADEMY_CODES = {"fr": "fr_academie", "en": "en_academie"}
+ACADEMY_LABELS = {"fr_academie": "L'Académie du Français", "en_academie": "The English Academy"}
+ACADEMY_LEVEL = "3"
+
+
+def is_academy_locked(academy_code, user_id=None):
+    return not has_active_entitlement(user_id, academy_code, ACADEMY_LEVEL)
+
+
 def public_content(content):
     """Strips the answer and the pedagogical explanation out of what's sent to
     the browser before it's answered — revealed only by
@@ -796,6 +813,88 @@ def start_session():
             "is_exam": session_row.is_exam,
             "total": len(exercises),
             "exercises": [public_exercise_payload(e) for e in exercises],
+        }
+    )
+
+
+@app.get("/api/academie/<subject>/status")
+def academie_status(subject):
+    """subject is "fr" or "en" (not the academy code itself) -- the
+    frontend asks about the subject page it's already on."""
+    academy_code = ACADEMY_CODES.get(subject)
+    if academy_code is None:
+        return jsonify({"error": "invalid_subject"}), 400
+    user = current_user()
+    locked = is_academy_locked(academy_code, user_id=user.id if user else None)
+    return jsonify({
+        "academy": academy_code,
+        "label": ACADEMY_LABELS[academy_code],
+        "level": ACADEMY_LEVEL,
+        "locked": locked,
+    })
+
+
+@app.post("/api/academie/session/start")
+def start_academie_session():
+    """Same session machinery as /api/session/start (Session row, exercise_ids,
+    answer/corrige work unchanged) but pulled from build_academy_session()
+    instead of one domain -- see that function's docstring for why this
+    never duplicates niveau 1/2 content."""
+    data = request.get_json(silent=True) or {}
+    subject = data.get("subject", "")
+    child_id = data.get("child_id")
+
+    academy_code = ACADEMY_CODES.get(subject)
+    if academy_code is None:
+        return jsonify({"error": "invalid_subject"}), 400
+
+    user = current_user()
+    child = None
+    if child_id is not None:
+        if user is None:
+            return jsonify(
+                {"error": "not_authenticated", "message": "Connexion parent requise pour sélectionner un enfant."}
+            ), 401
+        child = ChildProfile.query.filter_by(id=child_id, user_id=user.id).first()
+        if child is None:
+            return jsonify({"error": "invalid_child", "message": "Enfant introuvable."}), 400
+
+    if is_academy_locked(academy_code, user_id=user.id if user else None):
+        return jsonify({"error": "academy_locked", "message": "Cet espace nécessite un déblocage."}), 403
+
+    exercises = build_academy_session(subject)
+    if not exercises:
+        return jsonify(
+            {"error": "no_content", "message": "Aucun exercice n'est encore disponible pour cet espace."}
+        ), 404
+
+    session_row = Session(
+        child_profile_id=child.id if child else None,
+        level_code=ACADEMY_LEVEL,
+        subject_code=academy_code,
+        trimester="",
+        domain_code="academie",
+        is_exam=False,
+        exercise_ids=[e.id for e in exercises],
+        answers={},
+        client_ip=_client_ip(),
+        user_agent=(request.headers.get("User-Agent") or "")[:255],
+        is_trial=False,
+    )
+    db.session.add(session_row)
+    db.session.commit()
+
+    return jsonify(
+        {
+            "session_id": session_row.id,
+            "academy": academy_code,
+            "total": len(exercises),
+            # niveau_label lets the frontend show "Niveau 1"/"Niveau 2" per
+            # exercise instead of the real level name, without the backend
+            # inventing a second copy of the content just to relabel it.
+            "exercises": [
+                dict(public_exercise_payload(e), niveau_label=f"Niveau {e.level_code}") for e in exercises
+            ],
         }
     )
 
@@ -1039,11 +1138,18 @@ def request_bank_transfer():
     subject_code = data.get("subject", "")
     billing_cycle = data.get("billing_cycle", "annual")
 
-    subject_row = CurriculumSubject.query.filter_by(code=subject_code).first()
-    if subject_row is None:
-        return jsonify({"error": "invalid_subject"}), 400
-    if CurriculumLevel.query.filter_by(code=level_code).first() is None:
-        return jsonify({"error": "invalid_level"}), 400
+    # "fr_academie"/"en_academie" are not real CurriculumSubject rows (see
+    # ACADEMY_CODES) -- they're an Entitlement/Payment bookkeeping key for
+    # the Academy bundles, always at ACADEMY_LEVEL, so they skip the normal
+    # subject/level lookup entirely.
+    if subject_code in ACADEMY_CODES.values():
+        level_code = ACADEMY_LEVEL
+    else:
+        subject_row = CurriculumSubject.query.filter_by(code=subject_code).first()
+        if subject_row is None:
+            return jsonify({"error": "invalid_subject"}), 400
+        if CurriculumLevel.query.filter_by(code=level_code).first() is None:
+            return jsonify({"error": "invalid_level"}), 400
     # Anything other than "annual" is treated by bank_transfer.verify() as a
     # never-expiring one_time grant -- without this check a caller could send
     # billing_cycle="whatever" and get permanent access confirmed for the
@@ -1118,4 +1224,7 @@ def admin_payments_page():
 if __name__ == "__main__":
     # debug=True (autoreload + interactive debugger) only outside production —
     # never expose the Werkzeug debugger publicly.
-    app.run(host="127.0.0.1", port=5000, debug=not IS_PRODUCTION)
+    # host 0.0.0.0 (not just 127.0.0.1) so a phone on the same local network
+    # can reach this dev server directly for manual testing — fine on a
+    # trusted home/office LAN, never do this on a network you don't trust.
+    app.run(host="0.0.0.0", port=5000, debug=not IS_PRODUCTION)
